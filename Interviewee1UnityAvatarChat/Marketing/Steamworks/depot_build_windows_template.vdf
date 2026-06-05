@@ -1,0 +1,14 @@
+"DepotBuild"
+{
+    "DepotID" "REPLACE_WITH_WINDOWS_DEPOT_ID"
+    "ContentRoot" "..\content"
+    "FileMapping"
+    {
+        "LocalPath" "*"
+        "DepotPath" "."
+        "Recursive" "1"
+    }
+    "FileExclusion" "*.log"
+    "FileExclusion" "*.pid"
+    "FileExclusion" ".server.pid"
+}

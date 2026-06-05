@@ -1,0 +1,10 @@
+id	priority	owner	area	status	evidence	next_action	exit_criteria
+INT-AUTO-001	P0	QA	자동 QA	open	RELEASE_READINESS_REPORT.md	자동 실패와 보류 항목을 재현하고 수정한다.	RELEASE_READINESS_REPORT.md 자동 실패 0, 보류 0
+INT-PLAYTEST-001	P1	기획/QA	외부 플레이테스트	open	PLAYTEST_EVIDENCE_SUMMARY.md 완성 세션 0/5, P0 0, P1 0	외부 참가자 5명으로 5문답 세션, 관찰 양식, 피드백 export, 지원 번들을 수집한다.	완성 세션 5/5, P0 0, P1 0
+INT-ACCESS-001	P1	접근성 검토자	접근성	open	EXTERNAL_EVIDENCE_AUDIT.md 실제 접근성 QA 증거 미완료	화면 배율, 키보드만 조작, 고대비 또는 실제 입력 장치 테스트 양식과 화면 증거를 수집한다.	ACCESSIBILITY_OBSERVATION_FORM.md와 화면/녹화 증거 등록
+INT-ART-001	P1	아트 리뷰어	아트/상점 첫인상	open	EXTERNAL_EVIDENCE_AUDIT.md 외부 아트 리뷰 증거 미완료	작은 캡슐, 키아트, 실제 스크린샷에 대한 외부 아트 리뷰 양식을 수집한다.	ART_REVIEW_FORM.md와 이미지/PDF 근거 등록
+INT-TRAILER-001	P1	트레일러 편집자	트레일러	open	EXTERNAL_EVIDENCE_AUDIT.md 최종 트레일러 증거 미완료	라이브 플레이 기반 최종 MP4, 리뷰 양식, 자막 또는 캡션 증거를 수집한다.	TRAILER_FINAL_REVIEW_FORM.md, 최종 MP4, 자막 등록
+INT-LEGAL-001	P1	상점 운영/법무	Steam 관리자/법무	open	EXTERNAL_EVIDENCE_AUDIT.md Steam 관리자와 개인정보 최종 증거 미완료	Steam 관리자 체크리스트, 최종 개인정보 문구, 테스트 브랜치 실행 증거를 수집한다.	Steam 체크리스트, 개인정보 최종본, 테스트 브랜치 증거 등록
+INT-QUALITY-001	P1	기획/프로듀서	5달러 품질 루브릭	open	COMMERCIAL_QUALITY_REVIEW_QA.md 상태 미완료	COMMERCIAL_QUALITY_SCORECARD.tsv를 리뷰어/evidence 포함으로 채운다.	상태 완료, 평균 4.0 이상, 최저 3 이상, 차단 0
+INT-QUALITY-AUTO-001	P0	기획/프로듀서	내부 품질 점수표	open	INTERNAL_QUALITY_REVIEW.md 내부 차단 2	INTERNAL_QUALITY_SCORECARD.tsv에서 internal_blocker=yes 영역을 수정한다.	내부 품질 점수표 내부 차단 0
+INT-ISSUE-001	P2	QA	외부 이슈 폐쇄	open	EXTERNAL_ISSUE_REGISTER_QA.md 상태 증거 없음	외부 리뷰에서 발견된 이슈를 등록하고 P2 이상은 verified 또는 수용 위험으로 정리한다.	이슈 레지스터 상태 완료

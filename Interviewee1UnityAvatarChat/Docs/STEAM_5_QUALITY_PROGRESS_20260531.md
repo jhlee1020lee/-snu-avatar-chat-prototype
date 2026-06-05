@@ -1,0 +1,365 @@
+# $5 Steam Quality Progress - 2026-05-31
+
+## Scope
+
+이 문서는 `겉!=속`을 실제 판매가 아니라 "스팀에서 5달러에 팔리는 인디 게임처럼 보이는 수준"으로 끌어올리기 위한 2026-05-31 진행 상태를 기록한다.
+
+## 이번에 개선한 것
+
+- 게임 내 UI 글꼴을 Paperlogy로 교체했다.
+  - `Paperlogy-4Regular`
+  - `Paperlogy-6SemiBold`
+  - `Paperlogy-7Bold`
+- 후속 질문 카드를 짧은 주제형 카드로 바꿨다.
+  - 기존의 긴 문장 카드 대신 `배려 · 도움 받는 방식` 같은 짧은 라벨을 표시한다.
+  - 실제 질문 텍스트는 내부 질문 제출 로직에 유지된다.
+  - 카드 폭, 높이, 투명도, 장식 요소를 조정해 배경 위에 덜 싸게 떠 보이도록 했다.
+- 장면 핫스팟 라벨을 검은 버튼형 UI에서 작은 전시 태그 스타일로 바꿨다.
+  - 라벨 크기를 줄이고 투명도를 낮췄다.
+  - 안쪽 장식선과 핀 포인트를 추가해 배경 장면과 더 자연스럽게 섞이게 했다.
+- 대화 패널을 위로 확장해 첫 화면에서 보이는 답변 영역을 늘렸다.
+  - 긴 답변의 첫 화면 읽기 영역이 `154px`에서 `184px`로 늘었다.
+- 마무리 카드 하단 요약을 짧은 결과 기록 형태로 정리했다.
+  - 요약 텍스트가 선택지와 저장 버튼 위로 흘러내리지 않게 했다.
+  - 저장/계속/닫기 버튼 대비를 높였다.
+- 저장 후 기록함 흐름을 다시 검증했다.
+  - 저장된 마무리 기록이 기록함 목록과 미리보기로 이어지는 것을 확인했다.
+- 이어하기 데이터 로드를 스모크로 확인했다.
+  - 첫 인상, 질문 수, 태도, 깊은 기록 수가 로드 후 유지된다.
+- 5턴 자동 플레이스루 스모크를 추가했다.
+  - 여러 질문을 순서대로 제출하고 각 답변 완료를 기다린다.
+  - 끝에서 마무리 카드를 열고 기록 저장까지 이어갈 수 있다.
+  - 반복 플레이 루프 검증을 수동 캡처에만 의존하지 않게 됐다.
+- 서버 실패 시 내장 답변 fallback UX를 보강했다.
+  - 채팅 요청에 timeout을 추가했다.
+  - 서버 답변 실패 시 `서버 연결 실패 · 내장 답변으로 계속` 상태를 보여준다.
+  - 질문 노트의 장면 탭에도 답변 출처를 표시한다.
+  - 스모크에서 `server-fallback` 상태를 직접 검증한다.
+- 기존 로드맵 기능은 유지된다.
+  - 첫인상 선택
+  - 질문 태도 분류
+  - 깊은 기록 해금
+  - 첫인상과 태도 기반 엔딩 요약
+  - 약 2분 길이의 이야기 모드 진행
+
+## 검증 증거
+
+- Windows 빌드 성공
+  - `Build/unity-steam5-closing-polish.log`
+  - 결과: `Build Finished, Result: Success.`
+- Paperlogy 런타임 로드 확인
+  - `Build/release-smoke/steam5-dialogue-polish.tsv`
+  - `state ui-font Paperlogy-4Regular / Paperlogy-6SemiBold / Paperlogy-7Bold`
+- 게임 제목 확인
+  - `Build/release-smoke/steam5-dialogue-polish.tsv`
+  - `state game-title 겉!=속`
+  - `state product-name 겉!=속`
+- 로드맵 핵심 루프 확인
+  - `first-impression 목발`
+  - `last-attitude 배려`
+  - `deep-memory-count 1`
+  - `closing-summary` 개인화 출력
+- 후속 질문 라벨 축약 확인
+  - `lead question-1 배려 · 도움 받는 방식`
+  - `lead question-2 호기심 · 도움 받는 방식`
+  - `lead question-3 호기심 · 이동과 목발`
+- 대화 영역 확장 확인
+  - `layout dialogue-viewport-height 184.0`
+  - `layout dialogue-content-height 264.0`
+- 긴 답변 스크롤 회귀 확인
+  - `Build/release-smoke/steam5-dialogue-long.tsv`
+  - `expect dialogue-scrollable PASS`
+  - `expect dialogue-text-fit PASS`
+  - `expect dialogue-scroll-cue PASS`
+  - `expect dialogue-scrollbar PASS`
+- 마무리 카드 열림 확인
+  - `Build/release-smoke/steam5-closing-polish.tsv`
+  - `expect closing open PASS`
+  - `closing-summary`가 짧은 결과 기록 형태로 출력됨
+- 기록함 열림 확인
+  - `Build/release-smoke/steam5-record-archive.tsv`
+  - `expect archive open PASS`
+- 저장/이어하기 확인
+  - `Build/release-smoke/steam5-save-load.tsv`
+  - `conversation-turns 3`
+  - `first-impression 목발`
+  - `deep-memory-count 3`
+- 5턴 플레이스루 확인
+  - `Build/release-smoke/steam5-five-turn-playthrough.tsv`
+  - `conversation-turns 5`
+  - `deep-memory-count 4`
+  - `expect archive open PASS`
+  - `closing-summary`가 5턴 대화 결과를 반영함
+- 서버 실패 fallback 확인
+  - `Build/release-smoke/steam5-server-fallback.tsv`
+  - `answer-source server-fallback`
+  - `expect server-fallback-source PASS`
+  - `expect server-fallback-status PASS`
+  - `expect server-fallback-dialogue PASS`
+- 로컬 답변 회귀 확인
+  - `Build/release-smoke/steam5-local-after-fallback.tsv`
+  - `answer-source local-only`
+  - `thinking-status 내장 답변 사용`
+- 화면 캡처
+  - `Build/release-smoke/steam5-current-start.png`
+  - `Build/release-smoke/steam5-current-gameplay.png`
+  - `Build/release-smoke/steam5-polish1-gameplay.png`
+  - `Build/release-smoke/steam5-polish2-gameplay.png`
+  - `Build/release-smoke/steam5-hotspot-polish-gameplay.png`
+  - `Build/release-smoke/steam5-dialogue-polish-gameplay.png`
+  - `Build/release-smoke/steam5-closing-polish.png`
+  - `Build/release-smoke/steam5-record-archive-after-save.png`
+  - `Build/release-smoke/steam5-five-turn-archive.png`
+  - `Build/release-smoke/steam5-server-fallback-evidence.png`
+
+## 2026-05-31 스토어 자산 QA 갱신
+
+- 타이틀 화면을 어두운 카드형 시작 메뉴에서 밝은 종이 패널형 시작 메뉴로 바꿨다.
+- 대화 패널과 질문 노트를 밝은 전시 카드/종이 UI로 바꿔 스크린샷에서 검은 면적이 과하게 보이던 문제를 줄였다.
+- 게임플레이 캡처의 외곽 12px 고대비 위험을 줄이기 위해 장면 가장자리 안전 마감 레이어를 추가했다.
+- 상점 스크린샷 11장을 `Build/release-smoke`에서 다시 캡처하고 `Marketing/Screenshots`로 승격했다.
+- Steam 키아트, 캡슐, 라이브러리 자산, 페이지 배경, 바로가기 아이콘을 재생성했다.
+- 트레일러 애니매틱을 최신 스크린샷 기준으로 재생성했다.
+- 상점 주의 문구에 실제 인물/초상/신원 재현이 아니라는 고지를 추가했다.
+- 검증 결과
+  - `Tools/RunReleaseSmoke.ps1 -SkipUnityBuild` 통과
+  - `Tools/ValidateVisualQuality.ps1` 통과
+  - `Tools/ValidateSteamAssets.ps1` 통과
+  - `Tools/ValidateSteamLegalReadiness.ps1` 통과
+  - `Tools/WriteBuildMetadata.ps1`로 `Build/BUILD_INFO.json` 갱신
+- 주요 산출물
+  - `Marketing/Screenshots/01-title-session-start.png` ~ `11-title-continue.png`
+  - `Marketing/Screenshots/SCREENSHOT_MANIFEST.tsv`
+  - `Marketing/VisualQuality/VISUAL_QUALITY_REPORT.tsv`
+  - `Marketing/SteamAssets/STEAM_ASSET_MANIFEST.tsv`
+  - `Marketing/Trailer/trailer_animatic_60s.mp4`
+
+## 2026-05-31 릴리즈 패키지/상업 게이트 갱신
+
+- 번들 Node.js 런타임을 `Build/ThirdParty/NodeRuntime`에 준비했다.
+  - 버전: `v22.22.3`
+- 패키지 서버 QA의 모델 기대값을 현재 서버 정책과 맞췄다.
+  - 서버 기본 모델: `gpt-5.4-mini`
+  - 패키지 서버 QA: 통과
+- 상업/가격 판단 스크립트의 기본 기준을 USD 5 이상으로 맞췄다.
+  - `RunCommercialLaunchGate.ps1`
+  - `WriteCommercialLaunchDecision.ps1`
+  - `WriteCommercialPricePositioning.ps1`
+  - `WriteInternalQualityScorecard.ps1`
+  - `WriteCommercialSprintPlan.ps1`
+  - `WriteSteamMarketComparison.ps1`
+  - `ValidateSteamMarketComparison.ps1`
+- 운영 문서와 외부 검토 양식의 가격 기준도 5달러로 정리했다.
+  - `COMMERCIAL_RELEASE_REVIEW.md`, `COMMERCIAL_QUALITY_RUBRIC.md`, `SUPPORT_HANDOFF.md`, `EXTERNAL_EVIDENCE_REQUIREMENTS.md`
+  - 플레이테스트/아트 리뷰 양식과 `IMPROVEMENT_PLAN.md`
+  - 남은 `10달러` 문자열은 상점 문구 QA의 금지어 패턴뿐이다.
+- 5달러 기준 Steam 시장 비교를 생성하고 QA를 통과했다.
+  - 비교작: 8개
+  - 차단: 0
+  - 보류: 0
+- Windows/Steam 제출/Steamworks/외부 플레이테스트/상업 검토 패키지를 생성하고 검증했다.
+  - `Build/ReleasePackages/GeotNotEqualSok-Windows-QA`
+  - `Build/SteamSubmissionPackages/GeotNotEqualSok-SteamSubmission-QA`
+  - `Build/SteamworksStagingPackages/GeotNotEqualSok-Steamworks-QA`
+  - `Build/ExternalPlaytestPackages/GeotNotEqualSok-ExternalPlaytest-QA`
+  - `Build/CommercialReviewPackages/GeotNotEqualSok-CommercialReview-QA`
+- 릴리즈 준비 감사 결과
+  - 자동 통과: 42
+  - 자동 실패: 0
+  - 보류: 0
+  - 외부 검증 미완료: 5
+- 상업 출시 최종 게이트 결과
+  - 기준 가격: USD 5 이상
+  - 최종 판정: 보류
+  - 차단 게이트: 0
+  - Steam 상점 제출 자료: 준비됨
+  - 5달러 이상 최종 출시 후보: 보류
+- 빌드 캡처 트레일러 후보를 다시 편집했다.
+  - 첫 10초 안에 질문 선택과 장면 단서 확인이 보이도록 컷 타이밍을 조정했다.
+  - `TRAILER_BUILD_CAPTURE_SHOTLIST.tsv`와 `TRAILER_CAPTIONS.srt`를 새 타이밍에 맞췄다.
+  - `trailer_build_capture_60s.mp4`를 재생성하고 `ValidateTrailerAssets.ps1`를 통과했다.
+- 트레일러 QA를 강화했다.
+  - `ValidateTrailerAssets.ps1`가 SRT 자막의 컷 수, 순서, 시작/종료 시간을 빌드 캡처 샷리스트와 대조한다.
+  - 자막-샷리스트 불일치가 있으면 상점 트레일러 QA에서 실패하도록 만들었다.
+  - 병렬 보고서 생성 중 일시적으로 생긴 콘텐츠 QA 실패는 `RunContentQA.ps1` 단독 통과 후 순차 재실행으로 해소했다.
+- 실제 게임 UI의 진행도와 답변 출처 표시를 강화했다.
+  - 대화 패널 상단에 `1/5 질문 · 내장 답변`처럼 세션 진행도와 답변 출처가 보이도록 했다.
+  - 서버 답변, 내장 답변, 서버 실패 후 내장 답변 전환을 플레이어가 구분할 수 있게 했다.
+  - `RunReleaseSmoke.ps1`에 `answer-source-progress.tsv` 검증을 추가했다.
+  - `ValidateAccessibilityAutomation.ps1`가 해당 런타임 상태를 검사하도록 확장했다.
+  - 새 빌드 ID: `geot-not-equal-sok-1.0-468363eb-6e93d53d-ec6f52b6`
+- 외부 플레이테스트 피드백 export를 5달러 품질 판단에 맞췄다.
+  - 게임 내 `의견 남기기` 창에 `5달러 부족/보류/충분` 선택 행을 추가했다.
+  - 게임 내 `의견 남기기` 창에 문제 없음/사소한 문제/진행 방해/진행 불가 선택 행을 추가했다.
+  - 피드백 txt/json에 `5달러 기준`과 `commercialReadiness`를 저장한다.
+  - 피드백 txt/json에 `이슈 등급`과 `issueSeverity`를 저장한다.
+  - `ValidatePlaytestFeedbackExport.ps1`가 새 필드를 필수로 검증한다.
+  - `ExportFeedbackToCommercialQualityScorecard.ps1`가 5달러 기준 분포와 이슈 등급 분포를 점수표 초안 노트에 반영한다.
+  - `ImportPlaytestFeedbackIssues.ps1`가 P0/P1/P2로 표시된 피드백을 `EXTERNAL_ISSUE_REGISTER.tsv` 초안 행으로 변환한다.
+  - `PLAYTEST_OBSERVATION_FORM.md`에 게임 내 의견 저장 확인 항목을 추가했다.
+  - 새 빌드 ID: `geot-not-equal-sok-1.0-d4d18339-6e93d53d-ec6f52b6`
+- 내부 품질 점수표가 빌드 캡처 트레일러 후보를 반영하도록 갱신됐다.
+  - 평균 점수: 4.0
+  - 최저 점수: 4
+  - 내부 차단: 0
+- 5문답 완주 루프의 제품 내 안내와 자동 검증을 보강했다.
+  - 5문답 이상 도달 시 상단 `끝내기` 버튼이 더 눈에 띄는 따뜻한 색으로 전환된다.
+  - `RunReleaseSmoke.ps1`가 실제로 5개 질문을 제출하고, 마무리 카드를 열고, 기록을 저장한 뒤 기록함이 열리는지 검증한다.
+  - `ValidateAccessibilityAutomation.ps1`가 `five-turn-playthrough.tsv`에서 5문답 완료, 마무리 버튼 활성, `마무리 가능 · 내장 답변`, 기록함 열림을 확인한다.
+  - 새 빌드 ID: `geot-not-equal-sok-1.0-15e2887f-6e93d53d-ec6f52b6`
+- 외부 플레이테스트 피드백의 긍정 근거 품질을 강화했다.
+  - `좋음`, `충분`, `문제 없음` 조합은 5문답을 끝낸 뒤에만 저장되도록 막았다.
+  - 중도에 발견한 문제는 기존처럼 P2/P1/P0 등급과 메모를 남기면 저장할 수 있다.
+  - 피드백 txt/json에 `5문답 완료`, `마무리 기록 저장`, `긍정 근거 사용 가능`, `qualityEvidenceReady` 상태를 남긴다.
+  - `RunReleaseSmoke.ps1`에 `playtest-feedback-require-complete-session.tsv` 검증을 추가했다.
+  - `ValidateAccessibilityAutomation.ps1`, `ValidateCommercialUiCopy.ps1`, `ValidatePlaytestFeedbackExport.ps1`가 새 근거 품질 규칙을 확인한다.
+  - 새 빌드 ID: `geot-not-equal-sok-1.0-796f89b6-6e93d53d-ec6f52b6`
+- 의견 남기기 창의 캡처 품질을 다듬었다.
+  - `전체 느낌`, `5달러 기준`, `이슈 등급` 라벨과 버튼 사이 간격을 넓혀 붙어 보이지 않게 했다.
+  - 안내 상태 문구가 입력칸 위로 겹치지 않도록 하단 영역으로 분리했다.
+  - 스모크 캡처에서는 임의 QA 문장 선택 상태 대신 실제 placeholder 문장이 보이도록 바꿨다.
+- 질문 노트의 첫 사용 화면 가독성을 다듬었다.
+  - 노트 패널 폭을 넓혀 탭, 진행도, 장면 버튼이 종이 질감에 묻히지 않게 했다.
+  - 노트 제목과 리드 문구 크기, 진행도 배경 대비를 높였다.
+  - 대화 전 `더 듣기`, `대화 후` 버튼은 흐릿한 오류 상태처럼 보이지 않도록 별도 비활성 종이톤으로 표시한다.
+- 기억장 완료 화면의 보상감을 높였다.
+  - 기억장 패널과 카드의 불투명도를 높여 배경 오브젝트와 글자가 경쟁하지 않게 했다.
+  - 패널 폭과 장면 카드 폭을 넓혀 여섯 장면이 수집 결과처럼 보이게 했다.
+  - 장면 카드 글자와 완료 배지를 더 읽기 쉬운 대비로 조정했다.
+- 기록함 삭제 확인 흐름의 신뢰감을 다듬었다.
+  - 삭제 안내 문구를 하단 버튼 사이의 긴 텍스트에서 별도 힌트 패널로 분리했다.
+  - 삭제 확정 대기 상태는 붉은 글자만 쓰지 않고 경고 배경까지 함께 바뀌게 했다.
+  - 문구를 줄여 버튼, 닫기 동작, 경고가 서로 붙어 보이지 않게 했다.
+- 정보 화면의 저장 삭제 확인 흐름을 다듬었다.
+  - 저장 삭제 안내를 버튼 아래 작은 줄에서 별도 힌트 패널로 분리했다.
+  - 서버 상태 패널과 삭제 안내가 겹치지 않도록 하단 정보 레이아웃을 재배치했다.
+  - 삭제 확정 대기 상태는 경고 배경과 굵은 문구로 바뀌어 로컬 데이터 삭제 위험이 더 명확하다.
+- 마무리 카드의 보상감과 가독성을 다듬었다.
+  - 중앙에 남기는 문장 뒤에 포커스 패널을 추가해 종이 질감과 줄무늬에 문장이 묻히지 않게 했다.
+  - 보조 설명과 세션 요약 패널의 대비를 높여 5문답 완료 후 결과 화면처럼 더 분명하게 보이도록 했다.
+  - 요약 문구 크기와 패널 높이를 조정해 첫 인상, 태도, 깊은 기록, 열린 장면이 덜 눌려 보이게 했다.
+- 의견 남기기 화면의 외부 증거 수집 흐름을 다듬었다.
+  - 메모 입력 위에 상태 패널을 추가해 5문답 완료 여부, 완성도 느낌, 문제 단계 저장 여부를 바로 보이게 했다.
+  - 긍정 근거는 5문답 완료 전에는 붉은 안내로, 더 필요함/보류/문제 있음은 수정 근거 메모 필요 상태로 표시한다.
+  - 외부 플레이테스터가 어떤 조합의 평가를 남겨야 공식 증거로 쓸 수 있는지 화면 안에서 더 명확해졌다.
+- 저장된 진행이 있을 때의 첫 화면 메뉴를 다듬었다.
+  - `이어하기`, `처음부터`, `질문 노트`, `이야기 보기`를 하단 카드 안의 2행 2열 배열로 재배치했다.
+  - `이야기 보기` 버튼이 카드 밖으로 내려가 보이던 저장 있음 상태의 첫인상 문제를 제거했다.
+  - 저장 없음 상태의 3버튼 기본 진입 흐름은 기존처럼 한 줄로 유지했다.
+- 저장된 진행의 첫 화면 맥락을 보강했다.
+  - 생성만 되고 비활성 상태로 남아 있던 `Start Menu Flow` 패널을 저장 있음 상태에서 표시하도록 연결했다.
+  - `지난 대화 · 질문 n/5 · 기억장 n/6` 미리보기를 한 줄 요약으로 정리해 이어하기 전에 진행 상황을 바로 알 수 있게 했다.
+  - 좁은 하단 카드에서는 장식 칩보다 진행 요약을 우선하도록 정리하고, 설명 문구와 4개 진입 버튼이 서로 겹치지 않게 했다.
+- 질문 노트의 선택 가능한 요소 대비를 다듬었다.
+  - 노트 패널, 바깥 종이, 내부 종이의 불투명도를 높여 배경 장면과 덜 섞이게 했다.
+  - 질문/장면/기록 탭의 선택 상태와 비선택 상태 대비를 키워 현재 탭을 더 빨리 읽게 했다.
+  - 장면 주제 버튼과 진행 배지의 배경 대비를 높여 `일상`, `이동`, `도움` 같은 선택지가 비활성처럼 보이지 않게 했다.
+- 정보 화면의 하단 저장 안내를 다듬었다.
+  - 로컬 서버 상태 패널과 저장 삭제 안내 사이 간격을 다시 잡아 문구가 눌려 보이지 않게 했다.
+  - 저장 삭제 안내 패널의 높이와 불투명도, 글자 크기를 높여 정보 화면 캡처에서도 로컬 저장/삭제 흐름이 더 분명하게 보이도록 했다.
+- 기억장 완료 화면의 보상감을 한 번 더 다듬었다.
+  - 기억장 페이지, 그림자, 바인딩 장식의 대비를 올려 오른쪽 패널이 배경과 덜 섞이게 했다.
+  - 여섯 장면 카드, 완료 배지, 닫기 버튼의 불투명도를 높여 `모든 장면 완성` 상태가 보상 화면처럼 더 분명하게 보이도록 했다.
+- 마무리 카드의 결과 화면 구성을 한 번 더 다듬었다.
+  - 카드 크기와 하단 여백을 키워 남길 문장, 세션 요약, 선택지, 저장/닫기 버튼이 서로 눌려 보이지 않게 했다.
+  - 요약 문구를 점으로 이어진 압축 문장에서 `첫 인상`, `태도`, `깊은 기록`, `시선 변화`, `오늘 열린 장면`이 분리되어 읽히는 결과표 형태로 바꿨다.
+- 기록함 미리보기의 저장 결과 감각을 보강했다.
+  - 선택한 마무리 기록의 날짜와 남길 문장을 오른쪽 미리보기 상단 헤더로 분리했다.
+  - 긴 기록 본문은 아래 스크롤 영역으로 내려, 기록함이 단순 텍스트 덤프가 아니라 저장된 결과를 다시 확인하는 화면처럼 읽히게 했다.
+- 장면 단서 미리보기의 첫 상호작용을 더 명확하게 했다.
+  - 단서 카드를 키워 질문 문장과 하단 동작이 서로 눌리지 않게 했다.
+  - 아이콘처럼 보이던 `↵`/`×` 버튼을 `질문하기`/`닫기` 텍스트 버튼으로 바꿔 처음 누르는 플레이어도 동작을 바로 알 수 있게 했다.
+- 질문 노트의 `장면`/`기록` 탭을 상태판처럼 읽히게 다듬었다.
+  - 장면 탭에 진행 요약, 현재 장면, 질문 태도, 답변 출처를 위계 있게 표시한다.
+  - 기록 탭은 최근 질문 수와 질문/답변 역할을 분리해 대화 로그가 단순 문단처럼 보이지 않게 했다.
+- 기록함 목록 제목을 더 제품 화면답게 다듬었다.
+  - 저장 기록이 많이 쌓여도 `최근 기록 6/140`처럼 내부 카운터처럼 보이는 표기를 쓰지 않는다.
+  - 화면에 보이는 범위만 `최근 6개 기록`처럼 표시해 기록함이 테스트 누적 상태처럼 읽히지 않게 했다.
+- 기록함 목록 카드에 세션 메타데이터를 추가했다.
+  - 각 기록은 `06.01 13:18 · 5문답 · 장면 6/6`처럼 시간, 문답 수, 열린 장면 수를 먼저 보여준다.
+  - 같은 남길 문장이 반복되어도 목록에서 세션 규모가 구분되므로 테스트 더미 목록처럼 보이는 느낌을 줄였다.
+  - 릴리스 스모크와 접근성 자동화가 `record-delete-confirm.tsv`의 `record-archive-first-label` 상태로 문답/장면 메타데이터 표시를 확인한다.
+- 의견 남기기 화면의 저장 조건을 더 앞에 보이게 했다.
+  - 첫 안내 문장은 플레이어용 소감 안내로 유지하고, 상태 패널에서 5문답 완료 여부와 메모 필요 여부를 바로 말한다.
+  - 상태 문구를 `저장 가능`, `완주 대기`, `수정 근거 필요`처럼 플레이어가 이해하기 쉬운 저장 조건 중심으로 바꿨다.
+- 의견 남기기 화면의 플레이어 노출 문구를 상용 화면답게 낮췄다.
+  - 화면 안내에서는 `5달러 기준`, `공식 근거`, `빌드/세션 ID` 같은 리뷰 운영 문구를 빼고, `느낀 점`, `완성도 느낌`, `세션 정보는 이 컴퓨터에만 저장`처럼 플레이어가 바로 이해하는 말로 바꿨다.
+  - 저장 TXT/JSON에는 기존 세션 ID, 빌드 ID, 5달러 기준 필드를 유지해 외부 증거 수집과 점수표 검증은 계속 가능하게 했다.
+  - 릴리스 스모크와 상용 UI 문구 QA가 5문답 미완료 긍정 의견 차단 문구와 플레이어용 의견 창 문구를 새 기준으로 확인한다.
+- 전면 패널을 열었을 때 배경 핫스팟 라벨이 섞이지 않게 정리했다.
+  - 질문 노트, 기록함, 기억장, 설정, 정보, 마무리 카드, 의견 창이 열려 있을 때 뒤쪽 `책상`/`기록`/`이동` 라벨을 숨긴다.
+  - 패널을 닫으면 현재 상태를 다시 확인한 뒤 라벨을 복구하므로 질문 화면과 배경 단서 화면의 집중도가 분리된다.
+- 전면 패널 뒤에 후속 질문 쪽지가 남아 보이는 문제도 정리했다.
+  - 단서 미리보기, 기억장, 기록함, 마무리 카드처럼 별도 패널을 읽는 동안 `단정`/`배려`/`호기심` 쪽지를 숨긴다.
+  - 패널을 닫으면 질문 흐름으로 돌아왔을 때만 쪽지를 다시 보여, 보상/기록/검토 화면이 대화 선택지와 경쟁하지 않는다.
+- 전면 패널 시각 정리 상태를 자동 QA에 묶었다.
+  - 스모크 상태 보고서에 후속 질문 쪽지 표시 개수, 핫스팟 라벨 표시 개수, 핫스팟 점 표시 개수를 남긴다.
+  - 설정, 단서 미리보기, 기억장 상태에서 세 값이 모두 0인지 release smoke와 접근성 자동화가 확인한다.
+- 설정 토글 상태를 더 명확하게 만들었다.
+  - 움직임 줄임과 읽기 쉬움은 켜짐/꺼짐을 버튼 라벨에 직접 표시하고, 내장 답변은 `서버 사용`/`내장만`으로 현재 답변 경로를 표시한다.
+  - 접근성 스모크 상태 보고서가 `움직임 줄임 켜짐`, `읽기 쉬움 켜짐`, `소리 기본` 라벨을 확인한다.
+- 의견 남기기 화면의 문제 단계 버튼을 플레이어가 바로 이해하게 바꿨다.
+  - 저장 데이터는 기존 `없음`/`P2`/`P1`/`P0` 값을 유지하고, 화면 라벨은 `문제 없음`, `사소한 문제`, `진행 방해`, `진행 불가`로 풀어 쓴다.
+  - 릴리스 스모크와 접근성 자동화가 `feedback-issue-severity-label` 상태로 진행 방해/문제 없음 설명 라벨을 확인한다.
+- 기록함 삭제 확인 흐름에 명시적인 취소 버튼을 추가했다.
+  - `삭제 확정` 상태에서만 `취소` 버튼을 보여, 실수로 기록 삭제 확인 상태에 들어간 플레이어가 패널을 닫지 않고도 빠져나올 수 있다.
+  - 릴리스 스모크가 `record-delete-cancel` 상태로 삭제 확인 화면의 취소 액션 표시를 확인한다.
+- 정보 화면의 로컬 서버 상태 기본 문구를 안정 문구로 바꿨다.
+  - 기본 캡처가 `로컬 서버 확인 중...` 같은 대기 상태로 남지 않고 `로컬 서버 상태는 상태 확인으로 점검합니다.`로 보인다.
+  - 릴리스 스모크와 접근성 자동화가 `about-server-status` 상태로 정보 화면 서버 상태 문구를 확인한다.
+- 시작 화면에서 설정과 정보를 실제 버튼으로 노출했다.
+  - 첫 화면 캡처에서 개인정보/서버 설명과 접근성 설정으로 바로 들어갈 수 있어, 시작 전 신뢰 정보가 숨겨지지 않는다.
+  - 릴리스 스모크가 `start-settings-visible`, `start-about-visible` 상태로 두 버튼 표시를 확인한다.
+- 단축키 QA 증거 이름과 내용을 맞췄다.
+  - 설정 창 캡처를 `settings-shortcut-open.png`로 저장해 단축키로 열린 설정 화면임을 분명히 했다.
+  - 릴리스 스모크와 접근성 자동화가 `shortcut-settings-open.tsv`로 설정 단축키 실행 상태를 확인한다.
+- 소리 설정의 상업 QA 증거를 보강했다.
+  - `소리 기본`, `소리 작게`, `소리 끔` 단계가 버튼 라벨, 효과음 볼륨, 방 분위기음 재생/정지 상태와 일치하는지 스모크 상태 보고서로 남긴다.
+  - 릴리스 스모크와 접근성 자동화가 `sound-default.tsv`, `sound-small.tsv`, `sound-off.tsv`를 확인한다.
+- 답변을 읽는 동안 장면 핫스팟이 대사와 경쟁하지 않게 정리했다.
+  - 답변 본문이 열린 상태에서는 `책상`, `기록`, `이동` 같은 배경 핫스팟 표식과 라벨을 숨긴다.
+  - 후속 질문 쪽지는 남겨 다음 질문 흐름을 유지하되, 답변 읽기 상태에서는 더 낮고 작은 하단 도크 위치로 내려 장면과 아바타를 덜 가린다.
+  - 릴리스 스모크와 접근성 자동화가 `dialogue-reading-focus.tsv`로 핫스팟 0개, 핫스팟 라벨 0개, 후속 질문 표시 유지, 후속 질문 도크 위치를 확인한다.
+- 5문답 루프가 끝나기 전에는 마무리/끝내기 동선을 잠갔다.
+  - 1/5 상태에서는 `끝내기`와 질문 노트의 `마무리` 액션이 비활성화된다.
+  - 5문답 전 비활성 버튼 라벨은 `5문답 후`로 표시해, 플레이어가 왜 결과 화면으로 못 가는지 버튼 자체에서 알 수 있게 했다.
+  - 실제 `ShowClosingCard()` 진입도 5문답 완료 조건을 통과해야 열리므로 버튼 상태와 내부 호출 조건이 일치한다.
+  - 릴리스 스모크와 접근성 자동화가 `answer-source-progress.tsv`, `dialogue-reading-focus.tsv`, 게임패드 질문 진행 상태에서 `finish-button disabled`와 `finish-button-label 5문답 후`를 확인하고, `five-turn-playthrough.tsv`에서 5/5 후 `finish-button enabled`와 `finish-button-label 끝내기`를 확인한다.
+- 런처와 지원 번들의 서버 진단을 더 상용 운영에 맞게 바꿨다.
+  - `LaunchAvatarChat.ps1`는 로컬 서버 자동 시작 후 최대 8초까지 확인하고, 실패하면 내장 근거 답변으로 계속된다는 점과 `CollectSupportBundle.ps1` 진단 경로를 함께 안내한다.
+  - `-NoStartServer` 점검 경로도 서버가 이미 떠 있을 때만 서버를 쓰고 아니면 내장 근거 답변으로 계속된다고 명시해, 운영자가 게임 창 없이 환경을 점검할 때 오해를 줄인다.
+  - `CollectSupportBundle.ps1`는 `/api/config` 실패 사유를 `support_info.json.localServer.error`에 남기며, 릴리즈 감사가 이 진단 필드 생성을 확인한다.
+- 의견 남기기 화면의 완성도 선택 표현을 플레이어 말투로 낮췄다.
+  - 화면 버튼은 `더 필요함`/`보류`/`충분` 대신 `더 다듬기`/`조금 아쉬움`/`충분함`을 보여준다.
+  - 수정 근거 요구와 5문답 완료 요구 상태 문구도 같은 표현을 사용해, 플레이어가 내부 심사표를 보는 느낌을 줄였다.
+  - 저장 TXT/JSON의 판정값은 기존 `부족`/`보류`/`충분` 체계를 유지해 외부 피드백 집계 도구와 점수표 초안 생성은 깨지지 않는다.
+- 긍정 의견이 품질 근거로 쓰이는 조건을 더 엄격하게 했다.
+  - `좋음`/`충분함`/`문제 없음` 조합은 이제 5문답 완료뿐 아니라 마무리 기록 저장까지 끝난 뒤에만 `qualityEvidenceReady=true`가 된다.
+  - 5문답은 끝났지만 마무리 기록이 없으면 의견 저장 전에 `마무리 기록을 저장한 뒤` 안내를 보여줘, 외부 품질 근거가 실제 완주 루프를 빠뜨리지 않게 했다.
+  - 피드백 JSON에는 `positiveEvidenceRequiresEndingRecord`와 `endingRecordSavedThisSession`을 함께 남기고, export 검증이 `qualityEvidenceReady=true`와 마무리 기록 저장 상태의 일관성을 확인한다.
+  - `ExportFeedbackToCommercialQualityScorecard.ps1`도 `ending-record-needed`와 `ending-record-missing`을 점수표 초안에 반영해, 마무리 기록 없는 긍정 피드백이 핵심 루프 점수를 과하게 올리지 않게 했다.
+  - 전체 런타임 스모크에는 `playtest-feedback-require-ending-record.tsv`를 추가해, 5문답은 끝났지만 마무리 기록이 없는 긍정 의견이 파일로 저장되지 않고 `ending-record-needed` 상태로 남는지 별도로 확인하게 했다.
+
+## 현재 판단
+
+첫 화면은 Paperlogy 적용 후 이전보다 훨씬 제품 화면처럼 보이며, 저장된 진행이 있을 때도 진행 미리보기와 주요 진입 버튼 4개가 카드 안에서 균형 있게 읽히도록 정리됐다. 게임플레이 화면도 후속 질문 카드가 줄어들고 대화창에서 떨어지면서 가장 큰 cheap UI 요소는 완화됐다. 답변을 읽는 동안에는 배경 핫스팟 표식이 숨겨지고 후속 질문 쪽지가 하단 도크처럼 낮아져, 대사, 후속 질문, 장면 조작 힌트가 한꺼번에 경쟁하던 느낌도 줄었다. 핫스팟 라벨, 대화 패널, 질문 노트, 마무리 카드, 기록함도 장면의 전시실 톤에 더 맞게 정리됐다. 단서 미리보기는 `질문하기`와 `닫기`가 바로 보이도록 바뀌어 초반 상호작용의 망설임이 줄었다. 특히 질문 노트는 첫 질문을 고르는 핵심 진입점답게 폭, 제목, 탭, 진행도, 장면 선택 버튼 대비가 정리되어 이전보다 덜 흐릿하고 더 의도된 UI처럼 보인다. 질문 노트나 기록함 같은 전면 패널이 열렸을 때는 뒤쪽 핫스팟 라벨과 후속 질문 쪽지가 사라져, 패널 텍스트와 배경 단서가 서로 경쟁하지 않는다. `장면`/`기록` 탭도 진행 요약과 역할 구분이 생겨 단순 문단이 아니라 플레이어의 진행 상태를 확인하는 작은 상태판처럼 읽힌다. 마무리/끝내기 동선은 5문답 완료 전에는 잠기고 5/5 이후에만 열려, 세션이 너무 빨리 결과 화면으로 빠지는 느낌도 줄었다. 마무리 카드는 중앙 문장과 세션 요약이 종이 질감에 묻히지 않고, 하단 선택지와 저장/닫기 버튼도 서로 눌리지 않아 5문답 완료 후 결과 화면으로 더 잘 읽힌다. 기억장은 여섯 장면을 모았을 때 배경에 묻히던 느낌을 줄이고, 완료 배지와 닫기 버튼까지 더 분명해져 수집 결과를 확인하는 보상 화면처럼 읽힌다. 기록함은 선택한 기록의 날짜, 문답 수, 열린 장면 수, 남길 문장을 목록과 미리보기 헤더에 함께 보여 저장 결과를 서로 구분하기 쉬워졌다. 긴 본문은 아래 스크롤에 담겨 저장 결과를 다시 확인하는 화면처럼 더 분명해졌다. 기록이 많이 쌓인 상태에서도 목록 제목은 `최근 6개 기록`처럼 플레이어에게 필요한 범위만 말하므로 테스트 누적 수치가 노출되는 느낌이 줄었다. 기록함과 정보 화면은 삭제 확인 안내가 별도 패널로 분리되어 로컬 저장/삭제 흐름이 더 신뢰감 있게 보인다. 특히 정보 화면은 로컬 서버 상태, 저장 삭제 안내, 하단 버튼이 서로 덜 눌려 보여 개인정보/저장 정책을 확인하는 화면답게 더 정돈됐다. 대화 패널에는 세션 진행도와 답변 출처가 보이므로 플레이어가 5문답 구조와 서버/내장 답변 상태를 더 쉽게 이해할 수 있다. 의견 저장 창은 외부 증거 수집 기능을 유지하면서도 화면에는 5달러/공식 근거/빌드 ID 같은 운영 문구를 드러내지 않아, 실제 플레이어가 보는 소감 창처럼 더 자연스럽게 읽힌다. 저장 파일에는 세션 ID와 빌드 ID가 남으므로 플레이테스트 증거를 점수표와 이슈 triage로 옮기는 흐름은 유지된다. 의견 창 캡처도 선택된 텍스트 하이라이트와 라벨 겹침이 줄어 외부 리뷰 자료로 쓰기 편해졌다. 상점 스크린샷, Steam 캡슐 자산, Windows 패키지, Steam 제출 패키지, SteamPipe 스테이징 패키지는 자동 QA를 통과한 상태다.
+
+아직 "$5 Steam quality 완료"라고 보기는 어렵다. 로컬 자동 QA와 제출 패키지 기준으로는 Steam 상점 제출 자료가 준비됐고 내부 품질 점수도 4.0까지 올라왔지만, 외부 플레이테스트, 실제 접근성 검토, 외부 아트 리뷰, 최종 트레일러 리뷰, Steam 관리자/법무 최종 증거가 없어서 최종 출시 후보는 보류다.
+
+## 남은 갭
+
+- 외부 플레이테스트가 아직 없다.
+- 후속 질문 카드 위치는 개선됐지만, 실제 플레이테스트에서 장면 오브젝트와 시선 흐름을 방해하지 않는지 확인해야 한다.
+- 스토어 페이지용 스크린샷, 캡슐 이미지, 트레일러는 자동 QA를 통과했지만 외부 시선 기준의 상품성 검토가 아직 없다.
+- 전체 접근성 QA는 문서와 일부 스모크 기준에 머물러 있다.
+- 서버 실패와 로컬 답변은 스모크로 확인됐지만, 실제 API 응답 품질과 10분 이상 사람 기준 장시간 플레이 검증이 부족하다.
+- 공식 5달러 품질 점수표는 외부 리뷰어와 실제 증거 경로로 아직 채워지지 않았다.
+
+## 다음 우선순위
+
+1. 외부 참가자 5명 이상의 5문답 세션 증거를 수집한다.
+2. 실제 보조기기/확대/키보드 전용 조건으로 접근성 검토를 진행한다.
+3. 키아트와 캡슐을 외부 아트 리뷰어에게 검토받는다.
+4. 실제 조작 녹화 기반 최종 트레일러와 자막을 확정한다.
+5. `COMMERCIAL_QUALITY_SCORECARD.tsv`를 외부 증거 기준으로 채우고 `RunCommercialLaunchGate.ps1 -RequireLaunchReady`를 통과시킨다.
+

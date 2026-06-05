@@ -1,0 +1,13 @@
+{
+  "name": "interviewee1-clone-ai",
+  "version": "1.0.0",
+  "private": true,
+  "description": "3조 인터뷰 자료 기반 대화 앱",
+  "scripts": {
+    "start": "node server.js",
+    "check": "node --check server.js"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

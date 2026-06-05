@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>겉!=속</title>
+    <link rel="stylesheet" href="styles.css">
+  </head>
+  <body>
+    <main class="shell">
+      <section class="stage-panel" aria-label="인터뷰 장면">
+        <header class="brand-row">
+          <div>
+            <p class="eyebrow">Interview Scene</p>
+            <h1>겉!=속</h1>
+          </div>
+          <div class="brand-actions">
+            <span class="api-pill" id="apiPill">연결 확인 중</span>
+            <button type="button" id="fullscreenButton" class="ghost-button">전체 화면</button>
+          </div>
+        </header>
+
+        <div class="avatar-stage" id="avatarStage" data-state="idle">
+          <div class="room-back" aria-hidden="true">
+            <div class="route-grid"></div>
+          </div>
+          <div class="avatar" aria-hidden="true">
+            <div class="avatar-head">
+              <span class="hair"></span>
+              <span class="eye left"></span>
+              <span class="eye right"></span>
+              <span class="mouth"></span>
+            </div>
+            <div class="avatar-body">
+              <span class="neck"></span>
+              <span class="jacket"></span>
+              <span class="hand left"></span>
+              <span class="hand right"></span>
+            </div>
+          </div>
+          <div class="desk" aria-hidden="true">
+            <span class="screen"></span>
+            <span class="keyboard"></span>
+            <span class="contact-shadow left"></span>
+            <span class="contact-shadow right"></span>
+          </div>
+          <div class="crutch" aria-hidden="true">
+            <span></span>
+            <span></span>
+          </div>
+          <div class="wheel" aria-hidden="true"></div>
+          <div class="status-card">
+            <span id="avatarStateLabel">대기 중</span>
+            <strong>전시 대화</strong>
+            <p>목발, 자취방, 책상과 일상에 대해 답합니다.</p>
+          </div>
+        </div>
+
+        <section class="source-card" id="sourceCard" aria-label="근거 자료" hidden>
+          <div class="section-title">
+            <span>근거</span>
+          </div>
+          <div id="sourceList" class="source-list"></div>
+        </section>
+
+        <section class="memory-card" id="memoryCard" aria-label="확장 답변 관리" hidden>
+          <div class="section-title">
+            <span>확장 답변</span>
+            <div class="memory-toolbar">
+              <span id="memoryCount" class="memory-count">0개</span>
+              <button type="button" id="memoryRefreshButton" class="ghost-button">새로고침</button>
+            </div>
+          </div>
+          <div id="memoryList" class="memory-list"></div>
+        </section>
+      </section>
+
+      <section class="chat-panel" aria-label="대화">
+        <header class="chat-header">
+          <div>
+            <p class="eyebrow">Interview Chat</p>
+            <h2>겉!=속</h2>
+          </div>
+          <div class="voice-controls">
+            <button type="button" id="speakToggle" class="icon-button active" aria-pressed="true" title="음성 답변">음성</button>
+            <button type="button" id="resetButton" class="icon-button" title="대화 초기화">초기화</button>
+          </div>
+        </header>
+
+        <div id="chatLog" class="chat-log" aria-live="polite"></div>
+
+        <div class="prompt-strip" id="promptStrip" aria-label="추천 질문"></div>
+
+        <form id="composer" class="composer">
+          <button type="button" id="micButton" class="mic-button" title="마이크로 묻기">
+            <span class="mic-dot"></span>
+            마이크
+          </button>
+          <input id="messageInput" type="text" autocomplete="off" placeholder="목발, 자취방, 도움, 직장생활..." />
+          <button type="submit" class="send-button">전송</button>
+        </form>
+      </section>
+    </main>
+
+    <script src="app.js"></script>
+  </body>
+</html>

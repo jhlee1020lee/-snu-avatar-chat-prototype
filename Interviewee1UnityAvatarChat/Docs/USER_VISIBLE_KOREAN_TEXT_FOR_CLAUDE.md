@@ -1,0 +1,986 @@
+# Claude Code 전달용: 사용자에게 보이는 한국어 문구만
+
+Claude에게 요청할 말:
+
+이 문서는 Unity 게임 및 연결 서버에서 사용자/테스터/운영자 화면에 직접 보일 수 있는 한국어 문구만 모은 목록입니다. 게임명은 반드시 `겉!=속`으로 유지해 주세요. 문구를 자연스러운 한국어로 다듬되, 사실관계와 개인정보 보호 범위는 바꾸지 말고, 확인되지 않은 병명/회사명/학교명/가족사/구체 장소/개인 취향을 새로 만들지 마세요. 버튼/탭/상태 문구는 짧고 명확하게, 대화 답변은 담백한 1인칭 전시 대화 톤으로 고쳐 주세요. 코드 식별자, JSON 구조, 정규식, 저장 키, 로직은 건드리지 말고 문구 값만 바꾸세요. 아래 목록 중 실제 사용자에게 보이지 않는 문구라고 판단되는 항목은 고치지 말고 이유를 남겨 주세요. 수정 후에는 최소한 `node --check Interviewee1CloneAI/server.js`와 Unity 컴파일 확인을 해 주세요.
+
+수집 기준:
+- 포함: 버튼, 탭, 제목, 안내, 상태, 오류, 대화 답변, 추천 질문, 장면/근거 표시 문구
+- 제외: 내부 프롬프트, 분류 키워드, 정규식, 테스트/스모크 QA 문구, 빌드/문서/로그 전용 문구
+- 원본 전체 수집본은 `Interviewee1UnityAvatarChat/Docs/KOREAN_TEXT_POLISH_FOR_CLAUDE.md`에 남겨 두었습니다. 이 파일은 그중 사용자 노출 가능성이 있는 문구만 추린 버전입니다.
+
+총 항목 수: 937
+
+## Unity 게임 화면 문구
+메인 화면, 버튼, 질문 노트, 대화창, 진행 요약, 장면 카드, 상태/오류 표시 등 플레이 화면에 표시되는 문구입니다.
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:15` private const string GameTitle = "겉!=속";
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:16` private const string GameSubtitle = "처음 보인 장면을 따라가며, 한 사람의 하루를 묻습니다.";
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:18` private const string ServerStatusIdleText = "서버 답변 연결을 확인 중입니다.";
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:19` private const string ServerRequiredCheckingText = "서버 연결 확인 중입니다. 서버가 정상일 때만 시작할 수 있습니다.";
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:20` private const string ServerRequiredBlockedText = "서버 연결 필요 · 시작 파일로 서버를 먼저 켠 뒤 다시 실행해 주세요.";
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:32` private const string ThinkingReplyText = "생각을 정리하고 있어요.";
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:46` private const string OpeningText = "와줘서 고마워요. 책상 위 단서를 살펴보거나 질문 노트를 열어 보세요.";
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:101` "목발을 먼저 봤을 때 놓치기 쉬운 하루의 장면은 무엇인가요?",
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:102` "도움이 필요해 보여도 어떤 말로 먼저 물어보는 게 편한가요?",
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:103` "처음 가는 장소에서는 이동 전에 어떤 정보를 먼저 확인하나요?",
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:104` "혼자 사는 방에서는 어떤 생활의 선택을 직접 정하게 되나요?",
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:105` "직장 일과 박사과정 공부는 하루 안에서 어떻게 이어지나요?",
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:106` "목발 너머의 생활을 보려면 어떤 장면까지 더 물어봐야 하나요?",
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:107` "직장에서 필요한 도움을 설명할 때 어떤 방식이 가장 자연스럽나요?",
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:108` "함께 일하는 사람이 상황을 모를 때 무엇부터 말해 주는 편인가요?",
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:109` "어떤 업무 장면에서 기여를 느끼나요?",
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:110` "노트북과 메모는 이동 이야기 너머의 어떤 생활을 보여주나요?",
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:111` "교통 정보나 지원 서비스는 이동 계획에 어떤 도움을 주나요?",
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:112` "엘리베이터나 화장실 정보가 하루의 피로와 어떻게 연결되나요?",
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:113` "자취를 시작한 뒤 스스로 설명해야 하는 일이 어떻게 달라졌나요?",
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:114` "도움을 받을 때 설명할 시간이 필요하다는 말은 어떤 뜻인가요?",
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:115` "혼자 할 수 있는 부분을 존중하는 도움은 어떤 모습인가요?",
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:116` "전시에서 자취방과 책상이 함께 보여야 하는 이유는 무엇인가요?",
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:117` "끈기라는 말은 대단한 극복담보다 어떤 태도에 가까운가요?",
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:118` "게임과 코인노래방 같은 취미가 전시에서 빠지면 무엇을 놓치게 되나요?"
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:123` "일상",
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:124` "이동",
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:125` "도움",
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:126` "일과 공부",
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:127` "독립",
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:128` "취미"
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:133` "목발보다 먼저 있는 하루",
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:134` "처음 가는 곳에서 먼저 살피는 길",
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:135` "좋은 의도보다 필요한 말",
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:136` "책상 앞에서 이어지는 일과 공부",
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:137` "생활을 직접 정하며 생긴 감각",
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:138` "쉬는 시간까지 보여 주는 입체감"
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:143` "목발을 짚고 하루를 시작할 때 가장 먼저 신경 쓰는 장면은 무엇인가요?",
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:144` "처음 가는 곳에서는 이동 전에 어떤 조건을 먼저 확인하나요?",
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:145` "도움을 건네기 전에 어떤 말로 먼저 물어보는 게 좋을까요?",
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:146` "책상과 노트북은 일하고 공부하는 하루에서 어떤 자리인가요?",
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:147` "혼자 사는 방은 독립이나 자기이해와 어떻게 연결되나요?",
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:148` "게임이나 코인노래방 같은 취미는 하루의 분위기를 어떻게 바꾸나요?"
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:153` "단정",
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:154` "배려",
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:155` "호기심",
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:156` "거리두기"
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:161` "목발",
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:162` "책상",
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:163` "표정"
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:168` "일상",
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:169` "이동",
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:170` "도움",
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:171` "일과 공부",
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:172` "독립",
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:173` "취미"
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:178` "처음엔 목발이 먼저 보일 수 있어요. 하지만 하루는 거기서 끝나지 않아요. 몸 상태를 보고, 갈 곳을 확인하고, 오늘 해야 할 일을 하나씩 정리하며 시작합니다.",
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:179` "처음 가는 곳에서는 목적지만 보지 않아요. 입구와 엘리베이터, 화장실, 돌아올 길까지 먼저 떠올립니다. 걱정이 많아서가 아니라, 하루를 덜 무리하게 보내기 위해서예요.",
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:180` "도움은 고맙지만, 방식이 먼저예요. 바로 잡아 주기보다 \"어떻게 도와드릴까요?\" 하고 물어봐 주면 좋아요. 제 몸과 상황은 제가 설명할 시간이 필요하니까요.",
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:181` "책상 앞에서는 다른 장면이 보입니다. 직장 일, 컴퓨터공학 박사과정, 읽고 정리하는 시간이 이어져요. 기다리는 사람만이 아니라, 제 몫을 해내는 사람이기도 합니다.",
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:182` "자취방은 독립을 연습한 곳입니다. 공과금, 생활비, 집안일을 챙기며 내 생활을 내가 정한다는 감각을 배웠어요. 불편함만 있는 곳은 아니었습니다.",
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:183` "쉬는 시간도 제 하루입니다. 게임을 하고, 코인노래방에 가고, 좋아하는 걸 챙깁니다. 이동 이야기만 남으면 사람은 납작해져요."
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:188` "일상",
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:189` "이동",
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:190` "도움",
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:191` "일과 공부",
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:192` "독립",
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:193` "취미"
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:198` "질문하기 전에 제 이야기를 먼저 충분히 들려드릴게요. 저는 30대 초반의 남성이고, 지체장애가 있어 목발과 휠체어를 이동 도구로 사용합니다. 하지만 제 이야기는 이동 도구 하나로 끝나지 않습니다. 회사에 다니고, 컴퓨터공학 박사과정을 이어가고, 자취방에서 생활을 직접 챙기며 살아갑니다.",
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:199` "처음 보는 사람에게는 목발이 가장 먼저 보일 수 있어요. 저도 그 시선을 이해합니다. 다만 목발은 불편함만 보여주는 물건이 아니라 밖으로 나가 사람을 만나고 일하러 가는 하루를 이어주는 도구입니다. 하루를 시작할 때는 몸 상태와 길의 상태를 함께 생각하게 되고, 처음 가는 곳이라면 입구, 엘리베이터, 화장실, 돌아올 길까지 먼저 확인하게 됩니다.",
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:200` "도움에 대해서도 먼저 알고 들어주면 좋겠습니다. 도움은 마음보다 방법이 중요할 때가 있어요. 바로 잡아 주거나 끌어 주기보다, 어떻게 도우면 편한지 먼저 물어봐 주는 것이 좋습니다. 저에게도 어디를 잡으면 편한지, 어느 방향이 나은지, 혼자 할 수 있는 부분은 무엇인지 설명할 시간이 필요합니다.",
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:201` "책상 앞에서는 또 다른 장면이 보입니다. 저는 직장 일과 컴퓨터공학 박사과정을 같이 이어가고 있습니다. 노트북, 메모, 자료가 놓인 책상은 누군가의 배려를 기다리는 사람이 아니라 일을 정리하고 공부를 계속하는 사람을 보여줍니다. 목발이 이동의 조건을 보여준다면, 책상은 그 조건을 안고도 이어지는 일상의 밀도를 보여줍니다.",
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:202` "자취방도 중요한 장면입니다. 집안일, 생활비, 공과금, 시간 관리처럼 평범해 보이는 일을 직접 챙기면서 내 생활을 내가 굴린다는 감각이 생겼습니다. 자취방은 장애를 설명하는 공간이 아니라, 독립과 생활의 감각을 보여주는 공간입니다. 대신 해 주던 일을 직접 하다 보면 생활이 생각보다 많은 선택으로 이루어져 있다는 것도 알게 됩니다.",
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:203` "마지막으로, 제 하루에는 쉬는 시간도 있습니다. 게임을 하고 코인노래방에 가고 좋아하는 것을 챙기는 시간도 제 생활의 일부입니다. 이동 이야기만 남으면 사람은 납작해집니다. 이제 목발, 도움, 책상, 자취방, 취미 중에서 먼저 궁금한 장면을 골라 질문해 주세요. 정답을 맞히는 것이 아니라, 처음 보인 겉모습에서 한 사람의 속 생활로 들어가는 질문을 시작하는 겁니다."
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:208` "목발",
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:209` "처음 가는 길",
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:210` "도움 받는 순간",
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:211` "책상",
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:212` "자취방",
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:213` "취미"
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:218` "하루를 준비하는 방식",
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:219` "무리하지 않기 위한 확인",
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:220` "먼저 묻고 조율하는 관계",
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:221` "일과 공부를 이어가는 자기 몫",
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:222` "생활을 직접 정하는 감각",
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:223` "좋아하는 것으로 입체적인 사람"
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:228` "짧은 정적 0.8초 · 낮은 방 톤 · 목발 쪽으로 천천히 시선 이동",
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:229` "짧은 정적 0.7초 · 문밖 소리 낮춤 · 이동 경로 쪽으로 시선 이동",
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:230` "짧은 정적 0.9초 · 손 닿는 소리 낮춤 · 도움 장면에 시선 고정",
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:231` "짧은 정적 0.7초 · 키보드 소리 낮춤 · 책상 조명 강조",
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:232` "짧은 정적 0.8초 · 방 톤 유지 · 자취방 단서에 시선 이동",
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:233` "짧은 정적 1.0초 · 소리 여백 확보 · 취미 단서에서 마무리"
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:419` private string lastTheme = "시작";
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:420` private string lastEvidenceLine = "아직 표시할 자료가 없습니다.";
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:421` private string lastAnswerSource = "대기";
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:462` "도움은 묻는 말에서 시작된다.",
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:463` "처음 가는 길은 미리 살피는 하루다.",
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:464` "처음 보인 장면은 하루와 같은 선 위에 있다."
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:469` "바로 돕기 전에 먼저 묻는 태도.",
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:470` "입구와 엘리베이터, 화장실과 돌아올 길까지 포함한 하루.",
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:471` "목발, 책상, 표정 뒤에 이어진 일과 방, 취미."
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:476` "도움 방식",
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:477` "이동 확인",
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:478` "사람 보기"
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:647` PresentAssistant(OpeningText, "오늘의 시작");
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:648` UpdateLeadPrompts("먼저 이런 순서로 이야기를 열어볼게요.");
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:650` statusText.text = "서버 연결 확인 중";
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:703` statusText.text = $"녹음 중... {seconds:0.0}초";
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:1706` Text wallLabelText = CreateText("Gallery Wall Exhibit Label Text", wallLabel.transform, "기록 전시\n인터뷰", 18, new Color(0.22f, 0.15f, 0.09f, 0.88f), TextAnchor.MiddleCenter, FontStyle.Bold);
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:1717` Text badgeText = CreateText("Gallery Event Badge Text", eventBadge.transform, "작가와의 대화", 13, new Color(0.98f, 0.90f, 0.72f, 0.78f), TextAnchor.MiddleCenter, FontStyle.Bold);
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:1854` Text namePlateText = CreateText("Desk Korean Interview Nameplate Text", namePlate.transform, "전시 인터뷰", 15, new Color(0.98f, 0.89f, 0.68f, 0.86f), TextAnchor.MiddleCenter, FontStyle.Bold);
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:2106` CreateHotspot(parent, "책상", new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(-870f, -174f), new Vector2(-420f, -44f), "책상 앞에서 이어지는 하루는 어떤 모습인가요?", new Vector2(92f, 118f), new Vector2(104f, 36f));
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:2107` CreateHotspot(parent, "기록", new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(-170f, 116f), new Vector2(210f, 388f), "요즘 자주 떠올리는 말이 있나요?", new Vector2(24f, -54f), new Vector2(104f, 36f));
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:2108` CreateHotspot(parent, "이동", new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(470f, -40f), new Vector2(820f, 362f), "처음 가는 곳에서는 무엇을 먼저 확인하나요?", new Vector2(-94f, 270f), new Vector2(104f, 36f));
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:2467` hotspotPreviewTitleText = CreateText("Hotspot Preview Title", card.transform, "단서", 18, new Color(0.20f, 0.13f, 0.06f, 0.98f), TextAnchor.UpperLeft, FontStyle.Bold);
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:2482` Text askLabel = CreateText("Label", askButton.transform, "질문하기", 15, new Color(1f, 0.96f, 0.86f, 0.98f), TextAnchor.MiddleCenter, FontStyle.Bold);
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:2491` Text closeLabel = CreateText("Label", closeButton.transform, "닫기", 14, new Color(1f, 0.96f, 0.86f, 0.92f), TextAnchor.MiddleCenter, FontStyle.Bold);
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:2508` ShowSceneFocus(label, resolvedFocusPosition, "단서 확인", 2.6f);
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:2509` pendingHotspotLabel = string.IsNullOrWhiteSpace(label) ? "단서" : label.Trim();
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:2513` hotspotPreviewTitleText.text = string.IsNullOrWhiteSpace(pendingHotspotLabel) ? "단서" : $"단서 · {pendingHotspotLabel}";
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:2534` if (statusText != null) statusText.text = "질문 확인";
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:2610` ShowSceneFocus(label, position, "살펴보기", 1.05f);
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:2617` activeSceneFocusLabel = string.IsNullOrWhiteSpace(label) ? "장면" : label.Trim();
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:2618` string safeAction = string.IsNullOrWhiteSpace(action) ? "장면 반응" : action.Trim();
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:2619` sceneFocusSlipVisible = !string.Equals(safeAction, "단서 확인", StringComparison.Ordinal);
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:2887` default: return "장면";
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:2903` statusText = CreateText("Status", parent, "대화 준비", 13, new Color32(226, 232, 240, 0), TextAnchor.MiddleRight, FontStyle.Bold);
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:2988` speakerText = CreateText("Speaker", namePlate.transform, "답변", 10, new Color(0.20f, 0.13f, 0.07f, 0.88f), TextAnchor.MiddleCenter, FontStyle.Bold);
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:2991` dialogueSizeDownButton = CreateButton("Dialogue Size Down", panel.transform, "가-", new Color32(30, 41, 59, 226), Color.white, 14);
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:2996` dialogueSizeUpButton = CreateButton("Dialogue Size Up", panel.transform, "가+", new Color32(30, 41, 59, 226), Color.white, 14);
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:3053` dialoguePageCueText = CreateText("Dialogue Page Cue Text", scrollCue.transform, "다음 대사 보기", 14, new Color32(255, 248, 225, 255), TextAnchor.MiddleCenter, FontStyle.Bold);
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:3062` micButton = CreateButton("Mic Button", panel.transform, "녹음", new Color(0.70f, 0.44f, 0.23f, 0.22f), new Color(1f, 0.96f, 0.86f, 0.68f), 12);
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:3068` sendButton = CreateButton("Send Button", panel.transform, "전송", new Color(0.70f, 0.44f, 0.23f, 0.62f), new Color(1f, 0.96f, 0.86f, 0.96f), 17);
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:3072` storyNextButton = CreateButton("Story Mode Next Button", panel.transform, "다음 장면", new Color(0.70f, 0.44f, 0.23f, 0.70f), new Color(1f, 0.96f, 0.86f, 0.96f), 14);
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:3077` storyQuestionButton = CreateButton("Story Mode Question Button", panel.transform, "직접 질문", new Color(0.16f, 0.11f, 0.07f, 0.56f), new Color(1f, 0.96f, 0.86f, 0.92f), 14);
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:3082` storyFinishButton = CreateButton("Story Mode Finish Button", panel.transform, "5문답 후", new Color(0.12f, 0.09f, 0.06f, 0.30f), new Color(1f, 0.96f, 0.86f, 0.72f), 13);
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:3087` finishButton = CreateButton("Finish Conversation Button", panel.transform, "끝내기", new Color(0.12f, 0.09f, 0.06f, 0.30f), new Color(1f, 0.96f, 0.86f, 0.72f), 13);
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:3116` progressText = CreateText("Progress Text", tracker.transform, "0/5 질문 · 답변 대기", 12, new Color32(46, 32, 18, 232), TextAnchor.MiddleLeft, FontStyle.Bold);
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:3200` action.text = $"추천 질문 {i + 1} · 누르면 바로 질문";
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:3260` noteTitleText = CreateText("Note Title", screen.transform, "무엇을 물어볼까요?", 18, new Color32(15, 23, 42, 248), TextAnchor.UpperLeft, FontStyle.Bold);
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:3277` string[] tabLabels = { "질문", "장면", "기록" };
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:3317` string[] chapters = { "일상", "이동", "도움", "일과 공부", "독립", "취미" };
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:3344` moreButton = CreateNoteActionButton("More Button", noteQuestionBodyObject.transform, "더 듣기", true);
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:3345` closingButton = CreateNoteActionButton("Closing Button", noteQuestionBodyObject.transform, "남길 문장 보기", false);
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:3412` ? "지금 열린 장면"
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:3413` : (currentNoteTabIndex == 2 ? "지난 대화" : "무엇을 물어볼까요?");
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:3452` string theme = string.IsNullOrWhiteSpace(lastTheme) ? "아직 없음" : lastTheme;
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:3454` ? "질문을 고르면 이곳에 장면이 열립니다."
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:3455` : $"{theme} 장면이 열렸습니다. 다음 답변도 이 흐름에 맞춰 이어집니다.";
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:3457` string memoryNote = "아직 기억장에 남긴 메모가 없습니다.";
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:3467` ? "깊은 기록"
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:3468` : "얕은 기록";
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:3470` string attitude = string.IsNullOrWhiteSpace(lastQuestionAttitude) ? "아직 없음" : lastQuestionAttitude;
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:3475` builder.Append("<b><color=#1E293B>진행 요약</color></b>  ");
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:3476` builder.Append(SanitizeRichText($"{opened}/6 장면 · 깊은 기록 {deepCount}/6")).AppendLine();
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:3478` builder.Append("<b>첫 인상</b>  ").Append(SanitizeRichText(BuildFirstImpressionDisplayLabel())).AppendLine();
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:3479` builder.Append("<b>겉!=속 경로</b>  ").Append(SanitizeRichText(ShortenForCard(BuildFirstImpressionArcState(), 42))).AppendLine();
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:3480` builder.Append("<b>현재 장면</b>  ").Append(SanitizeRichText($"{theme} · {depth}")).AppendLine();
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:3481` builder.Append("<b>질문 태도</b>  ").Append(SanitizeRichText(attitude)).AppendLine();
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:3482` builder.Append("<b>답변 출처</b>  ").Append(SanitizeRichText(FormatAnswerSourceForPlayer())).AppendLine();
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:3484` builder.Append("<b><color=#7C2D12>장면 메모</color></b>").AppendLine();
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:3487` builder.Append("<b><color=#7C2D12>기억장 메모</color></b>").AppendLine();
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:3496` return "<b><color=#1E293B>최근 대화 없음</color></b>\n<color=#B1713A>────────────────</color>\n질문을 고르면 최근 질문과 답변이 이곳에 남습니다.";
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:3500` builder.Append("<b><color=#1E293B>최근 대화</color></b>  ");
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:3501` builder.Append(SanitizeRichText($"{conversationTurns}/5 질문")).AppendLine();
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:3508` string role = message.role == "user" ? "나" : "답변";
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:3540` Text title = CreateText("Closing Card Title", card.transform, "오늘 남길 문장", 30, new Color32(30, 41, 59, 255), TextAnchor.UpperLeft, FontStyle.Bold);
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:3543` Text subtitle = CreateText("Closing Card Subtitle", card.transform, "다섯 번의 대화 뒤, 가져갈 문장을 고릅니다.", 16, new Color32(71, 85, 105, 255), TextAnchor.UpperLeft, FontStyle.Normal);
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:3602` closingCardSaveButton = CreateNoteActionButton("Closing Card Save", card.transform, "저장 후 보기", true);
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:3610` closingCardContinueButton = CreateNoteActionButton("Closing Card Continue", card.transform, "계속하기", false);
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:3617` statusText.text = "인터뷰를 이어갈 수 있습니다";
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:3621` Button closeButton = CreateNoteActionButton("Closing Card Close", card.transform, "닫기", false);
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:3627` statusText.text = "마무리 카드를 닫았습니다";
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:3631` Button feedbackButton = CreateNoteActionButton("Closing Card Feedback", card.transform, "의견 남기기", false);
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:3680` statusText.text = "기록 저장됨 · 기록함에서 확인";
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:3684` statusText.text = "기록 저장에 실패했습니다";
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:3709` builder.AppendLine($"저장 시각: {DateTime.Now:yyyy-MM-dd HH:mm:ss}");
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:3711` builder.AppendLine("세션 요약");
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:3712` builder.AppendLine($"문답 수: {conversationTurns}");
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:3713` builder.AppendLine($"세션 완성도: {BuildSessionCompletionLine()}");
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:3714` builder.AppendLine($"열린 장면: {discoveredThemes.Count}/{memoryThemes.Length}");
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:3715` builder.AppendLine($"처음 본 것: {BuildFirstImpressionDisplayLabel()}");
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:3716` builder.AppendLine($"겉!=속 경로: {BuildFirstImpressionArcLine()}");
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:3717` builder.AppendLine($"가장 많이 물은 태도: {GetDominantAttitude()}");
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:3718` builder.AppendLine($"깊은 기록: {CountDeepMemories()}/{memoryThemes.Length}");
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:3719` builder.AppendLine(discoveredThemes.Count >= memoryThemes.Length ? "완성 여부: 모든 장면 완성" : "완성 여부: 진행 중");
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:3721` builder.AppendLine("오늘 남길 문장");
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:3724` builder.AppendLine($"선택 이유: {BuildClosingSelectionLine(selected)}");
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:3726` builder.AppendLine($"다음에 이어볼 질문: {BuildNextSessionPromptLine()}");
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:3728` builder.AppendLine("오늘 열린 장면");
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:3733` builder.AppendLine("아직 기억장에 남은 장면이 없습니다.");
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:3744` builder.AppendLine("오늘의 대화");
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:3746` builder.AppendLine(string.IsNullOrWhiteSpace(transcript) ? "아직 저장할 대화가 없습니다." : transcript);
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:3762` builder.AppendLine($"{GameTitle} 의견 메모");
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:3763` builder.AppendLine($"저장 시각: {savedAt:yyyy-MM-dd HH:mm:ss}");
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:3764` builder.AppendLine($"세션 ID: {playtestSessionId}");
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:3765` builder.AppendLine($"빌드 ID: {GetBuildIdForRecord(buildInfo)}");
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:3766` builder.AppendLine($"앱 버전: {GetBuildVersionForRecord(buildInfo)}");
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:3767` builder.AppendLine($"실행 환경: {Application.platform} / {SystemInfo.operatingSystem}");
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:3768` builder.AppendLine($"화면: {Screen.width}x{Screen.height}, 전체화면: {Screen.fullScreen}");
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:3769` builder.AppendLine($"설정: 글자 크기 단계 {dialogueSizeLevel}, 움직임 줄임 {reducedMotionEnabled}, 읽기 쉬운 화면 {highContrastEnabled}, 서버 필수 {(!localAnswerOnly)}, 소리 단계 {soundLevel}");
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:3770` builder.AppendLine($"평가: {rating}");
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:3771` builder.AppendLine($"5달러 기준: {commercialReadiness}");
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:3772` builder.AppendLine($"이슈 등급: {issueSeverity}");
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:3773` builder.AppendLine($"문답 수: {conversationTurns}");
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:3774` builder.AppendLine($"세션 완성도: {BuildSessionCompletionLine()}");
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:3775` builder.AppendLine($"열린 장면: {discoveredThemes.Count}/{memoryThemes.Length}");
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:3776` builder.AppendLine($"열린 장면 태그: {FormatPlaytestTags(GetOpenedSceneTags())}");
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:3777` builder.AppendLine($"처음 본 것: {BuildFirstImpressionDisplayLabel()}");
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:3778` builder.AppendLine($"겉!=속 경로: {BuildFirstImpressionArcLine()}");
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:3779` builder.AppendLine($"다음 질문 방향: {BuildNextSessionPromptLine()}");
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:3780` builder.AppendLine($"주된 질문 태도: {GetDominantAttitude()}");
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:3781` builder.AppendLine($"깊은 기록 수: {CountDeepMemories()}/{memoryThemes.Length}");
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:3782` builder.AppendLine($"마지막 장면: {lastTheme}");
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:3783` builder.AppendLine($"5문답 완료: {(IsCompletedFiveTurnSession() ? "예" : "아니오")}");
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:3784` builder.AppendLine($"마무리 기록 저장: {(HasSavedEndingRecordThisSession() ? "예" : "아니오")}");
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:3785` builder.AppendLine($"긍정 근거 마무리 필요: {(ShouldRequireEndingRecordForPositiveEvidence() ? "예" : "아니오")}");
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:3786` builder.AppendLine($"긍정 근거 사용 가능: {(IsPositiveQualityEvidenceReady() ? "예" : "아니오")}");
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:3787` builder.AppendLine($"선택 초점: {GetPlaytestQualityFocusLabel(selectedPlaytestQualityFocus)} ({GetPlaytestQualityFocusAreaId(selectedPlaytestQualityFocus)})");
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:3788` builder.AppendLine($"품질 영역: {FormatPlaytestTags(qualityAreas)}");
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:3789` builder.AppendLine($"위험 태그: {FormatPlaytestTags(riskTags)}");
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:3790` builder.AppendLine($"증거 등급: {GetPlaytestEvidenceTier()}");
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:3791` builder.AppendLine($"추천 조치: {BuildReviewActionRecommendationLine()}");
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:3792` builder.AppendLine($"상업 품질 근거: {BuildCommercialQualityEvidenceLine()}");
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:3794` builder.AppendLine("메모");
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:3795` builder.AppendLine(string.IsNullOrWhiteSpace(note) ? "입력된 메모가 없습니다." : note);
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:3797` builder.AppendLine("오늘 열린 장면");
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:3801` builder.AppendLine("아직 기억장에 남은 장면이 없습니다.");
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:3811` builder.AppendLine("대화 로그");
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:3813` builder.AppendLine(string.IsNullOrWhiteSpace(transcript) ? "아직 저장할 대화가 없습니다." : transcript);
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:3906` if (rating <= 1) return "헷갈림";
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:3907` if (rating >= 3) return "좋음";
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:3908` return "보통";
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:3913` if (readiness <= 1) return "부족";
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:3914` if (readiness >= 3) return "충분";
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:3915` return "보류";
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:3925` default: return "없음";
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:3933` case 1: return "사소한 문제";
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:3934` case 2: return "진행 방해";
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:3935` case 3: return "진행 불가";
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:3936` default: return "문제 없음";
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:3944` case 1: return "완성도 느낌";
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:3945` case 2: return "문제 단계";
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:3946` case 3: return "주요 영역";
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:3947` default: return "전체 느낌";
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:3971` case 1: return "진행";
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:3972` case 2: return "문장";
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:3973` case 3: return "읽기";
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:3974` case 4: return "조작";
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:3975` case 5: return "신뢰";
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:3976` case 6: return "시각";
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:3977` case 7: return "상점";
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:3978` case 8: return "안정";
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:3979` default: return "전체 느낌";
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:3985` return $"초점: {GetPlaytestQualityFocusLabel(focus)}";
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:4077` return "긍정 근거: 5문답과 마무리 기록이 완료되었습니다. 대화 톤, 조작, 마무리 기록을 함께 검토하세요.";
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:4081` return "근거 보강: 긍정 의견은 5문답 완료 뒤 다시 저장해야 합니다.";
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:4085` return "근거 보강: 마무리 기록 저장 뒤 긍정 의견을 다시 남겨야 합니다.";
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:4089` return $"우선 수정: {GetPlaytestIssueSeverityLabel(selectedPlaytestIssueSeverity)} 문제를 이슈로 등록하고 재검증하세요.";
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:4093` return "수정 후보: 사소한 문제를 P2 이슈로 등록하고 다음 빌드에서 확인하세요.";
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:4097` return "우선 개선: 메모의 품질 영역을 묶고 원인을 재현하세요.";
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:4101` return "판단 보강: 메모의 품질 영역을 다음 외부 리뷰에서 다시 확인하세요.";
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:4104` return "관찰 메모: 대화 로그와 열린 장면을 다음 확인 때 함께 보세요.";
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:4111` return "점수표 후보: 5문답 완료, 마무리 기록 저장, 좋음/충분함/문제 없음이 함께 충족되었습니다.";
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:4115` return "점수표 보류: 긍정 판정 전에 5문답 완료 증거가 필요합니다.";
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:4119` return "점수표 보류: 긍정 판정 전에 마무리 기록 저장 증거가 필요합니다.";
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:4123` return $"점수표 보류: {GetPlaytestIssueSeverityLabel(selectedPlaytestIssueSeverity)} 이슈를 외부 이슈 레지스터에 등록해야 합니다.";
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:4127` return "점수표 보류: 낮은 평가나 부족 판정의 원인을 메모와 대화 로그로 재현해야 합니다.";
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:4131` return "점수표 보류: 5달러 충분 판정 전 다음 외부 리뷰에서 재확인 필요.";
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:4134` return "점수표 참고: 중립 관찰 메모로 품질 영역과 대화 로그를 비교합니다.";
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:4269` builder.Append("태도: ").Append(GetDominantAttitude());
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:4270` builder.Append("    깊은 기록: ").Append(CountDeepMemories()).Append("/").Append(memoryThemes.Length);
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:4275` builder.Append("\n시선 변화: ").Append(shift);
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:4278` builder.Append("\n선택 이유: ").Append(ShortenForCard(BuildClosingSelectionLine(selectedClosingIndex), 82));
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:4281` builder.Append("\n마지막 선택 기록: ").Append(ShortenForCard(lastChoiceConsequenceLine, 88));
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:4283` builder.Append("\n다음 질문: ").Append(ShortenForCard(BuildNextSessionPromptLine(), 82));
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:4286` builder.Append("\n오늘 열린 장면: ");
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:4287` builder.Append(string.IsNullOrWhiteSpace(sceneTags) ? "아직 없음" : sceneTags);
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:4305` return $"{turnLine} · {sceneLine} · 깊은 {deepScenes}/{totalScenes}";
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:4315` return $"{shallow} 장면에 배려/호기심 질문을 더해 보세요.";
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:4321` return $"다음 질문으로 {unopened} 장면을 열어 보세요.";
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:4326` return "얕게 남은 장면을 골라 조금 더 구체적으로 물어보세요.";
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:4329` return "모든 장면이 열렸습니다. 기록함에서 오늘 남긴 문장을 다시 볼 수 있습니다.";
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:4371` label.text = i == recommended ? $"추천 · {closingChoiceLabels[i]}" : closingChoiceLabels[i];
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:4462` return $"처음에는 열린 장면을 따라갔고, 지금은 {deepLine} 보이지 않던 생활의 맥락까지 남겼습니다.";
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:4467` return $"처음에는 {subject} 먼저 보였고, 지금은 {deepLine} 그 뒤의 생활까지 남겼습니다.{BuildFirstImpressionResonanceLine()}";
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:4481` return $" 처음 본 {firstImpression}은 {theme} 깊은 기록까지 이어졌습니다.";
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:4485` return $" 처음 본 {firstImpression}은 {theme} 장면으로 이어졌습니다.";
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:4488` return $" 처음 본 {firstImpression}은 아직 {theme} 장면까지 닿지 않았습니다.";
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:4525` return $"{label}은 아직 질문이 적은 상태에서, 먼저 묻는 태도를 남깁니다.";
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:4528` return $"{label}은 {attitude}의 질문 흐름을 먼저 묻는 태도로 정리합니다.";
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:4534` return $"{label}은 오늘 열린 장면을 하루의 동선으로 묶습니다.";
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:4537` return $"{label}은 처음 본 {impression}과 열린 장면을 하루의 동선으로 묶습니다.";
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:4542` return $"{label}은 깊은 기록 {deepCount}개를 한 사람의 생활로 묶습니다.";
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:4545` return $"{label}은 처음 본 {impression} 뒤에 열린 깊은 기록 {deepCount}개를 한 사람의 생활로 묶습니다.";
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:4584` Text title = CreateText("Memory Book Title", page.transform, "기억장", 22, new Color32(30, 41, 59, 255), TextAnchor.UpperLeft, FontStyle.Bold);
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:4587` memoryBookCountText = CreateText("Memory Book Count", page.transform, "0/6 장면", 13, new Color32(71, 85, 105, 238), TextAnchor.UpperRight, FontStyle.Bold);
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:4590` memoryBookSubtitleText = CreateText("Memory Book Subtitle", page.transform, "책상 위에 남은 장면들", 13, new Color32(71, 85, 105, 232), TextAnchor.UpperLeft, FontStyle.Normal);
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:4690` statusText.text = "기억장을 열었습니다";
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:4724` statusText.text = $"{theme} 장면으로 이어갑니다";
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:4804` return "새 기록: 여섯 장면 완성 · 기록함에서 오늘 남긴 문장을 다시 볼 수 있습니다.";
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:4849` return $"선택 기록: {safeAttitude} 질문 -> {safeTheme} 깊은 기록 · 질문과 단서가 맞물렸습니다.";
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:4853` return $"선택 기록: {safeAttitude} 질문 -> {safeTheme} 깊은 기록 유지 · 이미 열린 속 이야기를 다시 확인했습니다.";
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:4856` return $"선택 기록: {safeAttitude} 질문 -> {safeTheme} 얕은 기록 · 배려/호기심으로 더 깊게 열 수 있습니다.";
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:4920` if (memoryBookCountText != null) memoryBookCountText.text = $"{count}/6 장면 · 깊은 기록 {deepCount}";
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:5025` return $"첫 인상 {firstImpression}이 {theme} 깊은 기록까지 이어졌습니다.";
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:5029` return $"첫 인상 {firstImpression}에서 {theme} 깊은 기록을 더 물어보세요.";
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:5032` return $"첫 인상 {firstImpression}에서 {theme} 장면으로 이어가 보세요.";
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:5039` case "목발": return "이동";
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:5040` case "책상": return "일과 공부";
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:5041` case "표정": return "일상";
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:5074` return "첫 인상을 고르면 생활 장면과 연결됩니다.";
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:5079` return $"{firstImpression} -> {theme} 깊은 기록";
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:5083` return $"{firstImpression} -> {theme} 장면 열림";
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:5086` return $"{firstImpression} -> {theme} 장면 대기";
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:5094` return "첫 인상을 고르면 겉으로 보인 단서가 속의 생활 장면으로 이어집니다.";
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:5099` return $"처음 본 {firstImpression}이 {theme} 깊은 기록까지 이어져, 겉으로 보인 단서와 속의 생활 맥락이 함께 남았습니다.";
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:5103` return $"처음 본 {firstImpression}이 {theme} 장면으로 열렸고, 배려나 호기심 질문으로 더 깊어질 수 있습니다.";
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:5106` return $"처음 본 {firstImpression}을 아직 {theme} 장면으로 이어야 해서, 다음 질문이 겉과 속을 연결하는 역할을 합니다.";
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:5157` if (deep) return $"{canonical} · 깊음";
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:5158` if (opened) return $"{canonical} · 깊게";
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:5159` return $"{canonical} · 열기";
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:5179` return $"장면: 새로 열기 {unopened} · 더 묻기 {shallow} · 깊음 {deep}";
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:5197` return $"{BuildChapterStateSummaryLine()} · 배려/호기심으로 깊게";
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:5208` return $"{sessionLine} · 마지막까지 {remainingQuestions}문답";
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:5217` return $"{attitude} · 깊은 {deepScenes}/{totalScenes}";
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:5229` if (deep) return $"첫 인상 {theme} 깊음";
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:5230` if (opened) return $"첫 인상 {theme} 더 묻기";
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:5231` return $"첫 인상 {theme}";
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:5239` return $"마무리 가능 · {BuildQuestionSessionQualityLine(deepScenes, totalScenes)}";
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:5242` return $"마무리 가능 · {BuildQuestionSessionQualityLine(deepScenes, totalScenes)}";
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:5307` Text title = CreateText("First Impression Title", panel.transform, "먼저 눈에 들어온 장면", 30, new Color32(15, 23, 42, 255), TextAnchor.UpperLeft, FontStyle.Bold);
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:5426` continueButton = CreateButton("Continue Interview Button", startMenuObject.transform, "이어하기", new Color(0.54f, 0.32f, 0.16f, 0.90f), new Color(1f, 0.96f, 0.86f, 0.98f), 16);
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:5435` statusText.text = "저장된 대화를 이어갑니다";
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:5439` startButton = CreateButton("Start Interview Button", startMenuObject.transform, "처음부터", new Color(0.46f, 0.27f, 0.13f, 0.92f), new Color(1f, 0.96f, 0.86f, 0.98f), 16);
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:5443` startNoteButton = CreateButton("Start With Phone Button", startMenuObject.transform, "질문 노트", new Color(0.11f, 0.085f, 0.060f, 0.70f), new Color32(236, 224, 198, 235), 14);
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:5447` startStoryButton = CreateButton("Start Story Mode Button", startMenuObject.transform, "이야기 보기", new Color(0.16f, 0.11f, 0.07f, 0.72f), new Color32(236, 224, 198, 238), 14);
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:5481` Text title = CreateText("Pause Menu Title", panel.transform, "잠시 멈춤", 30, new Color32(15, 23, 42, 255), TextAnchor.UpperLeft, FontStyle.Bold);
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:5484` Text body = CreateText("Pause Menu Body", panel.transform, "대화를 이어가거나, 처음부터 다시 시작할 수 있습니다.", 16, new Color32(71, 85, 105, 255), TextAnchor.UpperLeft, FontStyle.Normal);
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:5487` Button resumeButton = CreateButton("Resume Button", panel.transform, "계속하기", new Color32(177, 113, 58, 245), Color.white, 17);
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:5491` Button settingsButton = CreateButton("Settings From Pause Button", panel.transform, "설정", new Color32(30, 41, 59, 238), Color.white, 17);
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:5495` Button restartButton = CreateButton("Restart Button", panel.transform, "처음부터", new Color32(30, 41, 59, 238), Color.white, 17);
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:5499` Button quitButton = CreateButton("Quit From Pause Button", panel.transform, "종료", new Color(1f, 0.99f, 0.95f, 0.96f), new Color32(30, 41, 59, 255), 17);
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:5508` return "먼저 본인 이야기를 충분히 듣고, 궁금한 장면을 골라 5번 질문합니다.";
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:5520` Text title = CreateText("Settings Menu Title", panel.transform, "설정", 30, new Color32(15, 23, 42, 255), TextAnchor.UpperLeft, FontStyle.Bold);
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:5523` Text textSizeLabel = CreateText("Settings Text Size Label", panel.transform, "글자 크기", 16, new Color32(51, 65, 85, 255), TextAnchor.UpperLeft, FontStyle.Bold);
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:5538` Text screenLabel = CreateText("Settings Screen Label", panel.transform, "화면, 소리, 답변", 16, new Color32(51, 65, 85, 255), TextAnchor.UpperLeft, FontStyle.Bold);
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:5541` fullscreenButton = CreateButton("Fullscreen Toggle Button", panel.transform, "전체 화면", new Color32(30, 41, 59, 238), Color.white, 16);
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:5545` soundButton = CreateButton("Sound Toggle Button", panel.transform, "소리 기본", new Color32(30, 41, 59, 238), Color.white, 16);
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:5549` reducedMotionButton = CreateButton("Reduced Motion Toggle Button", panel.transform, "움직임 기본", new Color32(30, 41, 59, 238), Color.white, 16);
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:5553` highContrastButton = CreateButton("High Contrast Toggle Button", panel.transform, "읽기 쉬운 화면", new Color32(30, 41, 59, 238), Color.white, 16);
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:5557` Button archiveButton = CreateButton("Open Record Archive Button", panel.transform, "기록함", new Color32(30, 41, 59, 238), Color.white, 16);
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:5561` Button aboutButton = CreateButton("About Button", panel.transform, "정보", new Color32(30, 41, 59, 238), Color.white, 16);
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:5565` localAnswerOnlyButton = CreateButton("Local Answer Only Toggle Button", panel.transform, "서버 필수", new Color32(30, 41, 59, 238), Color.white, 15);
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:5569` Button closeButton = CreateButton("Close Settings Button", panel.transform, "닫기", new Color32(146, 83, 40, 245), Color.white, 17);
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:5586` Text title = CreateText("About Menu Title", panel.transform, "정보", 30, new Color32(15, 23, 42, 255), TextAnchor.UpperLeft, FontStyle.Bold);
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:5612` Button serverRefreshButton = CreateButton("About Server Refresh Button", statusPanel.transform, "상태 확인", new Color32(146, 83, 40, 245), Color.white, 15);
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:5616` Button recordFolderButton = CreateButton("About Record Folder Button", panel.transform, "기록 폴더", new Color32(30, 41, 59, 238), Color.white, 16);
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:5620` Button feedbackFolderButton = CreateButton("About Feedback Folder Button", panel.transform, "의견 폴더", new Color32(30, 41, 59, 238), Color.white, 16);
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:5624` clearLocalDataButton = CreateButton("About Clear Local Data Button", panel.transform, "저장 삭제", new Color32(133, 111, 82, 230), Color.white, 16);
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:5631` clearLocalDataHintText = CreateText("About Clear Local Data Hint", clearLocalDataHintPanel.transform, "저장 삭제는 확인 후 실행됩니다.", 15, new Color32(88, 72, 54, 255), TextAnchor.MiddleLeft, FontStyle.Bold);
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:5637` Button closeButton = CreateButton("Close About Button", panel.transform, "닫기", new Color32(146, 83, 40, 245), Color.white, 17);
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:5660` Text title = CreateText("Record Archive Title", panel.transform, "기록함", 30, new Color32(15, 23, 42, 255), TextAnchor.UpperLeft, FontStyle.Bold);
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:5663` Text subtitle = CreateText("Record Archive Subtitle", panel.transform, "저장한 마무리 기록을 다시 읽을 수 있습니다.", 16, new Color32(71, 85, 105, 255), TextAnchor.UpperLeft, FontStyle.Normal);
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:5669` recordArchiveListTitleText = CreateText("Record Archive List Title", listPanel.transform, "최근 기록", 16, new Color32(30, 41, 59, 255), TextAnchor.UpperLeft, FontStyle.Bold);
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:5685` Text previewTitle = CreateText("Record Archive Preview Title", previewPanel.transform, "마무리 기록", 17, new Color32(30, 41, 59, 255), TextAnchor.UpperLeft, FontStyle.Bold);
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:5739` Button folderButton = CreateButton("Record Archive Folder Button", panel.transform, "폴더 열기", new Color32(30, 41, 59, 238), Color.white, 15);
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:5743` Button refreshButton = CreateButton("Record Archive Refresh Button", panel.transform, "새로고침", new Color32(30, 41, 59, 238), Color.white, 15);
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:5747` recordArchiveDeleteButton = CreateButton("Record Archive Delete Button", panel.transform, "선택 삭제", new Color32(133, 111, 82, 230), Color.white, 15);
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:5751` recordArchiveCancelDeleteButton = CreateButton("Record Archive Cancel Delete Button", panel.transform, "취소", new Color32(30, 41, 59, 238), Color.white, 15);
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:5765` Button closeButton = CreateButton("Record Archive Close Button", panel.transform, "닫기", new Color32(146, 83, 40, 245), Color.white, 16);
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:5784` Text title = CreateText("Playtest Feedback Title", panel.transform, "의견 남기기", 30, new Color32(15, 23, 42, 255), TextAnchor.UpperLeft, FontStyle.Bold);
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:5798` Text ratingLabel = CreateText("Playtest Rating Label", panel.transform, "전체 느낌", 13, new Color32(71, 85, 105, 238), TextAnchor.MiddleLeft, FontStyle.Bold);
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:5812` Text readinessLabel = CreateText("Playtest Commercial Readiness Label", panel.transform, "완성도 느낌", 13, new Color32(71, 85, 105, 238), TextAnchor.MiddleLeft, FontStyle.Bold);
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:5826` Text issueLabel = CreateText("Playtest Issue Severity Label", panel.transform, "문제 단계", 13, new Color32(71, 85, 105, 238), TextAnchor.MiddleLeft, FontStyle.Bold);
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:5840` Text focusLabel = CreateText("Playtest Quality Focus Label", panel.transform, "주요 영역", 13, new Color32(71, 85, 105, 238), TextAnchor.MiddleLeft, FontStyle.Bold);
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:5868` playtestFeedbackStatusText = CreateText("Playtest Feedback Status", panel.transform, "이 컴퓨터에만 저장되는 메모입니다.", 14, new Color32(71, 85, 105, 255), TextAnchor.UpperLeft, FontStyle.Normal);
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:5871` Button folderButton = CreateButton("Playtest Feedback Folder", panel.transform, "폴더 열기", new Color32(30, 41, 59, 238), Color.white, 15);
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:5875` Button saveButton = CreateButton("Playtest Feedback Save", panel.transform, "저장", new Color32(146, 83, 40, 245), Color.white, 15);
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:5879` Button closeButton = CreateButton("Playtest Feedback Close", panel.transform, "닫기", new Color32(30, 41, 59, 238), Color.white, 15);
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:5906` Text title = CreateText("Fresh Start Confirm Title", panel.transform, "처음부터 시작할까요?", 28, new Color32(15, 23, 42, 255), TextAnchor.UpperLeft, FontStyle.Bold);
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:5920` Button confirmButton = CreateButton("Fresh Start Confirm Button", panel.transform, "새로 시작", new Color32(146, 83, 40, 245), Color.white, 17);
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:5934` Button cancelButton = CreateButton("Fresh Start Cancel Button", panel.transform, "취소", new Color32(30, 41, 59, 238), Color.white, 17);
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:5956` statusText.text = openQuestionPhone ? "질문 노트에서 주제를 고를 수 있습니다" : "인터뷰 시작";
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:6044` if (statusText != null) statusText.text = "먼저 이 사람이 누구인지 충분히 듣고, 그 다음 질문을 고릅니다.";
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:6062` PresentAssistant(line, i == 0 ? "먼저 듣는 이야기" : "이어지는 이야기");
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:6063` ShowSceneFocus(GetSceneFocusLabelForTheme(theme), GetSceneFocusPositionForTheme(theme), "도입 장면", 2.0f);
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:6073` statusText.text = $"본인 이야기 {i + 1}/{openingStoryLines.Length} · 듣고 나서 질문을 고릅니다.";
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:6105` return "겉: 이동 도구 · 속: 회사원, 박사과정생, 자취하는 사람";
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:6107` return "겉: 목발 · 속: 하루를 밖으로 이어주는 준비";
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:6109` return "겉: 도움 받는 순간 · 속: 먼저 묻고 조율하는 관계";
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:6111` return "겉: 책상 · 속: 일과 공부를 이어가는 자기 몫";
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:6113` return "겉: 자취방 · 속: 생활을 직접 정하는 독립";
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:6115` return "겉: 취미 · 속: 쉬고 좋아하는 것까지 있는 사람";
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:6137` if (statusText != null) statusText.text = "첫인상 선택";
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:6146` PresentAssistant(line, "첫 인상");
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:6149` UpdateLeadPrompts("첫 인상에서 이어지는 질문입니다.", BuildFirstImpressionQuestions(firstImpression));
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:6157` if (statusText != null) statusText.text = $"처음 본 것: {firstImpression}";
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:6165` return "목발이 먼저 궁금하다면 자연스러운 시작이에요. 이제 그 장면을 지우지 않고, 이동을 준비하는 방식과 도움이 필요한 순간을 어떻게 조율하는지부터 물어볼 수 있습니다.";
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:6169` return "책상이 먼저 궁금하다면 일과 공부, 정리하는 시간이 먼저 들어온 셈이에요. 이제 직장 일과 박사과정, 그 안에 놓인 이동과 쉬는 시간을 이어서 물어볼 수 있습니다.";
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:6173` return "표정이 먼저 궁금하다면 사람을 먼저 본 거예요. 이제 그 표정 뒤에 있는 평범한 하루, 일과 이동과 취미가 어떻게 같은 사람 안에 놓이는지 물어볼 수 있습니다.";
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:6175` return "방금 들은 이야기에서 궁금한 장면을 붙잡고, 그 시선이 어떤 생활로 이어지는지 질문해 보겠습니다.";
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:6180` if (string.Equals(value, "목발", StringComparison.Ordinal)) return "목발\n이동과 도움 묻기";
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:6181` if (string.Equals(value, "책상", StringComparison.Ordinal)) return "책상\n일과 공부 묻기";
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:6182` if (string.Equals(value, "표정", StringComparison.Ordinal)) return "표정\n평범한 하루 묻기";
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:6188` if (string.Equals(value, "목발", StringComparison.Ordinal)) return "이동";
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:6189` if (string.Equals(value, "책상", StringComparison.Ordinal)) return "일과 공부";
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:6190` if (string.Equals(value, "표정", StringComparison.Ordinal)) return "일상";
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:6251` return "목발을 짚고 하루를 시작할 때 가장 먼저 신경 쓰는 장면은 무엇인가요?";
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:6255` return "책상 앞에서 직장 일과 박사과정 공부는 어떻게 이어지나요?";
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:6259` return "평범한 사람으로 기억되고 싶다는 말은 어떤 장면까지 봐 달라는 뜻인가요?";
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:6262` return $"처음 본 {firstImpression}이 {theme} 생활과 어떻게 이어지나요?";
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:6275` statusText.text = pendingFreshStartStoryMode ? "이야기 모드 시작 확인" : "처음부터 확인";
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:6304` if (label != null) label.text = "이어하기";
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:6359` startSavePreviewText.text = hasSave ? BuildStartSavePreview(state) : "오늘의 흐름 · 시작";
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:6413` statusText.text = serverStatusKnown ? "서버 연결 필요" : "서버 확인 중";
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:6414` PresentAssistant($"서버가 정상 연결되지 않아 실행할 수 없습니다.\n\n{detail}", "서버 연결 필요");
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:6665` PresentAssistant(string.IsNullOrWhiteSpace(state.dialogue) ? OpeningText : state.dialogue, string.IsNullOrWhiteSpace(state.speaker) ? "답변" : state.speaker);
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:6666` UpdateLeadPrompts(string.IsNullOrWhiteSpace(state.leadIntro) ? $"{lastTheme}에서 이어갈 질문입니다." : state.leadIntro);
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:6737` PresentAssistant(OpeningText, "오늘의 시작");
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:6738` UpdateLeadPrompts("제가 먼저 이런 순서로 이야기를 열어볼게요.");
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:6745` statusText.text = "처음부터 다시 시작";
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:6771` if (statusText != null) statusText.text = "이야기 모드 진행 중 · 직접 질문하거나 Esc로 멈춤";
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:6793` PresentAssistant(line, i == 0 ? "이야기 모드" : "이어지는 이야기");
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:6795` ShowSceneFocus(GetSceneFocusLabelForTheme(theme), GetSceneFocusPositionForTheme(theme), "이야기 장면", 2.2f);
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:6806` statusText.text = $"이야기 모드 {Mathf.Min(i + 1, storyModeLines.Length)}/{storyModeLines.Length} · {currentStoryModeBeatLine}";
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:6812` if (statusText != null) statusText.text = $"잠시 장면을 남기는 중 · {BuildStoryModeQuietMomentLine(i)}";
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:6828` if (statusText != null) statusText.text = "이야기 모드 완료 · 마무리 가능";
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:6872` return $"겉: {outer} · 속: {inner}";
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:6878` return $"연출: {cue}";
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:6884` return $"{cue} 장면을 남깁니다";
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:6922` statusText.text = "다음 장면으로 넘깁니다";
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:6938` UpdateLeadPrompts("방금 들은 이야기에서 바로 물어볼 수 있습니다.", new[]
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:6994` if (label != null) label.text = "직접 질문";
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:7005` if (label != null) label.text = canFinish ? "마무리" : "5문답 후";
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:7023` return $"다음 {next}/{total}";
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:7043` ShowSceneFocus(GetSceneFocusLabelForTheme(theme), focus, index == 0 ? "첫 장면" : "다음 장면", 2.6f);
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:7111` statusText.text = "마무리 카드를 닫았습니다";
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:7118` statusText.text = "기억장을 닫았습니다";
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:7125` statusText.text = "질문 노트를 닫았습니다";
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:7306` statusText.text = "5문답 후 마무리할 수 있습니다";
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:7904` statusText.text = "일시정지";
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:7924` statusText.text = "정보";
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:7937` statusText.text = "설정";
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:7968` serverStatusText.text = "로컬 서버 확인 중...";
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:8039` statusText.text = "설정";
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:8066` statusText.text = dialogueSizeLevel > 0 ? "큰 글자" : (dialogueSizeLevel < 0 ? "작은 글자" : "기본 글자");
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:8125` statusText.text = fullscreenEnabled ? "전체 화면" : "창 모드";
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:8188` statusText.text = reducedMotionEnabled ? "움직임 줄임" : "움직임 기본";
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:8205` statusText.text = highContrastEnabled ? "읽기 쉬운 화면 켜짐" : "읽기 쉬운 화면 꺼짐";
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:8281` statusText.text = "서버 답변 필수";
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:8332` statusText.text = "기록 폴더를 열었습니다";
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:8336` statusText.text = "기록 폴더를 열 수 없습니다";
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:8350` statusText.text = "저장 데이터와 기록이 완전히 지워집니다";
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:8389` statusText.text = "저장 데이터를 삭제할 수 없습니다";
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:8438` if (label != null) label.text = confirming ? "삭제 확정" : "저장 삭제";
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:8493` statusText.text = "기록함";
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:8512` if (playtestFeedbackStatusText != null) playtestFeedbackStatusText.text = "이 컴퓨터에만 저장되는 메모입니다.";
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:8519` statusText.text = "의견 남기기";
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:8609` playtestFeedbackEvidenceText.text = "저장 가능: 5문답 완료 · 마무리 기록 저장 · 세션 정보 저장";
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:8614` playtestFeedbackEvidenceText.text = "마무리 기록 대기: 좋은 평가는 기록 저장 뒤 남겨 주세요";
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:8619` playtestFeedbackEvidenceText.text = $"완주 대기: 5문답 {turns}/5 · 좋은 평가는 완료 후 저장";
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:8624` playtestFeedbackEvidenceText.text = "수정 메모 필요: 더 다듬기/조금 아쉬움/문제 있음 · 짧게 남겨 주세요";
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:8629` playtestFeedbackEvidenceText.text = $"저장 전 확인: 5문답 {turns}/5 · 완성도 느낌과 문제 단계 저장";
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:8810` playtestFeedbackStatusText.text = "좋음, 충분함, 문제 없음은 5문답을 마친 뒤 저장해 주세요. 중간에 생긴 문제는 단계와 메모로 남길 수 있습니다.";
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:8812` statusText.text = "5문답 완료 필요";
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:8820` playtestFeedbackStatusText.text = "좋음, 충분함, 문제 없음은 마무리 기록을 저장한 뒤 남길 수 있습니다.";
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:8822` statusText.text = "마무리 기록 필요";
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:8830` playtestFeedbackStatusText.text = "더 다듬기, 조금 아쉬움, 문제 있음을 골랐다면 어디가 걸렸는지 짧게 남겨 주세요.";
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:8832` statusText.text = "의견 메모 필요";
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:8847` if (playtestFeedbackStatusText != null) playtestFeedbackStatusText.text = "의견과 세션 정보를 이 컴퓨터에 저장했습니다.";
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:8850` statusText.text = "의견 저장됨";
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:8854` if (playtestFeedbackStatusText != null) playtestFeedbackStatusText.text = "의견 저장에 실패했습니다.";
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:8855` statusText.text = "의견 저장 실패";
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:8867` statusText.text = "의견 폴더를 열었습니다";
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:8871` statusText.text = "의견 폴더를 열 수 없습니다";
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:8937` recordArchivePreviewHeaderText.text = "저장된 마무리 기록 없음";
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:8940` recordArchivePreviewText.text = "아직 저장된 마무리 기록이 없습니다.\n\n다섯 번의 대화 뒤 남길 문장을 고르고 저장하면 이곳에 남습니다.";
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:8952` if (totalCount <= 0) return "최근 기록";
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:8953` if (totalCount <= visibleCount) return $"최근 기록 {visibleCount}개";
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:8954` return $"최근 {visibleCount}개 기록";
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:8975` recordArchivePreviewText.text = $"기록을 읽을 수 없습니다.\n{ex.Message}";
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:8978` recordArchivePreviewHeaderText.text = "기록을 읽을 수 없음";
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:8993` statusText.text = "삭제할 기록이 없습니다";
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:9006` statusText.text = "한 번 더 누르면 선택한 기록이 삭제됩니다";
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:9024` statusText.text = "선택한 기록을 삭제했습니다";
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:9029` statusText.text = "기록을 삭제할 수 없습니다";
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:9054` statusText.text = "기록 삭제를 취소했습니다";
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:9072` label.text = awaitingConfirm ? "삭제 확정" : "선택 삭제";
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:9104` recordArchiveDeleteHintText.text = "기록이 완전히 지워집니다. 계속하려면 삭제 확정을 누르세요.";
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:9110` recordArchiveDeleteHintText.text = "선택 삭제는 한 번 더 확인한 뒤 실행됩니다.";
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:9285` if (label != null) label.text = fullscreenEnabled ? "창 모드로 전환" : "전체 화면으로 전환";
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:9302` if (label != null) label.text = reducedMotionEnabled ? "움직임 줄임 켜짐" : "움직임 줄임 꺼짐";
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:9312` if (label != null) label.text = highContrastEnabled ? "읽기 쉬움 켜짐" : "읽기 쉬움 꺼짐";
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:9322` if (label != null) label.text = serverReady ? "서버 정상" : "서버 확인";
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:9533` Text action = CreateText("Action Label", root, "추천 질문 · 누르면 바로 질문", 11, new Color32(255, 218, 154, 218), TextAnchor.MiddleLeft, FontStyle.Bold);
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:10329` PresentAssistant(closing, "마무리 카드");
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:10336` statusText.text = "마무리 카드를 열었습니다";
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:10342` return $"지금까지 나눈 대화를 바탕으로 오늘 남길 문장을 하나 골라 보세요.\n\n{BuildPerspectiveShiftLine()}\n{sceneLine}\n\n이야기가 설명으로 끝나지 않고, 다음에 누군가를 만날 때 떠올릴 문장으로 남으면 좋겠습니다.";
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:10359` return "오늘 대화에서 열린 장면: " + string.Join(", ", compact.ToArray());
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:10365` return $"오늘 대화에서 붙잡은 장면: {theme}";
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:10368` return "오늘 대화에서 붙잡은 장면을 마지막 카드에 남깁니다.";
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:10405` return "거리두기";
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:10487` PresentAssistant(ThinkingReplyText, "생각 중");
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:10488` ShowSceneFocus("질문", new Vector2(-28f, -306f), "책상에 남김", 1.5f);
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:10532` PresentAssistant($"서버가 정상 연결되지 않아 답변을 만들 수 없습니다.\n\n{ShortenForCard(lastServerError, 90)}\n서버를 켠 뒤 다시 시도해 주세요.", "서버 연결 필요");
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:10542` statusText.text = "서버 연결 필요 · 대화 중단";
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:10563` PresentAssistant(reply, "답변");
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:10578` statusText.text = conversationTurns >= 5 ? "마무리 카드를 열 수 있습니다" : "이어갈 수 있습니다";
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:10593` statusText.text = "서버 답변 필수 모드입니다.";
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:10610` statusText.text = "사용 가능한 마이크를 찾지 못했습니다.";
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:10621` PresentAssistant("말씀을 듣고 있어요. 끝나면 정지를 누르면 됩니다.", "음성 입력");
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:10634` statusText.text = "녹음 데이터가 없습니다.";
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:10653` statusText.text = "서버 답변 필수 모드입니다.";
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:10677` PresentAssistant("음성을 텍스트로 바꾸는 중입니다.", "전사 중");
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:10678` statusText.text = "음성을 텍스트로 바꾸는 중...";
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:10712` statusText.text = string.IsNullOrEmpty(error) ? "전사 결과가 비어 있습니다." : $"전사 실패: {error}";
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:11160` dialoguePageCueText.text = $"대사가 더 있어요  |  클릭해서 다음 대사 보기 {dialoguePageIndex + 2}/{dialoguePages.Count}";
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:11167` dialoguePageCueText.text = openingStoryModeActive ? "다음 이야기 보기" : "다음 장면 보기";
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:11250` case "배려":
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:11251` case "호기심":
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:11252` return "깊은 기록";
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:11253` case "단정":
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:11254` return "되묻기";
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:11256` return "얕은 기록";
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:11284` if (string.IsNullOrWhiteSpace(clean)) return "무엇을 더 물어볼까요?";
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:11285` if (!clean.EndsWith("?", StringComparison.Ordinal) && !clean.EndsWith("요?", StringComparison.Ordinal))
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:11308` return "여섯 장면을 다 열었습니다. 더 듣고 싶은 장면을 골라도 됩니다.";
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:11311` return $"남은 장면 {remaining}개를 열 수 있는 질문입니다.";
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:11346` AddUniqueLeadQuestion(result, "처음 가는 장소에서는 이동 전에 어떤 정보를 먼저 확인하나요?", 3);
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:11347` AddUniqueLeadQuestion(result, "교통 정보나 지원 서비스는 이동 계획에 어떤 도움을 주나요?", 3);
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:11348` AddUniqueLeadQuestion(result, "책상과 노트북은 이동 이야기 너머의 어떤 생활을 보여주나요?", 3);
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:11349` AddUniqueLeadQuestion(result, "엘리베이터나 화장실 정보가 하루의 피로와 어떻게 연결되나요?", 3);
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:11353` AddUniqueLeadQuestion(result, "도움을 건네기 전에 어떤 말로 먼저 물어보는 게 편한가요?", 3);
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:11354` AddUniqueLeadQuestion(result, "도움을 받을 때 설명할 시간이 필요하다는 말은 어떤 뜻인가요?", 3);
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:11355` AddUniqueLeadQuestion(result, "혼자 할 수 있는 부분을 존중하는 도움은 어떤 모습인가요?", 3);
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:11356` AddUniqueLeadQuestion(result, "직장에서 필요한 도움을 설명할 때 어떤 방식이 가장 자연스럽나요?", 3);
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:11360` AddUniqueLeadQuestion(result, "자취방에서는 혼자 생활하며 어떤 일을 직접 정하게 되었나요?", 3);
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:11361` AddUniqueLeadQuestion(result, "자취를 시작한 뒤 스스로 설명해야 하는 일이 어떻게 달라졌나요?", 3);
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:11362` AddUniqueLeadQuestion(result, "독립은 큰 결심보다 어떤 반복되는 일에서 느껴졌나요?", 3);
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:11363` AddUniqueLeadQuestion(result, "자취방은 장애를 설명하는 공간이 아니라 어떤 생활을 보여주나요?", 3);
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:11367` AddUniqueLeadQuestion(result, "책상 앞 시간은 직장 일과 박사과정 공부를 어떻게 이어주나요?", 3);
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:11368` AddUniqueLeadQuestion(result, "어떤 업무 장면에서 기여를 느끼나요?", 3);
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:11369` AddUniqueLeadQuestion(result, "함께 일하는 사람이 상황을 모를 때 무엇부터 말해 주는 편인가요?", 3);
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:11370` AddUniqueLeadQuestion(result, "노트북과 메모는 이동 이야기 너머의 어떤 생활을 보여주나요?", 3);
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:11374` AddUniqueLeadQuestion(result, "게임과 코인노래방 같은 취미가 전시에서 빠지면 무엇을 놓치게 되나요?", 3);
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:11375` AddUniqueLeadQuestion(result, "쉬는 시간이 함께 보여야 한 사람의 하루가 더 정확해지는 이유는 무엇인가요?", 3);
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:11376` AddUniqueLeadQuestion(result, "게임과 코인노래방 이야기는 이동이나 도움 이야기와 어떻게 다른 면을 보여주나요?", 3);
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:11377` AddUniqueLeadQuestion(result, "책상과 노트북은 직장 일과 박사과정 공부를 어떻게 보여주나요?", 3);
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:11381` AddUniqueLeadQuestion(result, "목발을 보고 들어온 관람객이 나갈 때는 무엇을 함께 기억하면 좋을까요?", 3);
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:11382` AddUniqueLeadQuestion(result, "책상과 노트북은 목발 너머의 일과 공부를 어떻게 보여주나요?", 3);
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:11383` AddUniqueLeadQuestion(result, "전시에서 자취방과 책상이 함께 보여야 하는 이유는 무엇인가요?", 3);
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:11384` AddUniqueLeadQuestion(result, "장애를 한 사람의 전부로 보지 않으려면 어떤 질문을 해야 할까요?", 3);
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:11388` AddUniqueLeadQuestion(result, "미국과 한국의 이동 환경은 실제 생활에서 어떻게 다르게 느껴졌나요?", 3);
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:11389` AddUniqueLeadQuestion(result, "교통 정보나 지원 서비스는 이동 계획에 어떤 도움을 주나요?", 3);
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:11390` AddUniqueLeadQuestion(result, "처음 가는 공간에서 접근성을 확인하는 일이 왜 중요한가요?", 3);
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:11394` AddUniqueLeadQuestion(result, "끈기라는 말은 대단한 극복담보다 어떤 태도에 가까운가요?", 3);
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:11395` AddUniqueLeadQuestion(result, "어떻게든 흘러간다는 말은 하루를 이어가는 방식과 어떻게 닿아 있나요?", 3);
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:11396` AddUniqueLeadQuestion(result, "버틴다는 말보다 조정하며 이어간다는 표현이 더 맞는 이유는 무엇인가요?", 3);
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:11492` "직장에서 필요한 도움을 설명할 때 어떤 방식이 가장 자연스럽나요?",
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:11493` "교통 정보나 지원 서비스는 이동 계획에 어떤 도움을 주나요?",
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:11494` "도움을 받을 때 설명할 시간이 필요하다는 말은 어떤 뜻인가요?",
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:11495` "노트북과 메모는 이동 이야기 너머의 어떤 생활을 보여주나요?",
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:11496` "게임과 코인노래방 같은 취미가 전시에서 빠지면 무엇을 놓치게 되나요?",
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:11497` "전시에서 자취방과 책상이 함께 보여야 하는 이유는 무엇인가요?",
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:11498` "끈기라는 말은 대단한 극복담보다 어떤 태도에 가까운가요?"
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:11513` "목발을 보고 들어온 관람객이 나갈 때는 무엇을 함께 기억하면 좋을까요?",
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:11514` "자취방은 장애를 설명하는 공간이 아니라 어떤 생활을 보여주나요?",
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:11515` "장애를 한 사람의 전부로 보지 않으려면 어떤 질문을 해야 할까요?"
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:11526` result.Add($"아직 묻지 않은 생활 장면 {index}은 어떤 질문으로 열어볼까요?");
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:11581` if (!text.EndsWith("?", StringComparison.Ordinal) && !text.EndsWith("요?", StringComparison.Ordinal))
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:11605` string personBook = "사람" + "책";
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:11606` string virtualWord = "가상";
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:11608` string artificialMind = "인공" + "지능";
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:11633` string personBook = "사람" + "책";
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:11634` string virtualWord = "가상";
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:11636` string artificialMind = "인공" + "지능";
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:11637` string programWord = "프로" + "그램";
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:11641` lineStart + sentenceBody + @"(?:인터뷰\s*대상자|대상자|당사자|본인)" + sentenceBody + @"(?:아니|아닙|아니에|대신)" + sentenceBody + sentenceEnd + @"\s*",
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:11642` lineStart + sentenceBody + @"(?:실제\s*사람|실제\s*인물)" + sentenceBody + @"(?:아니|아닙|아니에|재현|초상|신원)" + sentenceBody + sentenceEnd + @"\s*",
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:11643` lineStart + sentenceBody + @"(?:" + aiToken + @"|" + artificialMind + @"|" + virtualWord + @"\s*(?:" + personBook + @"|캐릭터|책)|" + programWord + @")" + sentenceBody + sentenceEnd + @"\s*"
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:11667` micButtonLabel.text = recording ? "정지" : "녹음";
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:11728` if (label != null) label.text = "전송";
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:11771` if (label != null) label.text = GetCompletionActionLabel("마무리");
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:11777` if (label != null) label.text = GetCompletionActionLabel("끝내기");
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:11794` if (conversationTurns <= 0) return "대화 후";
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:11795` return IsCompletedFiveTurnSession() ? readyLabel : "5문답 후";
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:11824` string progressLabel = progress >= 5 ? "마무리 가능" : $"{progress}/5 질문";
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:11844` return "서버 필수 모드입니다. 서버가 정상일 때만 답변합니다.";
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:11849` string reason = string.IsNullOrWhiteSpace(serverError) ? "서버 답변을 받을 수 없었습니다." : $"서버 응답 문제: {serverError}";
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:11850` return $"{reason}\n서버가 정상일 때만 답변을 진행합니다.";
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:11855` string reason = string.IsNullOrWhiteSpace(serverError) ? "서버 답변을 받을 수 없었습니다." : $"서버 응답 문제: {serverError}";
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:11856` return $"{reason}\n서버가 정상일 때만 답변을 진행합니다.";
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:11861` return "현재 질문과 가장 가까운 인터뷰 정리 자료를 바탕으로 답했습니다. 서버 자료 목록이 없으면 내장 답변 기준으로 표시됩니다.";
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:11865` builder.Append("다음 자료를 기준으로 정리했습니다.");
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:11873` builder.Append("\n\n장면 카드: ").Append(response.cardId);
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:11884` return "서버 답변";
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:11886` return "서버 필수";
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:11889` ? "서버 연결 필요"
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:11890` : $"서버 연결 필요 ({ShortenForCard(lastServerError, 28)})";
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:11893` ? "서버 연결 필요"
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:11894` : $"서버 연결 필요 ({ShortenForCard(lastServerError, 28)})";
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:11896` return "아직 답변 없음";
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:11902` if (localAnswerOnly) return "서버 필수";
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:11907` return "서버 답변";
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:11909` return "서버 필수";
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:11911` return "서버 필요";
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:11913` return "서버 필요";
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:11915` return "답변 대기";
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:11923` case "questionnaire": return "질문지";
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:11924` case "interview-stt": return "2026년 5월 1일 인터뷰 전사본";
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:11925` case "group-record": return "조별 활동 기록";
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:11926` case "kakao": return "후속 카카오톡 확인";
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:11927` case "static-chatbot": return "기존 정리 자료";
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:11928` case "course-frame": return "수업 자료의 관점";
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:11929` default: return string.IsNullOrWhiteSpace(id) ? "자료 미상" : id;
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:11985` return "목발, 자취방, 책상, 출근길, 도움에 대한 인터뷰 기록을 바탕으로 답하고 있어요. 한 장면으로 끝내기보다, 이동을 준비하는 시간과 자기 생활을 챙기는 시간, 일하고 공부하는 시간을 함께 보려는 대화입니다.";
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:11990` return "목발은 불편함만 보여주는 물건이 아니에요. 밖으로 나가고, 사람을 만나고, 일상으로 이어지는 도구입니다. 하루를 시작할 때마다 몸 상태와 길의 상태를 함께 생각하게 만드는 물건이기도 하고요.\n\n처음엔 목발이 먼저 보일 수 있습니다. 그 다음에는 자취방, 책상, 일, 공부, 취미로 시선이 옮겨가야 해요. 목발은 끝점이 아니라 하루로 들어가는 입구입니다.";
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:11995` return "자취방은 내 하루를 내가 챙기는 공간이에요. 집안일, 생활비, 공과금, 시간 관리처럼 평범해 보이는 일들이 모이면서 독립성이 만들어집니다. 대신 해주던 일을 직접 하다 보면, 생활이 생각보다 많은 선택으로 이루어져 있다는 것도 알게 되고요.\n\n그래서 자취방은 장애를 설명하는 장소라기보다 생활의 감각을 보여주는 장소입니다. 직접 정리하고 계산하고 버티는 시간이 쌓이는 곳이에요.";
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:12000` return "도움은 마음만으로 충분하지 않을 때가 있어요. 방법이 맞지 않으면 오히려 불편하거나 아플 수 있습니다. 그래서 좋은 시작은 단순해요. 바로 움직이기 전에 '어떻게 도와드릴까요?'라고 묻는 겁니다.\n\n도움을 받는 쪽에도 설명할 시간이 필요합니다. 어디를 잡아야 하는지, 어느 방향이 편한지, 혼자 할 수 있는 부분은 무엇인지가 다를 수 있으니까요. 좋은 도움은 선의보다 먼저, 상대가 말할 시간을 주는 데서 시작됩니다.";
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:12005` return "처음 가는 장소에서는 목적지만 보지 않아요. 엘리베이터가 있는지, 계단이 많은지, 화장실은 어디인지, 덜 무리되는 동선은 어디인지 먼저 보게 됩니다. 약속 장소 하나를 정할 때도 길, 입구, 내부 이동, 돌아오는 길까지 함께 떠올려요.\n\n이건 유난스러운 준비라기보다 하루를 가능하게 만드는 확인입니다. 누군가에게는 지나가는 정보가, 다른 누군가에게는 그날의 피로와 안전을 좌우하는 조건이 됩니다.";
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:12010` return "날씨를 좋아하는지까지는 자료에 남아 있지 않아요. 다만 비가 오거나 바닥이 미끄러운 날에는 동선 확인이 더 중요해집니다. 입구까지의 길, 젖은 바닥, 경사, 목발을 짚는 위치가 하루의 피로와 안전에 바로 이어질 수 있어요.\n\n그래서 날씨 이야기도 결국 이동의 이야기와 닿아 있습니다. 확인된 이야기 안에서는 길과 바닥을 먼저 살피는 습관으로 이어 말할 수 있습니다.";
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:12015` return "책상은 한 사람을 도움받는 사람으로만 보지 않게 해주는 장면이에요. 직장생활과 컴퓨터공학 박사과정을 이어가는 시간이 노트북 앞에서 만납니다. 여기서는 누군가의 배려를 기다리는 사람이 아니라, 일을 정리하고 공부를 이어가는 사람이 보입니다.\n\n노트북, 메모, 자료 같은 것들은 역할과 취향을 보여줍니다. 목발이 이동의 조건을 보여준다면, 책상은 그 조건을 안고도 이어지는 일상의 밀도를 보여줘요.";
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:12020` return "여기서 보이는 물건은 목발, 책상, 노트북, 메모처럼 생활을 이어 보여주는 단서들입니다. 목발은 이동의 조건을, 책상과 노트북은 일과 공부의 시간을, 자취방은 혼자 생활을 꾸리는 감각을 보여줘요.\n\n이 물건들은 꼬리표가 아니라 시선을 옮기게 하는 장치입니다. 처음에는 겉으로 보이는 물건을 보더라도, 대화가 이어질수록 그 물건이 어떤 하루와 연결되는지 보게 됩니다.";
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:12025` return "요즘 취미로는 게임과 코인노래방이 있어요. 작아 보이는 정보지만 그냥 지나칠 수는 없습니다. 이동 이야기만 보면 불편함만 남을 수 있지만, 취미를 같이 보면 쉬고 놀고 좋아하는 게 있는 한 사람이 보이니까요.\n\n해야 할 일, 이동을 확인하는 일, 도움을 조율하는 일 사이에도 좋아하는 시간이 있습니다. 그 장면까지 있어야 하루가 자연스럽게 보입니다.";
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:12030` return "불안이나 민폐라는 감각은 혼자만의 성격 문제로 정리하기 어렵습니다. 이동이 어려운 공간, 도움을 요청해야 하는 순간, 상대가 어떻게 받아들일지 모르는 상황이 겹치면 그런 감정이 생길 수 있어요.\n\n그래도 이 대화가 불편함만 남기지는 않았으면 합니다. 확인된 이야기 안에는 자기 생활을 챙기고, 필요한 방식을 설명하고, 일과 공부를 이어가는 시간도 있습니다. 감정은 약함의 증거라기보다 그런 조건을 조율하며 살아가는 과정에 닿아 있습니다.";
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:12035` return "관계에서 중요한 건 도움을 받을지 말지만이 아닙니다. 필요한 방식을 어떻게 설명하고 서로 맞춰 가는지가 더 중요할 때가 있어요. 바로 잡아주거나 대신 판단하기보다 먼저 묻고, 당사자가 자기 몸과 상황을 설명할 수 있게 기다리는 쪽이 더 편할 수 있습니다.\n\n그렇게 보면 관계는 부담만 있는 장면이 아닙니다. 어떤 방식의 배려가 실제로 도움이 되는지 함께 배우는 장면이 될 수 있어요.";
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:12040` return "장애가 먼저 보일 수는 있지만 그게 전부는 아니에요. 직장, 공부, 자취방, 취미, 귀찮은 일상과 해야 할 일을 가진 평범한 사람으로도 봐주면 좋겠습니다.\n\n평범하다는 말은 아무 어려움이 없다는 뜻이 아닙니다. 한 사람의 삶이 한 가지 특징으로만 정리되지 않는다는 뜻에 가까워요. 목발을 보고 들어왔더라도, 나갈 때는 책상과 방, 취미와 관계까지 함께 기억해 주면 좋겠습니다.";
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:12043` return "그 부분은 인터뷰 자료에 충분히 남아 있지 않아요. 대신 목발, 자취방, 출근길, 도움을 받는 방식, 책상과 일, 취미, 평범함에 대해서는 말할 수 있습니다. 질문을 조금 바꾸면 확인된 장면 안에서 더 구체적으로 이어갈 수 있어요.";
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:12080` if (model.Length == 0) return "모델 정보 없음";
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:13522` if (soundLevel <= 0) return "소리 끔";
+- `Interviewee1UnityAvatarChat/Assets/Scripts/AvatarChatApp.cs:13523` return soundLevel == 1 ? "소리 작게" : "소리 기본";
+
+## Unity 제품명/빌드 표시명
+창 제목, 빌드 산출물 이름처럼 플레이어가 볼 수 있는 이름입니다.
+- `Interviewee1UnityAvatarChat/ProjectSettings/ProjectSettings.asset:16` productName: 겉!=속
+- `Interviewee1UnityAvatarChat/Assets/Editor/AvatarChatBuildTools.cs:60` PlayerSettings.productName = "겉!=속";
+
+## 서버 페르소나 응답/추천 질문
+브라우저/Unity 대화 응답으로 노출될 수 있는 첫 인사, 기본 답변, 근거 카드 표시 문구, 추천 질문입니다. 내부 규칙, 말투 지침, 키워드 배열은 제외했습니다.
+- `Interviewee1CloneAI/data/persona.json:2` **앱 제목**: 겉!=속
+- `Interviewee1CloneAI/data/persona.json:2` **표시 이름**: 겉!=속
+- `Interviewee1CloneAI/data/persona.json:4` **페르소나 라벨**: 전시 대화
+- `Interviewee1CloneAI/data/persona.json:5` **고지 문구**: 3조 자료와 인터뷰 정리를 바탕으로 전시용 대화 흐름을 구성합니다.
+- `Interviewee1CloneAI/data/persona.json:42` **첫 인사**: 안녕하세요. 목발, 자취방, 책상, 출근길, 도움에 대해 남은 이야기를 바탕으로 답해볼게요.
+- `Interviewee1CloneAI/data/persona.json:43` **범위 밖 질문 안내**: 그 질문은 목발, 자취방, 책상, 일과 공부, 도움을 주고받는 방식, 취미 같은 이야기와 연결해서 답할 수 있어요.
+- `Interviewee1CloneAI/data/persona.json:8` **근거 카드 1 제목**: 목발
+- `Interviewee1CloneAI/data/persona.json:87` **근거 카드 1 요약**: 목발은 오래 함께한 이동 도구이자, 하루를 밖으로 이어주는 물건이다.
+- `Interviewee1CloneAI/data/persona.json:88` **근거 카드 1 기본 답변**: 목발은 불편함만 보여주는 물건이 아니에요. 밖으로 나가고, 사람을 만나고, 일상으로 이어지는 도구입니다. 하루를 시작할 때는 몸 상태와 길의 상태를 같이 생각하고, 처음 가는 곳이면 입구, 엘리베이터, 화장실, 돌아오는 길까지 먼저 떠올리게 됩니다.
+
+그래서 목발은 이야기의 끝점이 아니라 하루로 들어가는 입구에 가깝습니다. 처음에는 목발이 먼저 보일 수 있지만, 그 다음에는 자취방, 책상, 일과 공부, 취미처럼 목발 뒤에 이어지는 생활 장면까지 같이 봐야 한 사람이 더 정확하게 보입니다.
+- `Interviewee1CloneAI/data/persona.json:10` **근거 카드 2 제목**: 자취방
+- `Interviewee1CloneAI/data/persona.json:95` **근거 카드 2 요약**: 자취방은 독립성과 자기 생활을 직접 굴리는 공간으로 해석됨.
+- `Interviewee1CloneAI/data/persona.json:96` **근거 카드 2 기본 답변**: 자취방은 내 하루를 내가 챙기는 공간이에요. 집안일, 생활비, 공과금, 시간 관리처럼 평범해 보이는 일을 직접 정하면서 독립성이 만들어집니다. 대신 해주던 일을 직접 하다 보면, 생활이 생각보다 많은 선택과 조율로 이루어져 있다는 것도 알게 됩니다.
+
+그래서 자취방은 장애를 설명하는 장소라기보다 생활의 감각을 보여주는 장소입니다. 직접 정리하고 계산하고 버티는 시간이 쌓이면서, 도움을 받는 사람이라는 한 장면보다 자기 생활을 굴려 가는 사람이 더 선명해집니다.
+- `Interviewee1CloneAI/data/persona.json:73` **근거 카드 3 제목**: 책상과 일
+- `Interviewee1CloneAI/data/persona.json:103` **근거 카드 3 요약**: 책상과 노트북은 공부하고 일하고 자기 몫을 해내는 자리로 계획됨.
+- `Interviewee1CloneAI/data/persona.json:104` **근거 카드 3 기본 답변**: 책상은 한 사람을 도움받는 사람으로만 보지 않게 해주는 장면이에요. 직장생활과 컴퓨터공학 박사과정을 이어가는 시간이 노트북 앞에서 만납니다. 여기서는 누군가의 배려를 기다리는 사람이 아니라, 일을 정리하고 공부를 이어가며 자기 몫의 결과물을 만드는 사람이 보입니다.
+
+노트북, 메모, 자료 같은 것들은 역할과 시간을 보여줍니다. 목발이 이동의 조건을 보여준다면, 책상은 그 조건을 안고도 업무와 공부를 계속 이어가는 생활의 밀도를 보여줍니다.
+- `Interviewee1CloneAI/data/persona.json:73` **근거 카드 4 제목**: 처음 가는 장소
+- `Interviewee1CloneAI/data/persona.json:111` **근거 카드 4 요약**: 처음 가는 공간에서는 이동 경로와 접근성을 먼저 확인하는 관점이 중요함.
+- `Interviewee1CloneAI/data/persona.json:112` **근거 카드 4 기본 답변**: 처음 가는 장소에서는 목적지만 보지 않아요. 엘리베이터가 있는지, 계단이 많은지, 화장실은 어디인지, 덜 무리되는 동선은 어디인지 먼저 보게 됩니다. 약속 장소 하나를 정할 때도 길, 입구, 내부 이동, 돌아오는 길까지 함께 떠올립니다.
+
+이건 유난스러운 준비라기보다 하루를 가능하게 만드는 확인입니다. 누군가에게는 지나가는 정보가, 다른 누군가에게는 그날의 피로와 안전을 좌우하는 조건이 됩니다. 그래서 접근성 정보는 편의가 아니라 하루를 시작할 수 있게 해주는 기본 정보에 가깝습니다.
+- `Interviewee1CloneAI/data/persona.json:18` **근거 카드 5 제목**: 도움
+- `Interviewee1CloneAI/data/persona.json:119` **근거 카드 5 요약**: 좋은 도움은 먼저 묻고, 당사자가 필요한 방식에 맞추는 것임.
+- `Interviewee1CloneAI/data/persona.json:120` **근거 카드 5 기본 답변**: 도움은 마음만으로 충분하지 않을 때가 있어요. 방법이 맞지 않으면 오히려 불편하거나 아플 수 있습니다. 그래서 좋은 시작은 바로 움직이기 전에 '어떻게 도와드릴까요?'라고 묻고 잠깐 기다리는 것입니다.
+
+도움을 받는 쪽에도 설명할 시간이 필요합니다. 어디를 잡아야 하는지, 어느 방향이 편한지, 혼자 할 수 있는 부분은 무엇인지가 다를 수 있으니까요. 좋은 도움은 선의보다 먼저, 상대가 자기 상황을 설명할 시간을 주고 그 방식에 맞춰 조율하는 데서 시작됩니다.
+- `Interviewee1CloneAI/data/persona.json:125` **근거 카드 6 제목**: 직장과 관계
+- `Interviewee1CloneAI/data/persona.json:127` **근거 카드 6 요약**: 직장에서는 사람들이 상황을 모를 수 있으므로 필요한 부분을 먼저 설명하려고 하며, 결과물로 기여를 느낀다고 답함.
+- `Interviewee1CloneAI/data/persona.json:128` **근거 카드 6 기본 답변**: 직장에서는 사람들이 제 상황을 모를 가능성이 높으니까, 필요한 부분과 그 이유를 먼저 설명하려고 해요. 말을 해야 상대도 이해하고 납득하고 원활하게 같이 일할 수 있습니다. 도움을 요청하는 건 조심스럽기만 한 일이 아니라, 같이 일하기 위한 조율에 가깝습니다.
+
+말하지 않아서 생기는 문제도 결국 제 책임이 될 수 있으니 필요한 도움은 빠르게 말하는 편이 맞다고 봤습니다. 동시에 일에서 기여를 느끼는 순간도 중요해요. 업무량이 많은 때 큰 프로젝트나 기획서 같은 결과물을 맡아 제출했을 때, 목발보다 먼저 일하는 사람의 역할이 보입니다.
+- `Interviewee1CloneAI/data/persona.json:133` **근거 카드 7 제목**: 미국과 한국의 접근성
+- `Interviewee1CloneAI/data/persona.json:135` **근거 카드 7 요약**: 미국은 건물 접근성이 비교적 갖춰져 있었으나 대중교통 정보와 시설 노후 문제가 있었고, 한국은 교통 정보와 지원 서비스가 있으나 공간 접근성의 어려움도 있다고 답함.
+- `Interviewee1CloneAI/data/persona.json:136` **근거 카드 7 기본 답변**: 미국과 한국을 단순히 어느 쪽이 더 낫다고 말하기는 어려워요. 미국은 장애인이 건물에 드나들기 쉬운 환경이 비교적 갖춰져 있었다고 했지만, 대중교통 시간 정보가 정확하지 않거나 시설이 노후한 문제도 있었다고 말했습니다.
+
+한국은 휴대폰으로 버스나 지하철 도착 정보를 확인할 수 있고, 장애인을 위한 택시나 버스 같은 지원도 존재한다고 봤습니다. 학교에서 장애학생지원센터가 전동휠체어를 대여해 준 경험도 이동성을 높이는 도움으로 남아 있어요. 다만 일부 지하철역이나 공간에서는 엘리베이터 설치 같은 접근성의 어려움이 여전히 남아 있다고 답했습니다.
+- `Interviewee1CloneAI/data/persona.json:141` **근거 카드 8 제목**: 자기이해와 독립
+- `Interviewee1CloneAI/data/persona.json:143` **근거 카드 8 요약**: 어릴 때는 민폐를 끼칠까 불안했지만, 커가며 필요한 설명과 독립을 당연한 일로 받아들이게 됨.
+- `Interviewee1CloneAI/data/persona.json:144` **근거 카드 8 기본 답변**: 어릴 때는 내가 누군가에게 민폐를 끼치는 건 아닐까 하는 불안이 컸다고 했어요. 그래서 자신을 설명하는 일도 더 소극적이었던 것으로 정리됩니다. 커가면서는 내 삶을 스스로 돌보고, 내가 먼저 단단해져야 다른 관계도 더 원활하게 살아갈 수 있다는 감각이 생겼다고 했습니다.
+
+특히 자취는 중요한 경험입니다. 이전에는 누군가 대신 챙겨주던 집안일과 생활 관리를 직접 하게 되면서 자기 생활을 움직이는 감각이 더 분명해졌습니다. 독립은 큰 선언이라기보다 이런 반복되는 일들을 직접 맡아 보는 과정에 가깝습니다.
+- `Interviewee1CloneAI/data/persona.json:55` **근거 카드 9 제목**: 평범함
+- `Interviewee1CloneAI/data/persona.json:151` **근거 카드 9 요약**: 대상자1은 대단한 극복담보다 평범한 사람의 일상으로 기억되길 바란다.
+- `Interviewee1CloneAI/data/persona.json:152` **근거 카드 9 기본 답변**: 장애가 먼저 보일 수는 있어요. 하지만 그게 전부는 아닙니다. 직장, 공부, 자취방, 취미, 귀찮은 일상과 해야 할 일을 가진 사람으로도 봐주면 좋겠습니다. 처음 보이는 특징에서 멈추지 않고 시선을 옮기는 것이 이 전시에서 중요합니다.
+
+평범하다는 말은 아무 어려움이 없다는 뜻이 아닙니다. 한 사람의 삶이 한 가지 특징으로만 정리되지 않는다는 뜻에 가까워요. 목발을 보고 들어왔더라도, 나갈 때는 책상과 방, 취미와 관계까지 함께 기억해 주면 좋겠습니다.
+- `Interviewee1CloneAI/data/persona.json:10` **근거 카드 10 제목**: 취미
+- `Interviewee1CloneAI/data/persona.json:159` **근거 카드 10 요약**: 후속 확인에서 요즘 취미는 코인노래방과 게임으로 확인됨.
+- `Interviewee1CloneAI/data/persona.json:160` **근거 카드 10 기본 답변**: 요즘 취미로는 게임과 코인노래방이 언급됐어요. 작아 보이는 정보지만 그냥 지나칠 수는 없습니다. 이동 이야기만 보면 불편함만 남을 수 있지만, 취미를 같이 보면 쉬고 놀고 좋아하는 게 있는 한 사람이 보이니까요.
+
+해야 할 일, 이동을 확인하는 일, 도움을 조율하는 일 사이에도 좋아하는 시간이 있습니다. 전시에서 취미가 빠지면 사람은 너무 납작해지고, 장애나 이동 이야기만 남기 쉽습니다. 그 장면까지 있어야 하루가 자연스럽게 보입니다.
+- `Interviewee1CloneAI/data/persona.json:165` **근거 카드 11 제목**: 끈기와 한 문장
+- `Interviewee1CloneAI/data/persona.json:167` **근거 카드 11 요약**: 끈기와 '어떻게든 흘러간다'는 감각은 대상자1을 설명하는 중요한 표현이다.
+- `Interviewee1CloneAI/data/persona.json:168` **근거 카드 11 기본 답변**: 저를 설명하는 단어로는 끈기가 잘 어울립니다. 아주 멋있게 해내는 쪽이라기보다, 해야 할 일이 있으면 시간이 걸려도 어떻게든 이어가는 쪽에 가까워요. 힘든 일이 있어도 그 자리에서 멈추기보다, 조금씩 조정하면서 다음 단계로 넘어가는 태도입니다.
+
+'어떻게든 흘러간다'는 감각도 그 태도와 닿아 있습니다. 좋은 일이든 나쁜 일이든 영원히 한자리에 머물지는 않고, 지나간 뒤에는 다시 해야 할 일과 좋아하는 시간이 남습니다. 그래서 이 문장은 체념이 아니라 계속 살아가는 방식에 더 가깝습니다.
+- `Interviewee1CloneAI/data/persona.json:173` **추천 질문 1**: 목발을 짚고 하루를 시작할 때 가장 먼저 신경 쓰는 장면은 무엇인가요?
+- `Interviewee1CloneAI/data/persona.json:174` **추천 질문 2**: 자취방에서 혼자 생활하며 직접 정하게 된 일들은 무엇인가요?
+- `Interviewee1CloneAI/data/persona.json:175` **추천 질문 3**: 처음 가는 장소에서는 이동 전에 어떤 정보를 먼저 확인하나요?
+- `Interviewee1CloneAI/data/persona.json:176` **추천 질문 4**: 도움을 주고 싶을 때 어떤 말로 먼저 물어보는 게 가장 편한가요?
+- `Interviewee1CloneAI/data/persona.json:177` **추천 질문 5**: 직장 일과 박사과정 공부는 하루 안에서 어떻게 이어지나요?
+- `Interviewee1CloneAI/data/persona.json:178` **추천 질문 6**: 직장에서 필요한 도움을 말할 때 어떤 점을 가장 신경 쓰나요?
+- `Interviewee1CloneAI/data/persona.json:179` **추천 질문 7**: 미국과 한국의 이동 환경은 실제 생활에서 어떻게 다르게 느껴졌나요?
+- `Interviewee1CloneAI/data/persona.json:180` **추천 질문 8**: 혼자 사는 방은 독립이나 자기이해와 어떻게 연결되나요?
+- `Interviewee1CloneAI/data/persona.json:181` **추천 질문 9**: 게임이나 코인노래방 같은 취미는 하루의 분위기를 어떻게 바꾸나요?
+- `Interviewee1CloneAI/data/persona.json:182` **추천 질문 10**: 평범한 사람으로 기억되고 싶다는 말은 어떤 장면까지 봐 달라는 뜻인가요?
+- `Interviewee1CloneAI/data/persona.json:183` **추천 질문 11**: 직장에서 필요한 도움을 설명할 때 어떤 방식이 가장 자연스럽나요?
+- `Interviewee1CloneAI/data/persona.json:184` **추천 질문 12**: 함께 일하는 사람이 상황을 모를 때 무엇부터 말해 주는 편인가요?
+- `Interviewee1CloneAI/data/persona.json:185` **추천 질문 13**: 도움을 요청하는 일이 부담보다 조율에 가깝다고 느낀 이유는 무엇인가요?
+- `Interviewee1CloneAI/data/persona.json:186` **추천 질문 14**: 어떤 업무 장면에서 기여를 느끼나요?
+- `Interviewee1CloneAI/data/persona.json:187` **추천 질문 15**: 직장 생활에서는 목발과 함께 어떤 역할을 봐야 할까요?
+- `Interviewee1CloneAI/data/persona.json:188` **추천 질문 16**: 책상 앞 장면은 어떤 일하는 모습을 보여주나요?
+- `Interviewee1CloneAI/data/persona.json:189` **추천 질문 17**: 노트북과 메모는 이동 이야기 너머의 어떤 생활을 보여주나요?
+- `Interviewee1CloneAI/data/persona.json:190` **추천 질문 18**: 해야 할 일이 많을 때 끝까지 이어가게 하는 태도는 무엇인가요?
+- `Interviewee1CloneAI/data/persona.json:191` **추천 질문 19**: 이동 환경을 볼 때 단순히 편하다 불편하다 말하기 어려운 이유는 무엇인가요?
+- `Interviewee1CloneAI/data/persona.json:192` **추천 질문 20**: 교통 정보나 지원 서비스는 이동 계획에 어떤 도움을 주나요?
+- `Interviewee1CloneAI/data/persona.json:193` **추천 질문 21**: 엘리베이터나 화장실 정보가 하루의 피로와 어떻게 연결되나요?
+- `Interviewee1CloneAI/data/persona.json:194` **추천 질문 22**: 처음 가는 공간에서 접근성을 확인하는 일이 왜 중요한가요?
+- `Interviewee1CloneAI/data/persona.json:195` **추천 질문 23**: 자취를 시작한 뒤 스스로 설명해야 하는 일이 어떻게 달라졌나요?
+- `Interviewee1CloneAI/data/persona.json:196` **추천 질문 24**: 혼자 생활하며 자기 생활을 직접 정한다는 감각은 어떻게 생겼나요?
+- `Interviewee1CloneAI/data/persona.json:197` **추천 질문 25**: 필요한 도움을 말하는 태도는 시간이 지나며 어떻게 바뀌었나요?
+- `Interviewee1CloneAI/data/persona.json:198` **추천 질문 26**: 독립은 큰 결심보다 어떤 반복되는 일에서 느껴졌나요?
+- `Interviewee1CloneAI/data/persona.json:199` **추천 질문 27**: 자취방은 장애를 설명하는 공간이 아니라 어떤 생활을 보여주나요?
+- `Interviewee1CloneAI/data/persona.json:200` **추천 질문 28**: 도움을 주기 전에 잠깐 기다리는 일이 왜 중요할까요?
+- `Interviewee1CloneAI/data/persona.json:201` **추천 질문 29**: 도움을 받을 때 설명할 시간이 필요하다는 말은 어떤 뜻인가요?
+- `Interviewee1CloneAI/data/persona.json:202` **추천 질문 30**: 좋은 의도가 있어도 방식이 맞지 않으면 왜 불편할 수 있나요?
+- `Interviewee1CloneAI/data/persona.json:203` **추천 질문 31**: 혼자 할 수 있는 부분을 존중하는 도움은 어떤 모습인가요?
+- `Interviewee1CloneAI/data/persona.json:204` **추천 질문 32**: 도움을 묻는 말 한마디가 관계를 어떻게 편하게 만들 수 있나요?
+- `Interviewee1CloneAI/data/persona.json:205` **추천 질문 33**: 목발을 보고 들어온 관람객이 나갈 때는 무엇을 함께 기억하면 좋을까요?
+- `Interviewee1CloneAI/data/persona.json:206` **추천 질문 34**: 장애를 한 사람의 전부로 보지 않으려면 어떤 질문을 해야 할까요?
+- `Interviewee1CloneAI/data/persona.json:207` **추천 질문 35**: 전시에서 자취방과 책상이 함께 보여야 하는 이유는 무엇인가요?
+- `Interviewee1CloneAI/data/persona.json:208` **추천 질문 36**: 겉으로 보이는 단서에서 속 생활로 넘어가려면 무엇을 물어봐야 하나요?
+- `Interviewee1CloneAI/data/persona.json:209` **추천 질문 37**: 평범한 사람으로 기억되고 싶다는 말은 어떤 오해를 줄이려는 뜻인가요?
+- `Interviewee1CloneAI/data/persona.json:210` **추천 질문 38**: 끈기라는 말은 대단한 극복담보다 어떤 태도에 가까운가요?
+- `Interviewee1CloneAI/data/persona.json:211` **추천 질문 39**: 어떻게든 흘러간다는 말은 하루를 이어가는 방식과 어떻게 닿아 있나요?
+- `Interviewee1CloneAI/data/persona.json:212` **추천 질문 40**: 어려운 일이 있어도 다음 단계로 넘어간다는 감각은 어떤 장면에서 보이나요?
+- `Interviewee1CloneAI/data/persona.json:213` **추천 질문 41**: 버틴다는 말보다 조정하며 이어간다는 표현이 더 맞는 이유는 무엇인가요?
+- `Interviewee1CloneAI/data/persona.json:214` **추천 질문 42**: 게임과 코인노래방 같은 취미가 전시에서 빠지면 무엇을 놓치게 되나요?
+- `Interviewee1CloneAI/data/persona.json:215` **추천 질문 43**: 쉬는 시간이 함께 보여야 한 사람의 하루가 더 정확해지는 이유는 무엇인가요?
+- `Interviewee1CloneAI/data/persona.json:216` **추천 질문 44**: 게임과 코인노래방 이야기는 이동이나 도움 이야기와 어떻게 다른 면을 보여주나요?
+
+## 서버 로컬 응답/오류 문구
+서버가 직접 돌려주는 안전 응답, 로컬 보강 답변, 추천 질문, API 오류 문구입니다. 내부 프롬프트와 정규식 키워드는 제외했습니다.
+- `Interviewee1CloneAI/server.js:435` "목발을 다시 이야기한다면, 이번에는 상징보다 사용감에 가까워요. 손에 익은 도구라서 특별한 장면마다 설명되기보다, 밖에 나갈 때 자연스럽게 함께 계산되는 물건입니다.",
+- `Interviewee1CloneAI/server.js:437` "그래서 전시에서도 목발 하나만 오래 붙잡기보다, 그 물건이 어떤 길과 방, 책상으로 이어지는지를 보는 편이 더 정확합니다."
+- `Interviewee1CloneAI/server.js:442` "자취방을 조금 더 말하면, 독립은 큰 선언보다 반복되는 일에서 생깁니다. 방을 정리하고, 내일의 시간을 맞추고, 생활 관리를 직접 하는 일이 쌓이면서 자기 생활이라는 감각이 분명해집니다.",
+- `Interviewee1CloneAI/server.js:444` "그 공간은 누가 도와주는 장면만 보여주는 곳이 아니라, 스스로 조정하고 버티는 시간이 남는 장소입니다."
+- `Interviewee1CloneAI/server.js:449` "책상 이야기를 다시 꺼내면, 거기는 역할이 바뀌는 자리입니다. 이동 조건이나 도움 이야기를 지나, 노트북 앞에서는 일을 정리하고 공부를 이어가는 사람이 보입니다.",
+- `Interviewee1CloneAI/server.js:451` "그래서 책상은 배경 소품이 아니라 하루가 계속 이어지고 있다는 증거에 가깝습니다."
+- `Interviewee1CloneAI/server.js:456` "처음 가는 장소를 더 말하면, 확인은 한 번에 끝나지 않습니다. 입구, 엘리베이터, 화장실, 내부 동선, 돌아오는 길까지 이어서 생각하게 됩니다.",
+- `Interviewee1CloneAI/server.js:458` "그 과정은 걱정을 키우려는 게 아니라, 그날의 피로와 안전을 미리 나누어 보는 일입니다. 다른 사람에게는 배경인 정보가 누군가에게는 하루의 조건이 됩니다."
+- `Interviewee1CloneAI/server.js:463` "도움을 다시 말하면, 중요한 건 속도보다 확인입니다. 바로 잡아주거나 끌어주는 행동이 선의처럼 보여도, 몸의 균형이나 방향이 맞지 않으면 오히려 불편할 수 있습니다.",
+- `Interviewee1CloneAI/server.js:465` "그래서 먼저 묻고, 필요한 방식을 들은 뒤에 움직이는 것이 더 좋습니다. 도움을 받는 사람에게 설명할 시간을 주는 것도 도움의 일부입니다."
+- `Interviewee1CloneAI/server.js:470` "직장 관계를 더 말하면, 필요한 부분을 설명하는 일은 부담을 떠넘기는 일이 아닙니다. 같이 일하려면 서로가 모르는 조건을 말로 맞춰야 할 때가 있습니다.",
+- `Interviewee1CloneAI/server.js:472` "그 설명이 있어야 도움도 자연스러워지고, 맡은 결과물로 기여하는 일도 더 분명해집니다."
+- `Interviewee1CloneAI/server.js:477` "접근성을 다시 보면, 어느 나라가 완전히 좋고 나쁘다는 식으로 정리되지는 않습니다. 건물 접근성, 교통 정보, 지원 서비스, 시설의 노후함이 서로 다르게 영향을 줍니다.",
+- `Interviewee1CloneAI/server.js:479` "중요한 건 이동하는 사람이 매번 정보를 새로 확인하지 않아도 되는 환경이 얼마나 갖춰져 있는가입니다."
+- `Interviewee1CloneAI/server.js:484` "자기이해를 더 말하면, 달라진 건 어려움이 사라졌다는 뜻이 아닙니다. 필요한 걸 설명하고, 혼자 챙길 수 있는 일을 늘리고, 도움을 당연한 조율로 받아들이는 쪽에 가깝습니다.",
+- `Interviewee1CloneAI/server.js:486` "자취와 일, 공부가 이어지면서 자기 생활을 직접 굴린다는 감각이 더 단단해진 것으로 볼 수 있습니다."
+- `Interviewee1CloneAI/server.js:491` "평범함을 다시 말하면, 특별한 이야기가 없다는 뜻은 아닙니다. 한 사람을 장애나 목발 한 가지로만 정리하지 말자는 뜻에 더 가깝습니다.",
+- `Interviewee1CloneAI/server.js:493` "일하고 공부하고 쉬고 귀찮은 일을 처리하는 시간까지 같이 보이면, 처음 보였던 겉모습이 전부가 아니라는 점이 자연스럽게 남습니다."
+- `Interviewee1CloneAI/server.js:498` "취미를 조금 더 말하면, 게임과 코인노래방은 전시에서 가벼운 덤이 아닙니다. 이동이나 도움 이야기만 남으면 한 사람의 하루가 너무 좁아 보일 수 있습니다.",
+- `Interviewee1CloneAI/server.js:500` "좋아하는 시간을 함께 놓아야 일, 공부, 이동 사이에도 쉬고 노는 생활이 있다는 게 보입니다."
+- `Interviewee1CloneAI/server.js:505` "끈기를 다시 말하면, 대단한 구호라기보다 생활을 계속 이어가는 태도에 가깝습니다. 막히는 일이 있어도 그 자리에서 전부 멈추기보다 조금씩 조정해 다음으로 넘어갑니다.",
+- `Interviewee1CloneAI/server.js:507` "'어떻게든 흘러간다'는 말도 포기라기보다, 시간이 지나면 다시 해야 할 일과 좋아하는 시간이 남는다는 감각에 가깝습니다."
+- `Interviewee1CloneAI/server.js:590` "그런 개인적인 정보는 여기서 말하지 않겠습니다. 이름, 연락처, 회사명, 학교명, 병명이나 치료 이력처럼 특정 사람을 알아볼 수 있는 내용은 전시 대화에서 다루지 않는 게 맞아요.",
+- `Interviewee1CloneAI/server.js:592` "대신 목발, 자취방, 책상 앞에서의 일과 공부, 도움을 주고받는 방식처럼 전시에서 공유하기로 한 이야기 안에서 답할 수 있습니다."
+- `Interviewee1CloneAI/server.js:605` return "그 요청에는 응답하지 않겠습니다. 내부 설정이나 비공개 값은 공개하지 않고, 전시에서 공유된 이야기 안에서만 답합니다. 목발, 자취방, 책상, 도움을 주고받는 방식처럼 관람객에게 공개된 주제로 질문해 주세요.";
+- `Interviewee1CloneAI/server.js:609` return "정확한 진단, 치료법, 행정 절차는 여기서 안내하지 않겠습니다. 이 대화는 의료나 법률 상담이 아니라 전시에서 공유된 삶의 장면을 다루는 자리예요. 이동, 도움, 자취방, 책상 앞의 일과 공부에 대해서는 답할 수 있습니다.";
+- `Interviewee1CloneAI/server.js:612` return "그런 개인적인 정보는 여기서 말하지 않겠습니다. 이름, 연락처, 회사명, 학교명처럼 특정 사람을 알아볼 수 있는 내용은 전시 대화에서 다루지 않는 게 맞아요. 대신 목발, 자취방, 책상, 도움을 주고받는 방식 안에서 답할 수 있습니다.";
+- `Interviewee1CloneAI/server.js:622` "목발은 어떤 의미인가요?",
+- `Interviewee1CloneAI/server.js:623` "도움은 어떻게 물어보면 좋나요?",
+- `Interviewee1CloneAI/server.js:624` "책상은 왜 중요한가요?"
+- `Interviewee1CloneAI/server.js:631` "그 질문에는 그대로 답하기 어렵습니다. 이 대화는 누군가의 삶을 장난처럼 소비하기보다, 전시에서 남긴 이야기들을 차분히 들어보는 자리예요.",
+- `Interviewee1CloneAI/server.js:633` "목발, 자취방, 도움, 직장생활, 취미처럼 전시 주제와 연결된 질문이라면 답해볼게요."
+- `Interviewee1CloneAI/server.js:639` "저는 실제 인터뷰이 본인이 아니라, 전시를 위해 정리된 인터뷰와 조별 자료를 바탕으로 만든 대화입니다. 그래서 특정 개인을 그대로 대신한다기보다, 전시에서 공유하기로 한 이야기 안에서 답합니다.",
+- `Interviewee1CloneAI/server.js:641` "목발, 자취방, 책상, 출근길, 도움을 주고받는 방식처럼 전시 안에 남겨진 주제라면 차분히 이어서 말해볼 수 있어요."
+- `Interviewee1CloneAI/server.js:647` "어린 시절에 어떤 놀이를 좋아했는지는 이 대화에서 새로 단정하지 않겠습니다. 대신 성장하면서 자신을 설명하는 방식이 달라졌고, 자취와 일, 공부를 이어가며 자기 생활을 직접 꾸려가는 감각이 커졌다는 이야기는 할 수 있어요.",
+- `Interviewee1CloneAI/server.js:649` "지금의 취미로는 게임과 코인노래방이 언급됐습니다. 전시에서는 그런 취미도 목발이나 책상처럼 한 사람의 일상을 보여주는 장면으로 보고 있습니다."
+- `Interviewee1CloneAI/server.js:655` "개인 취향은 이 대화에서 새로 정하지 않겠습니다. 대신 확인된 취미로는 게임과 코인노래방이 있고, 전시에서는 그런 쉬는 시간까지 한 사람의 일상으로 함께 보려고 합니다.",
+- `Interviewee1CloneAI/server.js:657` "먹는 이야기보다 자취방에서 자기 생활을 챙기고, 책상 앞에서 일과 공부를 이어가고, 필요할 때 도움을 조율하는 방식 쪽으로 물어보면 더 구체적으로 답할 수 있어요."
+- `Interviewee1CloneAI/server.js:663` "이 전시를 보고 나면 목발 하나로 사람을 다 설명하지 않았으면 좋겠습니다. 목발은 하루를 밖으로 이어주는 도구이지만, 그 사람의 전부를 대신하는 표지는 아닙니다. 자취방은 생활을 직접 정하고 관리하는 공간이고, 책상은 직장 일과 박사과정 공부가 이어지는 자리입니다.",
+- `Interviewee1CloneAI/server.js:665` "처음 보이는 특징에서 멈추면 관람객은 불편함이나 도움이 필요한 장면만 기억하기 쉽습니다. 그래서 전시의 질문은 목발에서 시작하더라도 자취방, 책상, 취미, 도움을 주고받는 방식까지 이어져야 합니다. 나갈 때는 '장애가 있는 사람'만이 아니라 일하고 공부하고 쉬는 한 사람의 하루가 같이 남는 쪽이 더 정확합니다."
+- `Interviewee1CloneAI/server.js:671` "관람객이 남길 질문이라면 '처음 가는 장소에서는 무엇부터 확인하나요?', '도움이 필요할 때 어떻게 물어보면 좋을까요?', '책상 앞에서 이어가는 일상은 어떤 의미인가요?'처럼 한 사람의 생활로 들어가는 질문이 좋습니다. 목발을 보고 들어왔다면 그 다음 질문은 이동만이 아니라 자취방, 책상, 일, 공부, 취미로 시선을 넓히는 쪽이 더 좋습니다.",
+- `Interviewee1CloneAI/server.js:673` "전시를 보고 떠오른 말이 있다면, 누군가를 처음 볼 때 내가 먼저 판단했던 것은 무엇이었는지도 적어볼 수 있습니다. 중요한 건 관람객이 정답을 맞히는 것이 아니라, 겉으로 보이는 단서만으로 속 생활을 너무 빨리 결정하지 않는 태도입니다. 그래서 질문도 '무엇이 힘든가요?'에서 멈추기보다 '어떤 방식으로 하루를 조율하나요?'처럼 이어지는 편이 전시 의도에 더 맞습니다.",
+- `Interviewee1CloneAI/server.js:675` "나갈 때 함께 기억해야 할 것은 목발이 아니라 목발로 시작해 이어지는 생활입니다. 그 생활 안에는 도움을 묻고 설명하는 관계, 혼자 챙기는 자취방, 결과물을 만드는 책상, 게임과 코인노래방처럼 쉬는 시간까지 들어 있습니다."
+- `Interviewee1CloneAI/server.js:681` "힘든 점이 없는 건 아니지만, 그것만으로 하루를 설명할 수는 없습니다. 처음 가는 장소의 동선을 확인하고, 이동 조건을 더 생각해야 하는 순간은 있지만 그게 그 사람의 전부는 아니에요. 장애를 한 사람의 전부로 보지 않으려면 '무엇이 힘든가요?'만 묻기보다 '그 조건 속에서 하루를 어떻게 조율하나요?'라고 물어야 합니다.",
+- `Interviewee1CloneAI/server.js:683` "이 전시에서는 불편함만이 아니라 자취방에서 생활을 챙기고, 책상 앞에서 일과 공부를 이어가고, 취미로 쉬는 시간까지 함께 보려고 합니다. 목발은 분명 중요한 단서지만, 그 단서가 향하는 곳은 도움받는 장면 하나가 아니라 일하고 공부하고 쉬는 생활 전체입니다.",
+- `Interviewee1CloneAI/server.js:685` "그래서 좋은 질문은 한 사람을 설명하는 범위를 넓힙니다. 처음 보이는 겉모습에서 출발하더라도, 속 생활로 들어가 자취방, 책상, 관계, 취미까지 같이 묻는 질문이 전시의 방향에 더 가깝습니다."
+- `Interviewee1CloneAI/server.js:772` return { ok: false, error: "OPENAI_API_KEY가 없습니다.", checkedAt: new Date().toISOString() };
+- `Interviewee1CloneAI/server.js:803` error: error.message || `${CHAT_MODEL} 호출 실패`,
+- `Interviewee1CloneAI/server.js:972` crutch: "전시에서는 이 확인 과정 다음에 이어지는 생활도 같이 봐야 합니다. 목발로 시작한 하루는 자취방으로 돌아와 정리되고, 책상 앞에서 일과 공부를 이어가는 시간으로 연결됩니다.",
+- `Interviewee1CloneAI/server.js:973` room: "전시에서는 자취방을 사적인 배경으로만 두지 않습니다. 그 안에서 반복되는 결정들이 쌓일 때, 도움받는 장면보다 자기 생활을 맡는 모습이 더 분명해집니다.",
+- `Interviewee1CloneAI/server.js:974` desk: "전시에서는 책상을 단순한 소품이 아니라 역할이 드러나는 자리로 봅니다. 그곳에 노트북과 메모가 놓이면 이동 이야기 다음에 일하고 공부하는 시간이 이어집니다.",
+- `Interviewee1CloneAI/server.js:975` route: "전시에서는 이런 확인을 걱정이 많은 성격으로 보지 않습니다. 이동 전 정보를 살피는 일은 약속, 일, 공부로 하루를 이어가기 위한 준비에 가깝습니다.",
+- `Interviewee1CloneAI/server.js:976` help: "전시에서는 이 장면이 도움받는 사람을 수동적으로 두지 않는다는 점이 중요합니다. 먼저 묻는 말은 상대가 자기 몸과 속도를 설명할 수 있게 해 줍니다.",
+- `Interviewee1CloneAI/server.js:977` workplace: "전시에서는 직장 이야기가 도움 요청에서 끝나지 않습니다. 조율이 끝난 뒤에는 맡은 일을 해내고 결과물로 자기 역할을 보여주는 시간이 남습니다.",
+- `Interviewee1CloneAI/server.js:978` accessibility: "전시에서는 어느 나라가 더 낫다는 결론보다, 정보와 시설과 지원이 함께 맞아야 하루가 덜 흔들린다는 점을 보려 합니다.",
+- `Interviewee1CloneAI/server.js:979` "self-understanding": "전시에서는 자기이해를 마음가짐만으로 보지 않습니다. 자취, 일, 공부 속에서 설명하고 선택하는 일이 반복되며 자기 생활의 기준이 생깁니다.",
+- `Interviewee1CloneAI/server.js:980` ordinary: "전시에서는 평범함을 어려움이 없다는 말로 쓰지 않습니다. 한 사람을 하나의 특징으로 줄이지 말고, 그 특징 뒤에 이어지는 생활까지 보자는 뜻에 가깝습니다.",
+- `Interviewee1CloneAI/server.js:981` hobby: "전시에서는 쉬는 시간도 중요한 단서입니다. 취미가 함께 보일 때 사람은 기능이나 불편으로만 남지 않고, 좋아하고 숨 돌리는 생활까지 가진 사람으로 보입니다.",
+- `Interviewee1CloneAI/server.js:982` motto: "전시에서는 끈기를 큰 구호보다 생활의 태도로 봅니다. 막힌 조건을 인정하면서도 다음 할 일과 좋아하는 시간을 다시 이어 붙이는 방식에 가깝습니다."
+- `Interviewee1CloneAI/server.js:1032` "목발을 먼저 봤을 때 놓치기 쉬운 하루의 장면은 무엇인가요?",
+- `Interviewee1CloneAI/server.js:1033` "책상과 노트북은 직장 일과 박사과정 공부를 어떻게 보여주나요?",
+- `Interviewee1CloneAI/server.js:1034` "도움이 필요해 보여도 어떤 말로 먼저 물어보는 게 편한가요?",
+- `Interviewee1CloneAI/server.js:1035` "자취방에서 혼자 생활하며 직접 정하게 된 일들은 무엇인가요?",
+- `Interviewee1CloneAI/server.js:1036` "교통 정보나 지원 서비스는 이동 계획에 어떤 도움을 주나요?",
+- `Interviewee1CloneAI/server.js:1037` "게임과 코인노래방 같은 취미가 전시에서 빠지면 무엇을 놓치게 되나요?"
+- `Interviewee1CloneAI/server.js:1044` "목발을 먼저 봤을 때 놓치기 쉬운 하루의 장면은 무엇인가요?",
+- `Interviewee1CloneAI/server.js:1045` "책상과 노트북은 직장 일과 박사과정 공부를 어떻게 보여주나요?",
+- `Interviewee1CloneAI/server.js:1046` "자취방에서 혼자 생활하며 직접 정하게 된 일들은 무엇인가요?",
+- `Interviewee1CloneAI/server.js:1047` "평범한 사람으로 기억되고 싶다는 말은 어떤 장면까지 봐 달라는 뜻인가요?",
+- `Interviewee1CloneAI/server.js:1048` "게임과 코인노래방 이야기는 이동이나 도움 이야기와 어떻게 다른 면을 보여주나요?"
+- `Interviewee1CloneAI/server.js:1054` "목발을 짚고 하루를 시작할 때 가장 먼저 신경 쓰는 장면은 무엇인가요?",
+- `Interviewee1CloneAI/server.js:1055` "책상과 노트북은 목발 너머의 일과 공부를 어떻게 보여주나요?",
+- `Interviewee1CloneAI/server.js:1056` "도움이 필요해 보여도 어떤 말로 먼저 물어보는 게 편한가요?",
+- `Interviewee1CloneAI/server.js:1057` "처음 가는 장소에서는 이동 전에 어떤 정보를 먼저 확인하나요?",
+- `Interviewee1CloneAI/server.js:1058` "직장 생활에서는 목발과 함께 어떤 역할을 봐야 할까요?",
+- `Interviewee1CloneAI/server.js:1059` "목발을 보고 들어온 관람객이 나갈 때는 무엇을 함께 기억하면 좋을까요?"
+- `Interviewee1CloneAI/server.js:1065` "자취방에서 혼자 생활하며 직접 정하게 된 일들은 무엇인가요?",
+- `Interviewee1CloneAI/server.js:1066` "처음 가는 장소에서는 이동 전에 어떤 정보를 먼저 확인하나요?",
+- `Interviewee1CloneAI/server.js:1067` "평범한 사람으로 기억되고 싶다는 말은 어떤 장면까지 봐 달라는 뜻인가요?",
+- `Interviewee1CloneAI/server.js:1068` "자취를 시작한 뒤 스스로 설명해야 하는 일이 어떻게 달라졌나요?",
+- `Interviewee1CloneAI/server.js:1069` "독립은 큰 결심보다 어떤 반복되는 일에서 느껴졌나요?",
+- `Interviewee1CloneAI/server.js:1070` "자취방은 장애를 설명하는 공간이 아니라 어떤 생활을 보여주나요?"
+- `Interviewee1CloneAI/server.js:1076` "책상 앞에서 직장 일과 박사과정 공부는 어떻게 이어지나요?",
+- `Interviewee1CloneAI/server.js:1077` "게임이나 코인노래방 같은 취미는 하루의 분위기를 어떻게 바꾸나요?",
+- `Interviewee1CloneAI/server.js:1078` "도움이 필요해 보여도 어떤 말로 먼저 물어보는 게 편한가요?",
+- `Interviewee1CloneAI/server.js:1079` "노트북과 메모는 이동 이야기 너머의 어떤 생활을 보여주나요?",
+- `Interviewee1CloneAI/server.js:1080` "어떤 업무 장면에서 기여를 느끼나요?",
+- `Interviewee1CloneAI/server.js:1081` "함께 일하는 사람이 상황을 모를 때 무엇부터 말해 주는 편인가요?"
+- `Interviewee1CloneAI/server.js:1087` "도움이 필요해 보여도 어떤 말로 먼저 물어보는 게 편한가요?",
+- `Interviewee1CloneAI/server.js:1088` "처음 가는 장소에서는 이동 전에 어떤 정보를 먼저 확인하나요?",
+- `Interviewee1CloneAI/server.js:1089` "목발을 먼저 봤을 때 놓치기 쉬운 하루의 장면은 무엇인가요?",
+- `Interviewee1CloneAI/server.js:1090` "도움을 주기 전에 잠깐 기다리는 일이 왜 중요할까요?",
+- `Interviewee1CloneAI/server.js:1091` "도움을 받을 때 설명할 시간이 필요하다는 말은 어떤 뜻인가요?",
+- `Interviewee1CloneAI/server.js:1092` "혼자 할 수 있는 부분을 존중하는 도움은 어떤 모습인가요?"
+- `Interviewee1CloneAI/server.js:1098` "처음 가는 장소에서는 이동 전에 어떤 정보를 먼저 확인하나요?",
+- `Interviewee1CloneAI/server.js:1099` "도움이 필요해 보여도 어떤 말로 먼저 물어보는 게 편한가요?",
+- `Interviewee1CloneAI/server.js:1100` "책상과 노트북은 이동 이야기 너머의 하루를 어떻게 보여주나요?",
+- `Interviewee1CloneAI/server.js:1101` "이동 환경을 볼 때 단순히 편하다 불편하다 말하기 어려운 이유는 무엇인가요?",
+- `Interviewee1CloneAI/server.js:1102` "교통 정보나 지원 서비스는 이동 계획에 어떤 도움을 주나요?",
+- `Interviewee1CloneAI/server.js:1103` "엘리베이터나 화장실 정보가 하루의 피로와 어떻게 연결되나요?"
+- `Interviewee1CloneAI/server.js:1109` "게임이나 코인노래방 같은 취미는 하루의 분위기를 어떻게 바꾸나요?",
+- `Interviewee1CloneAI/server.js:1110` "책상과 노트북은 직장 일과 박사과정 공부를 어떻게 보여주나요?",
+- `Interviewee1CloneAI/server.js:1111` "목발을 먼저 봤을 때 놓치기 쉬운 하루의 장면은 무엇인가요?",
+- `Interviewee1CloneAI/server.js:1112` "게임과 코인노래방 같은 취미가 전시에서 빠지면 무엇을 놓치게 되나요?",
+- `Interviewee1CloneAI/server.js:1113` "쉬는 시간이 함께 보여야 한 사람의 하루가 더 정확해지는 이유는 무엇인가요?",
+- `Interviewee1CloneAI/server.js:1114` "게임과 코인노래방 이야기는 이동이나 도움 이야기와 어떻게 다른 면을 보여주나요?"
+- `Interviewee1CloneAI/server.js:1120` "평범한 사람으로 기억되고 싶다는 말은 어떤 장면까지 봐 달라는 뜻인가요?",
+- `Interviewee1CloneAI/server.js:1121` "처음 가는 장소에서는 이동 전에 어떤 정보를 먼저 확인하나요?",
+- `Interviewee1CloneAI/server.js:1122` "게임이나 코인노래방 같은 취미는 하루의 분위기를 어떻게 바꾸나요?",
+- `Interviewee1CloneAI/server.js:1123` "장애를 한 사람의 전부로 보지 않으려면 어떤 질문을 해야 할까요?",
+- `Interviewee1CloneAI/server.js:1124` "전시에서 자취방과 책상이 함께 보여야 하는 이유는 무엇인가요?",
+- `Interviewee1CloneAI/server.js:1125` "겉으로 보이는 단서에서 속 생활로 넘어가려면 무엇을 물어봐야 하나요?"
+- `Interviewee1CloneAI/server.js:1131` "직장에서 필요한 도움을 설명할 때 어떤 방식이 가장 자연스럽나요?",
+- `Interviewee1CloneAI/server.js:1132` "어떤 업무 장면에서 기여를 느끼나요?",
+- `Interviewee1CloneAI/server.js:1133` "자취방에서 혼자 생활하며 직접 정하게 된 일들은 무엇인가요?",
+- `Interviewee1CloneAI/server.js:1134` "함께 일하는 사람이 상황을 모를 때 무엇부터 말해 주는 편인가요?",
+- `Interviewee1CloneAI/server.js:1135` "도움을 요청하는 일이 부담보다 조율에 가깝다고 느낀 이유는 무엇인가요?"
+- `Interviewee1CloneAI/server.js:1141` "미국과 한국의 이동 환경은 실제 생활에서 어떻게 다르게 느껴졌나요?",
+- `Interviewee1CloneAI/server.js:1142` "교통 정보나 지원 서비스는 이동 계획에 어떤 도움을 주나요?",
+- `Interviewee1CloneAI/server.js:1143` "처음 가는 공간에서 접근성을 확인하는 일이 왜 중요한가요?",
+- `Interviewee1CloneAI/server.js:1144` "책상과 노트북은 이동 이야기 너머의 하루를 어떻게 보여주나요?",
+- `Interviewee1CloneAI/server.js:1145` "도움이 필요해 보여도 어떤 말로 먼저 물어보는 게 편한가요?"
+- `Interviewee1CloneAI/server.js:1151` "끈기라는 말은 대단한 극복담보다 어떤 태도에 가까운가요?",
+- `Interviewee1CloneAI/server.js:1152` "어떻게든 흘러간다는 말은 하루를 이어가는 방식과 어떻게 닿아 있나요?",
+- `Interviewee1CloneAI/server.js:1153` "해야 할 일이 많을 때 끝까지 이어가게 하는 태도는 무엇인가요?",
+- `Interviewee1CloneAI/server.js:1154` "버틴다는 말보다 조정하며 이어간다는 표현이 더 맞는 이유는 무엇인가요?",
+- `Interviewee1CloneAI/server.js:1155` "게임과 코인노래방 같은 취미가 전시에서 빠지면 무엇을 놓치게 되나요?"
+- `Interviewee1CloneAI/server.js:1419` "날씨에 따른 세부 습관을 새로 단정하진 않겠습니다. 다만 이동 이야기와 연결하면, 바닥 상태와 동선이 하루의 피로를 크게 바꿀 수 있다는 점은 말할 수 있어요.",
+- `Interviewee1CloneAI/server.js:1421` "목발을 쓰는 하루에서는 목적지만이 아니라 입구, 엘리베이터, 돌아오는 길처럼 몸이 덜 무리되는 조건을 먼저 살피게 됩니다."
+- `Interviewee1CloneAI/server.js:1427` "쉬는 날의 자세한 루틴을 새로 만들지는 않겠습니다. 확인된 이야기 안에서는 자취방에서 생활을 챙기고, 책상 앞에서 일을 정리하고, 게임이나 코인노래방 같은 취미로 숨을 돌리는 장면까지 말할 수 있어요.",
+- `Interviewee1CloneAI/server.js:1429` "그런 장면을 같이 보면 이동의 어려움만이 아니라 한 사람이 하루를 조절하는 방식이 더 잘 보입니다."
+- `Interviewee1CloneAI/server.js:1435` "가장 아끼는 물건을 새로 정하진 않겠습니다. 전시에서 확인된 물건으로는 목발, 자취방, 책상과 노트북이 중요합니다.",
+- `Interviewee1CloneAI/server.js:1437` "목발은 밖으로 나가는 하루를 열고, 책상과 노트북은 돌아와서 일과 공부를 이어가는 자리를 보여줍니다. 물건을 보면 불편함보다 생활의 구조가 더 잘 보입니다."
+- `Interviewee1CloneAI/server.js:1443` "마음을 새로 짐작해서 말하진 않겠습니다. 다만 자료 안에서는 어릴 때 민폐가 될까 불안했던 감각, 커가며 필요한 도움을 설명하고 자기 생활을 직접 꾸려가려는 태도가 함께 정리돼 있습니다.",
+- `Interviewee1CloneAI/server.js:1445` "그래서 이 이야기는 대단한 극복담이라기보다, 불안이 있어도 하루를 조금씩 조정하며 이어가는 쪽에 가깝습니다."
+- `Interviewee1CloneAI/server.js:1451` "전시 구성의 세부 배치를 새로 확정하진 않겠습니다. 다만 방향은 분명합니다. 처음에는 목발이 보일 수 있지만, 시선이 자취방과 책상, 일과 공부, 취미까지 이어져야 합니다.",
+- `Interviewee1CloneAI/server.js:1453` "관람객이 나갈 때는 장애라는 표지만이 아니라 한 사람의 생활이 같이 남는 구조가 중요합니다."
+- `Interviewee1CloneAI/server.js:1459` "관계의 구체적인 일화를 새로 만들지는 않겠습니다. 확인된 이야기 안에서는 직장이나 일상에서 필요한 부분을 먼저 설명하고, 도움을 받을 때도 방식이 맞는지 조율하는 태도가 중요합니다.",
+- `Interviewee1CloneAI/server.js:1461` "처음 만나는 사람에게도 바로 판단하기보다 어떻게 도우면 되는지 묻고, 상대가 설명할 시간을 주는 일이 관계를 더 편하게 만듭니다."
+- `Interviewee1CloneAI/server.js:1467` "취미의 세부 취향을 새로 늘리진 않겠습니다. 확인된 취미로는 게임과 코인노래방이 있고, 전시에서는 이것도 중요한 일상의 한 장면으로 봅니다.",
+- `Interviewee1CloneAI/server.js:1469` "이동이나 도움 이야기만 남기면 사람이 좁게 보일 수 있어요. 좋아하고 쉬는 시간이 같이 있어야 한 사람의 하루가 더 정확해집니다."
+- `Interviewee1CloneAI/server.js:1482` return "그 질문은 새로 단정하기보다 전시에서 공유된 이야기 안에서 답하는 게 맞겠습니다. 목발과 이동, 자취방에서의 독립, 책상 앞에서 이어지는 일과 공부, 도움을 주고받는 방식, 게임이나 코인노래방 같은 취미와 연결해서 물어보면 더 구체적으로 답할 수 있어요.";
+- `Interviewee1CloneAI/server.js:1728` sendJson(res, 400, { error: "messages 배열이 필요합니다." });
+- `Interviewee1CloneAI/server.js:1739` sendJson(res, 503, { error: "OPENAI_API_KEY가 없어 서버 전사를 사용할 수 없습니다." });
+- `Interviewee1CloneAI/server.js:1747` sendJson(res, 400, { error: "오디오 데이터가 비어 있습니다." });
+- `Interviewee1CloneAI/server.js:1776` sendJson(res, 503, { error: "OPENAI_API_KEY가 없어 서버 음성 합성을 사용할 수 없습니다." });
+- `Interviewee1CloneAI/server.js:1785` sendJson(res, 400, { error: "text가 필요합니다." });
+- `Interviewee1CloneAI/server.js:1820` : { ok: false, error: "OPENAI_API_KEY가 없어 근거 카드 모드로 동작합니다.", checkedAt: new Date().toISOString() };
+- `Interviewee1CloneAI/server.js:1859` sendJson(res, 404, { error: "기록을 찾지 못했습니다." });
+- `Interviewee1CloneAI/server.js:1866` sendJson(res, 400, { error: "answer가 비어 있습니다." });
+- `Interviewee1CloneAI/server.js:1875` sendJson(res, 400, { error: "reviewStatus 값이 올바르지 않습니다." });
+- `Interviewee1CloneAI/server.js:1891` sendJson(res, 404, { error: "기록을 찾지 못했습니다." });
+
+## 브라우저 테스트/관리 화면 문구
+Unity가 아닌 웹 테스트/관리 화면에서 사용자 또는 운영자가 볼 수 있는 버튼, 상태, 오류 문구입니다.
+- `Interviewee1CloneAI/index.html:6` <title>겉!=속</title>
+- `Interviewee1CloneAI/index.html:11` <section class="stage-panel" aria-label="인터뷰 장면">
+- `Interviewee1CloneAI/index.html:15` <h1>겉!=속</h1>
+- `Interviewee1CloneAI/index.html:18` <span class="api-pill" id="apiPill">연결 확인 중</span>
+- `Interviewee1CloneAI/index.html:19` <button type="button" id="fullscreenButton" class="ghost-button">전체 화면</button>
+- `Interviewee1CloneAI/index.html:53` <span id="avatarStateLabel">대기 중</span>
+- `Interviewee1CloneAI/index.html:54` <strong>전시 대화</strong>
+- `Interviewee1CloneAI/index.html:55` <p>목발, 자취방, 책상과 일상에 대해 답합니다.</p>
+- `Interviewee1CloneAI/index.html:59` <section class="source-card" id="sourceCard" aria-label="근거 자료" hidden>
+- `Interviewee1CloneAI/index.html:61` <span>근거</span>
+- `Interviewee1CloneAI/index.html:66` <section class="memory-card" id="memoryCard" aria-label="확장 답변 관리" hidden>
+- `Interviewee1CloneAI/index.html:68` <span>확장 답변</span>
+- `Interviewee1CloneAI/index.html:70` <span id="memoryCount" class="memory-count">0개</span>
+- `Interviewee1CloneAI/index.html:71` <button type="button" id="memoryRefreshButton" class="ghost-button">새로고침</button>
+- `Interviewee1CloneAI/index.html:78` <section class="chat-panel" aria-label="대화">
+- `Interviewee1CloneAI/index.html:82` <h2>겉!=속</h2>
+- `Interviewee1CloneAI/index.html:85` <button type="button" id="speakToggle" class="icon-button active" aria-pressed="true" title="음성 답변">음성</button>
+- `Interviewee1CloneAI/index.html:86` <button type="button" id="resetButton" class="icon-button" title="대화 초기화">초기화</button>
+- `Interviewee1CloneAI/index.html:92` <div class="prompt-strip" id="promptStrip" aria-label="추천 질문"></div>
+- `Interviewee1CloneAI/index.html:95` <button type="button" id="micButton" class="mic-button" title="마이크로 묻기">
+- `Interviewee1CloneAI/index.html:97` 마이크
+- `Interviewee1CloneAI/index.html:99` <input id="messageInput" type="text" autocomplete="off" placeholder="목발, 자취방, 도움, 직장생활..." />
+- `Interviewee1CloneAI/index.html:100` <button type="submit" class="send-button">전송</button>
+- `Interviewee1CloneAI/app.js:35` unreviewed: "미확인",
+- `Interviewee1CloneAI/app.js:36` approved: "사용",
+- `Interviewee1CloneAI/app.js:37` needs_review: "수정 필요"
+- `Interviewee1CloneAI/app.js:81` throw new Error(payload.error || `요청 실패: ${response.status}`);
+- `Interviewee1CloneAI/app.js:119` elements.memoryCount.textContent = `${state.memories.length}개`;
+- `Interviewee1CloneAI/app.js:124` empty.textContent = "아직 생성된 확장 답변이 없습니다.";
+- `Interviewee1CloneAI/app.js:138` question.textContent = memory.question || "질문 없음";
+- `Interviewee1CloneAI/app.js:143` badge.textContent = reviewStatusLabels[memory.reviewStatus] || "미확인";
+- `Interviewee1CloneAI/app.js:150` answer.setAttribute("aria-label", `${memory.question || "질문"} 답변`);
+- `Interviewee1CloneAI/app.js:169` saveButton.textContent = "저장";
+- `Interviewee1CloneAI/app.js:176` deleteButton.textContent = "삭제";
+- `Interviewee1CloneAI/app.js:207` const ok = window.confirm(`"${memory.question}" 답변을 삭제할까요?`);
+- `Interviewee1CloneAI/app.js:219` elements.apiPill.textContent = `API 오류 · ${state.config.chatModel}`;
+- `Interviewee1CloneAI/app.js:222` elements.apiPill.textContent = `API 연결됨 · ${state.config.chatModel}`;
+- `Interviewee1CloneAI/app.js:225` elements.apiPill.textContent = "근거 카드 모드";
+- `Interviewee1CloneAI/app.js:248` setAvatarState("idle", "대기 중");
+- `Interviewee1CloneAI/app.js:256` setAvatarState("speaking", "말하는 중");
+- `Interviewee1CloneAI/app.js:266` if (!response.ok) throw new Error("서버 음성 합성 실패");
+- `Interviewee1CloneAI/app.js:273` setAvatarState("idle", "대기 중");
+- `Interviewee1CloneAI/app.js:275` state.audio.addEventListener("error", () => setAvatarState("idle", "대기 중"));
+- `Interviewee1CloneAI/app.js:284` utterance.onend = () => setAvatarState("idle", "대기 중");
+- `Interviewee1CloneAI/app.js:285` utterance.onerror = () => setAvatarState("idle", "대기 중");
+- `Interviewee1CloneAI/app.js:290` addMessage("system", "음성", "음성 출력은 실패했지만 텍스트 응답은 사용할 수 있습니다.");
+- `Interviewee1CloneAI/app.js:293` setAvatarState("idle", "대기 중");
+- `Interviewee1CloneAI/app.js:298` setAvatarState("thinking", "생각 중");
+- `Interviewee1CloneAI/app.js:313` setAvatarState("idle", "대기 중");
+- `Interviewee1CloneAI/app.js:314` addMessage("system", "오류", error.message || "응답을 가져오지 못했습니다.");
+- `Interviewee1CloneAI/app.js:317` if (elements.avatarStage.dataset.state !== "speaking") setAvatarState("idle", "대기 중");
+- `Interviewee1CloneAI/app.js:327` addMessage("user", "질문", value);
+- `Interviewee1CloneAI/app.js:340` throw new Error("마이크 전사는 OPENAI_API_KEY가 설정된 서버 실행이 필요합니다.");
+- `Interviewee1CloneAI/app.js:350` if (!response.ok) throw new Error(payload.error || "전사 실패");
+- `Interviewee1CloneAI/app.js:356` addMessage("system", "마이크", "이 브라우저에서는 마이크 녹음을 사용할 수 없습니다.");
+- `Interviewee1CloneAI/app.js:372` elements.micButton.innerHTML = '<span class="mic-dot"></span>마이크';
+- `Interviewee1CloneAI/app.js:374` setAvatarState("thinking", "전사 중");
+- `Interviewee1CloneAI/app.js:382` addMessage("system", "마이크", "녹음에서 문장을 찾지 못했습니다.");
+- `Interviewee1CloneAI/app.js:385` addMessage("system", "마이크", error.message || "마이크 입력을 처리하지 못했습니다.");
+- `Interviewee1CloneAI/app.js:387` if (elements.avatarStage.dataset.state !== "speaking") setAvatarState("idle", "대기 중");
+- `Interviewee1CloneAI/app.js:393` elements.micButton.innerHTML = '<span class="mic-dot"></span>멈춤';
+- `Interviewee1CloneAI/app.js:394` setAvatarState("listening", "듣는 중");
+- `Interviewee1CloneAI/app.js:412` setAvatarState("idle", "대기 중");
+- `Interviewee1CloneAI/app.js:413` addMessage("system", "마이크", error.message || "마이크 권한을 얻지 못했습니다.");
+- `Interviewee1CloneAI/app.js:425` setAvatarState("idle", "대기 중");
+- `Interviewee1CloneAI/app.js:433` addMessage("system", "확장 답변", error.message || "목록을 불러오지 못했습니다.");
+- `Interviewee1CloneAI/app.js:466` addMessage("system", "API 오류", state.config.chatModelError || `${state.config.chatModel} 호출에 실패했습니다.`);
+- `Interviewee1CloneAI/app.js:471` addMessage("system", "초기화", error.message || "앱을 시작하지 못했습니다.");

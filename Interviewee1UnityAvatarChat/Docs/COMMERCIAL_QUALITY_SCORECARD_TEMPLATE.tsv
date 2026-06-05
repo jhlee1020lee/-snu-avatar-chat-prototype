@@ -1,0 +1,9 @@
+area	item	score	blocker	reviewer	evidence	notes
+core_loop	5문답 세션 완결감		false			
+writing	사람책 인터뷰 말투		false			
+readability	긴 답변과 큰 글자 읽기		false			
+controls	입력, 설정, 기록 저장과 삭제		false			
+trust_privacy	로컬 저장과 개인정보 안내 신뢰		false			
+art_presentation	캐릭터, 배경, 캡슐, 스크린샷 완성도		false			
+trailer_store	트레일러와 상점 문구의 실제 플레이 전달		false			
+stability_package	실행 패키지, fallback, 지원 번들 안정성		false			

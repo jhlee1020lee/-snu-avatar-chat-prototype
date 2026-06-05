@@ -1,0 +1,10 @@
+start	end	source	caption
+0	3	title-no-save.png	책상 맞은편에서 짧은 인터뷰를 시작합니다
+3	10	question-phone.png	무엇을 물을지 고르고 여섯 장면을 열어갑니다
+10	17	hotspot-preview.png	책상 위 단서를 먼저 확인하고 질문합니다
+17	28	long-dialogue.png	긴 답변도 대사창 안에서 차분히 읽습니다
+28	37	memory-complete.png	문답이 쌓이면 기억장이 하나의 세션이 됩니다
+37	46	closing-card.png	다섯 번의 문답 뒤 오늘 남길 문장을 고릅니다
+46	53	ending-archive.png	저장한 기록은 기록함에서 다시 읽습니다
+53	57	keyboard-shortcuts.png	글자 크기와 조작 옵션을 바로 조정합니다
+57	60	data-policy-delete-prompt.png	저장 데이터와 기록은 앱 안에서 관리합니다

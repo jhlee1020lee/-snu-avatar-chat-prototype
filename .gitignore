@@ -1,0 +1,63 @@
+# Ignore everything by default; this repo is a scoped backup for the avatar chat prototype.
+*
+
+# Repo metadata
+!.gitignore
+
+# Unity avatar chat source
+!/Interviewee1UnityAvatarChat/
+/Interviewee1UnityAvatarChat/*
+!/Interviewee1UnityAvatarChat/Assets/
+!/Interviewee1UnityAvatarChat/Assets/**
+!/Interviewee1UnityAvatarChat/Docs/
+!/Interviewee1UnityAvatarChat/Docs/**
+!/Interviewee1UnityAvatarChat/Marketing/
+!/Interviewee1UnityAvatarChat/Marketing/**
+!/Interviewee1UnityAvatarChat/Packages/
+!/Interviewee1UnityAvatarChat/Packages/**
+!/Interviewee1UnityAvatarChat/ProjectSettings/
+!/Interviewee1UnityAvatarChat/ProjectSettings/**
+!/Interviewee1UnityAvatarChat/Tools/
+!/Interviewee1UnityAvatarChat/Tools/**
+!/Interviewee1UnityAvatarChat/LaunchAvatarChat.ps1
+!/Interviewee1UnityAvatarChat/README.md
+!/Interviewee1UnityAvatarChat/RUN_AVATAR_CHAT.bat
+!/Interviewee1UnityAvatarChat/TEAM_DEMO_CHECKLIST_20260605.md
+!/Interviewee1UnityAvatarChat/TEAM_PLAYTEST_STATUS_20260604.md
+
+# Unity generated output
+/Interviewee1UnityAvatarChat/Build/
+/Interviewee1UnityAvatarChat/Library/
+/Interviewee1UnityAvatarChat/Logs/
+/Interviewee1UnityAvatarChat/Temp/
+/Interviewee1UnityAvatarChat/Obj/
+/Interviewee1UnityAvatarChat/UserSettings/
+/Interviewee1UnityAvatarChat/MemoryCaptures/
+/Interviewee1UnityAvatarChat/_Archive*/
+
+# Clone AI server source
+!/Interviewee1CloneAI/
+/Interviewee1CloneAI/*
+!/Interviewee1CloneAI/data/
+!/Interviewee1CloneAI/data/**
+!/Interviewee1CloneAI/app.js
+!/Interviewee1CloneAI/index.html
+!/Interviewee1CloneAI/package.json
+!/Interviewee1CloneAI/README.md
+!/Interviewee1CloneAI/RUN_CLONE_AI.bat
+!/Interviewee1CloneAI/server.js
+!/Interviewee1CloneAI/styles.css
+!/Interviewee1CloneAI/COMPLETION_AUDIT.md
+!/Interviewee1CloneAI/EVIDENCE_NOTES.md
+!/Interviewee1CloneAI/EXHIBITION_RUNBOOK.md
+!/Interviewee1CloneAI/MATERIAL_REVIEW_AUDIT.md
+
+# Server generated output and local logs
+/Interviewee1CloneAI/artifacts/
+/Interviewee1CloneAI/node_modules/
+/Interviewee1CloneAI/.env
+/Interviewee1CloneAI/*.log
+/Interviewee1CloneAI/.*.log
+
+# Local backups stay off git
+/_recovery_backups/

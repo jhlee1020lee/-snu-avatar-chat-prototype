@@ -1,0 +1,12 @@
+"AppBuild"
+{
+    "AppID" "REPLACE_WITH_STEAM_APP_ID"
+    "Desc" "Geot Not Equal Sok Windows QA build"
+    "BuildOutput" "..\output"
+    "ContentRoot" "..\content"
+    "Depots"
+    {
+        "REPLACE_WITH_WINDOWS_DEPOT_ID" "depot_build_windows.vdf"
+    }
+}
+
