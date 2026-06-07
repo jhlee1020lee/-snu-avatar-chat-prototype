@@ -282,7 +282,18 @@ function buildDeveloperPrompt(persona, generatedMemories = []) {
     `- ${persona.voiceStyle.pacing}`,
     `- ${persona.voiceStyle.stance}`,
     `- ${persona.voiceStyle.firstPerson}`,
+    ...(Array.isArray(persona.voiceStyle.naturalness)
+      ? persona.voiceStyle.naturalness.map((rule) => `- ${rule}`)
+      : []),
     "",
+    ...(voiceExampleBlock
+      ? [
+          "말투 예시:",
+          "아래 예시는 문장을 그대로 반복하기보다 길이, 속도, 태도만 참고한다.",
+          voiceExampleBlock,
+          ""
+        ]
+      : []),
     "근거 카드:",
     compactFacts(persona),
     "",
@@ -343,6 +354,9 @@ function buildGeneratedExtensionPrompt(persona, generatedMemories = []) {
     `- ${persona.voiceStyle.pacing}`,
     `- ${persona.voiceStyle.stance}`,
     `- ${persona.voiceStyle.firstPerson}`,
+    ...(Array.isArray(persona.voiceStyle.naturalness)
+      ? persona.voiceStyle.naturalness.map((rule) => `- ${rule}`)
+      : []),
     "",
     ...(voiceExampleBlock
       ? [
