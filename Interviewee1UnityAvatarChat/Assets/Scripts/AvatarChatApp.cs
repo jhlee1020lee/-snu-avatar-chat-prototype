@@ -57,6 +57,7 @@ public sealed class AvatarChatApp : MonoBehaviour
     private readonly Dictionary<ExpressionState, Sprite> avatarSprites = new Dictionary<ExpressionState, Sprite>();
     private readonly Dictionary<ExpressionState, Sprite> avatarHandSprites = new Dictionary<ExpressionState, Sprite>();
     private readonly Dictionary<string, Sprite> generatedSprites = new Dictionary<string, Sprite>();
+    private readonly System.Random leadQuestionRandom = new System.Random(Guid.NewGuid().GetHashCode());
     private readonly List<RectTransform> hotspotPulseRects = new List<RectTransform>();
     private readonly List<Image> hotspotPulseImages = new List<Image>();
     private readonly List<GameObject> hotspotRootObjects = new List<GameObject>();
@@ -101,24 +102,29 @@ public sealed class AvatarChatApp : MonoBehaviour
 
     private readonly string[] leadQuestions =
     {
-        "목발을 먼저 봤을 때 놓치기 쉬운 하루의 장면은 무엇인가요?",
-        "도움이 필요해 보여도 어떤 말로 먼저 물어보는 게 편한가요?",
+        "목발을 짚고 하루를 시작할 때 가장 먼저 신경 쓰는 장면은 무엇인가요?",
         "처음 가는 장소에서는 이동 전에 어떤 정보를 먼저 확인하나요?",
-        "혼자 사는 방에서는 어떤 생활의 선택을 직접 정하게 되나요?",
+        "도움을 주고 싶을 때 어떤 말로 먼저 물어보는 게 가장 편한가요?",
         "직장 일과 박사과정 공부는 하루 안에서 어떻게 이어지나요?",
-        "목발 너머의 생활을 보려면 어떤 장면까지 더 물어봐야 하나요?",
+        "직장에서 필요한 도움을 말할 때 어떤 점을 가장 신경 쓰나요?",
+        "책상 앞에서는 어떤 일을 가장 많이 하게 되나요?",
+        "자취방에서 혼자 생활하며 직접 정하게 된 일들은 무엇인가요?",
+        "미국과 한국의 이동 환경은 실제 생활에서 어떻게 다르게 느껴졌나요?",
+        "혼자 사는 방은 독립이나 자기이해와 어떻게 연결되나요?",
+        "평범한 사람으로 기억되고 싶다는 말은 어떤 장면까지 봐 달라는 뜻인가요?",
         "직장에서 필요한 도움을 설명할 때 어떤 방식이 가장 자연스럽나요?",
         "함께 일하는 사람이 상황을 모를 때 무엇부터 말해 주는 편인가요?",
+        "도움을 요청하는 일이 부담보다 조율에 가깝다고 느낀 이유는 무엇인가요?",
         "어떤 업무 장면에서 기여를 느끼나요?",
-        "노트북과 메모는 이동 이야기 너머의 어떤 생활을 보여주나요?",
+        "노트북과 메모는 하루에서 어떤 역할을 하나요?",
+        "해야 할 일이 많을 때 끝까지 이어가게 하는 태도는 무엇인가요?",
+        "이동 환경을 볼 때 단순히 편하다 불편하다 말하기 어려운 이유는 무엇인가요?",
         "교통 정보나 지원 서비스는 이동 계획에 어떤 도움을 주나요?",
         "엘리베이터나 화장실 정보가 하루의 피로와 어떻게 연결되나요?",
         "자취를 시작한 뒤 스스로 설명해야 하는 일이 어떻게 달라졌나요?",
-        "도움을 받을 때 설명할 시간이 필요하다는 말은 어떤 뜻인가요?",
-        "혼자 할 수 있는 부분을 존중하는 도움은 어떤 모습인가요?",
-        "전시에서 자취방과 책상이 함께 보여야 하는 이유는 무엇인가요?",
-        "끈기라는 말은 대단한 극복담보다 어떤 태도에 가까운가요?",
-        "게임과 코인노래방 같은 취미가 전시에서 빠지면 무엇을 놓치게 되나요?"
+        "게임이나 코인노래방 같은 취미는 하루의 분위기를 어떻게 바꾸나요?",
+        "게임이나 코인노래방은 쉬는 시간의 분위기를 어떻게 바꾸나요?",
+        "끈기나 어떻게든 흘러간다는 말은 어떤 생활 태도와 닿아 있나요?"
     };
 
     private readonly string[] memoryThemes =
@@ -144,10 +150,10 @@ public sealed class AvatarChatApp : MonoBehaviour
     private readonly string[] themeLeadQuestions =
     {
         "목발을 짚고 하루를 시작할 때 가장 먼저 신경 쓰는 장면은 무엇인가요?",
-        "처음 가는 곳에서는 이동 전에 어떤 조건을 먼저 확인하나요?",
-        "도움을 건네기 전에 어떤 말로 먼저 물어보는 게 좋을까요?",
-        "책상과 노트북은 일하고 공부하는 하루에서 어떤 자리인가요?",
-        "혼자 사는 방은 독립이나 자기이해와 어떻게 연결되나요?",
+        "처음 가는 장소에서는 이동 전에 어떤 정보를 먼저 확인하나요?",
+        "도움을 주고 싶을 때 어떤 말로 먼저 물어보는 게 가장 편한가요?",
+        "직장 일과 박사과정 공부는 하루 안에서 어떻게 이어지나요?",
+        "자취방에서 혼자 생활하며 직접 정하게 된 일들은 무엇인가요?",
         "게임이나 코인노래방 같은 취미는 하루의 분위기를 어떻게 바꾸나요?"
     };
 
@@ -158,56 +164,74 @@ public sealed class AvatarChatApp : MonoBehaviour
             case "일상":
                 return new[]
                 {
-                    "목발을 먼저 봤을 때 놓치기 쉬운 하루의 장면은 무엇인가요?",
-                    "목발보다 먼저 있는 평범한 하루는 어떤 모습인가요?",
-                    "장애가 먼저 보일 때 그 밖의 생활은 어떻게 함께 봐야 할까요?",
-                    "관람객이 나갈 때 목발 말고 무엇을 함께 기억하면 좋을까요?",
-                    "한 사람의 하루를 한 가지 특징으로만 보지 않으려면 어떤 질문이 필요할까요?"
+                    "목발을 짚고 하루를 시작할 때 가장 먼저 신경 쓰는 장면은 무엇인가요?",
+                    "회사에 가고 공부하고 집에 돌아오는 하루는 어떤 순서로 이어지나요?",
+                    "해야 할 일이 많을 때 끝까지 이어가게 하는 태도는 무엇인가요?",
+                    "평범한 사람으로 기억되고 싶다는 말은 어떤 장면까지 봐 달라는 뜻인가요?",
+                    "끈기나 어떻게든 흘러간다는 말은 어떤 생활 태도와 닿아 있나요?",
+                    "목발을 쓰는 날에도 하루에서 가장 평범하게 반복되는 일은 무엇인가요?",
+                    "좋아하는 시간과 해야 하는 시간이 하루 안에서 어떻게 섞이나요?",
+                    "처음 보는 사람이 가장 먼저 물어봐 주면 좋겠는 생활 질문은 무엇인가요?"
                 };
             case "이동":
                 return new[]
                 {
-                    "처음 가는 곳에서는 이동 전에 어떤 조건을 먼저 확인하나요?",
+                    "처음 가는 장소에서는 이동 전에 어떤 정보를 먼저 확인하나요?",
                     "입구와 엘리베이터, 화장실 정보는 하루의 피로와 어떻게 연결되나요?",
                     "교통 정보나 지원 서비스는 이동 계획에 어떤 도움을 주나요?",
                     "비가 오거나 바닥이 미끄러운 날에는 무엇을 더 신경 쓰게 되나요?",
-                    "목발은 불편함만이 아니라 하루를 이어 주는 도구라는 말은 어떤 뜻인가요?"
+                    "목발은 하루를 밖으로 이어 주는 도구라는 말은 어떤 뜻인가요?",
+                    "처음 가는 공간에서 접근성을 확인하는 일이 왜 중요한가요?",
+                    "이동 계획을 세울 때 가장 먼저 확인하는 정보는 무엇인가요?",
+                    "미국과 한국의 이동 환경은 실제 생활에서 어떻게 다르게 느껴졌나요?"
                 };
             case "도움":
                 return new[]
                 {
-                    "도움을 건네기 전에 어떤 말로 먼저 물어보는 게 좋을까요?",
+                    "도움을 주고 싶을 때 어떤 말로 먼저 물어보는 게 가장 편한가요?",
                     "바로 잡아 주기보다 설명할 시간을 주는 일이 왜 중요한가요?",
                     "혼자 할 수 있는 부분을 존중하는 도움은 어떤 모습인가요?",
                     "직장에서 필요한 도움을 설명할 때 어떤 방식이 가장 자연스럽나요?",
-                    "좋은 의도와 실제로 편한 도움 사이에는 어떤 차이가 있나요?"
+                    "좋은 의도와 실제로 편한 도움 사이에는 어떤 차이가 있나요?",
+                    "도움을 요청하는 일이 부담보다 조율에 가깝다고 느낀 이유는 무엇인가요?",
+                    "기다려 주는 태도가 도움의 일부가 될 때는 언제인가요?",
+                    "어디를 잡아야 하는지 직접 설명할 시간이 필요한 이유는 무엇인가요?"
                 };
             case "일과 공부":
                 return new[]
                 {
-                    "책상과 노트북은 일하고 공부하는 하루에서 어떤 자리인가요?",
+                    "책상 앞에서는 어떤 일을 가장 많이 하게 되나요?",
                     "직장 일과 컴퓨터공학 박사과정 공부는 하루 안에서 어떻게 이어지나요?",
-                    "노트북과 메모는 이동 이야기 너머의 어떤 생활을 보여주나요?",
+                    "노트북과 메모는 하루에서 어떤 역할을 하나요?",
                     "어떤 업무 장면에서 자기 몫이나 기여를 느끼나요?",
-                    "책상 앞 시간은 누군가의 배려를 기다리는 사람이라는 인상을 어떻게 바꾸나요?"
+                    "직장에서 필요한 도움을 말할 때 어떤 점을 가장 신경 쓰나요?",
+                    "프로젝트를 마쳤을 때 느끼는 성취는 하루를 어떻게 다르게 보이게 하나요?",
+                    "공부와 일을 병행하는 생활에서 가장 꾸준히 챙기는 리듬은 무엇인가요?",
+                    "함께 일하는 사람이 상황을 모를 때 무엇부터 말해 주는 편인가요?"
                 };
             case "독립":
                 return new[]
                 {
                     "혼자 사는 방은 독립이나 자기이해와 어떻게 연결되나요?",
-                    "자취방에서는 혼자 생활하며 어떤 일을 직접 정하게 되었나요?",
+                    "자취방에서 혼자 생활하며 직접 정하게 된 일들은 무엇인가요?",
                     "집안일, 생활비, 공과금 같은 일이 생활 감각을 어떻게 바꾸었나요?",
                     "자취를 시작한 뒤 스스로 설명해야 하는 일이 어떻게 달라졌나요?",
-                    "자취방은 장애를 설명하는 공간이 아니라 어떤 생활을 보여주나요?"
+                    "자취방에서 하루를 챙길 때 가장 자주 신경 쓰는 일은 무엇인가요?",
+                    "생활을 직접 정한다는 감각은 어떤 작은 선택에서 생기나요?",
+                    "혼자 사는 공간에서 하루를 맞춰 가는 방식은 어떻게 달라졌나요?",
+                    "독립은 큰 결심보다 어떤 반복되는 일에서 느껴졌나요?"
                 };
             case "취미":
                 return new[]
                 {
                     "게임이나 코인노래방 같은 취미는 하루의 분위기를 어떻게 바꾸나요?",
-                    "게임과 코인노래방 같은 취미가 전시에서 빠지면 무엇을 놓치게 되나요?",
-                    "쉬는 시간이 함께 보여야 한 사람의 하루가 더 정확해지는 이유는 무엇인가요?",
-                    "좋아하는 것을 챙기는 시간이 이동이나 도움 이야기와 어떻게 다른 면을 보여주나요?",
-                    "취미 이야기는 한 사람을 더 입체적으로 기억하게 만드는 데 어떤 역할을 하나요?"
+                    "게임이나 코인노래방은 쉬는 시간의 분위기를 어떻게 바꾸나요?",
+                    "쉬는 날에는 어떤 방식으로 긴장을 푸는 편인가요?",
+                    "좋아하는 것을 챙기는 시간은 하루에서 어떤 역할을 하나요?",
+                    "취미 이야기가 이동이나 도움 이야기와 다르게 느껴지는 이유는 무엇인가요?",
+                    "게임을 하는 시간은 하루의 긴장을 어떻게 바꿔 주나요?",
+                    "코인노래방 같은 여가가 자기답게 쉬는 시간으로 남는 이유는 무엇인가요?",
+                    "해야 할 일 사이에 좋아하는 시간을 남겨 두는 일이 왜 중요한가요?"
                 };
             default:
                 return new string[0];
@@ -241,10 +265,10 @@ public sealed class AvatarChatApp : MonoBehaviour
 
     private readonly string[] storyModeLines =
     {
-        "처음에는 목발이 먼저 보일 수 있어요. 그래도 제 하루가 그 장면 하나로 멈추진 않아요. 몸 상태를 살피고, 갈 곳을 떠올리고, 오늘 할 일을 하나씩 챙기면서 하루를 시작합니다.",
+        "하루를 시작할 때는 몸 상태와 이동할 길을 먼저 떠올립니다. 어디로 가는지, 얼마나 걸리는지, 오늘 해야 할 일이 무엇인지 하나씩 챙기면서 밖으로 나갈 준비를 해요.",
         "처음 가는 곳을 떠올릴 때 저는 목적지만 보지 않아요. 입구, 엘리베이터, 화장실, 돌아올 길까지 미리 그려 봅니다. 불안해서가 아니라, 하루를 너무 지치지 않게 보내고 싶어서예요.",
         "도움은 마음만큼이나 방식이 중요해요. 갑자기 붙잡기보다 먼저 물어봐 주시면, 제가 제 몸과 상황을 제 말로 설명할 수 있어요. 그 잠깐의 시간이 존중받는 느낌을 줍니다.",
-        "책상 앞에 앉으면 목발과는 또 다른 제 모습이 보여요. 직장 일과 컴퓨터공학 박사과정, 읽고 정리하는 시간이 이어집니다. 누군가의 배려만 기다리는 사람이 아니라, 제 몫을 해내는 사람이기도 해요.",
+        "책상 앞에서는 해야 할 일이 꽤 많아요. 회사 일도 정리하고, 컴퓨터공학 박사과정 공부도 이어 갑니다. 목발을 짚고 이동하는 시간만큼이나, 노트북 앞에서 제 몫을 해내는 시간도 제 하루에 크게 들어와 있어요.",
         "자취방에서는 작은 선택들이 모여 하루가 됩니다. 공과금, 집안일, 시간 관리 같은 평범한 일을 직접 챙기다 보니, 내 생활을 내가 정한다는 감각이 생겼어요.",
         "쉬는 시간도 분명한 제 이야기예요. 게임을 하고, 코인노래방에 가고, 좋아하는 걸 챙깁니다. 이동 이야기만 남으면 제 하루가 너무 단조롭게만 보이니까요."
     };
@@ -261,10 +285,10 @@ public sealed class AvatarChatApp : MonoBehaviour
 
     private readonly string[] openingStoryLines =
     {
-        "질문을 시작하기 전에, 제 하루 이야기를 잠깐만 들려드릴게요. 저는 30대 초반 남성이고, 지체장애가 있어서 목발과 휠체어로 이동합니다. 그런데 저를 목발과 휠체어로만 보면 놓치는 게 많아요. 회사에 다니고, 컴퓨터공학 박사과정을 밟고 있고, 자취방에서 제 생활을 직접 꾸리며 지내거든요.",
-        "처음 보는 분들은 아무래도 목발이 가장 먼저 눈에 들어올 거예요. 그 시선을 저도 잘 압니다. 다만 목발은 불편함을 뜻하는 물건이 아니라, 제가 밖으로 나가 사람을 만나고 일하러 가도록 하루를 이어 주는 도구예요. 그래서 처음 가는 곳이라면 입구와 엘리베이터, 화장실, 돌아올 길까지 미리 머릿속에 그려 둡니다.",
+        "질문을 시작하기 전에, 제 하루 이야기를 잠깐만 들려드릴게요. 저는 30대 초반 남성이고, 지체장애가 있어서 목발과 휠체어로 이동합니다. 회사에 가고, 공부를 하고, 집에 돌아와 제 생활을 챙기면서 지내요.",
+        "목발은 제가 밖으로 나가 사람을 만나고 일하러 갈 때 쓰는 이동 도구예요. 처음 가는 곳이라면 입구와 엘리베이터, 화장실, 돌아올 길까지 미리 머릿속에 그려 둡니다.",
         "도움에 대해서는 이런 부탁을 드리고 싶어요. 돕고 싶은 마음은 정말 고맙지만, 그 마음만으로는 충분하지 않을 때가 있거든요. 바로 붙잡거나 끌어 주기보다 어떻게 하면 편한지 먼저 물어봐 주시면, 제가 제 몸과 상황을 제 말로 설명할 수 있어요. 그래야 혼자 할 수 있는 일과 도움이 필요한 일이 분명해집니다.",
-        "책상 앞에 앉으면 또 다른 제 모습이 나와요. 직장 일과 컴퓨터공학 박사과정, 노트북과 메모, 읽고 정리하는 시간이 줄줄이 이어집니다. 목발이 제가 어떻게 움직이는지를 보여 준다면, 책상은 그 안에서도 멈추지 않고 이어지는 일과 공부를 보여 줘요.",
+        "책상 앞에서는 하루가 다시 일과 공부 쪽으로 넘어갑니다. 직장 일, 컴퓨터공학 박사과정, 노트북과 메모, 읽고 정리하는 시간이 차례로 이어져요. 밖으로 나갈 때는 이동을 많이 계산하지만, 돌아와서는 해야 할 일을 붙잡고 제 속도로 다시 정리합니다.",
         "자취방도 저를 보여 주는 중요한 공간이에요. 집안일, 생활비, 공과금, 시간 관리처럼 사소해 보이는 일을 직접 챙기다 보니, 내 생활을 내가 꾸려 간다는 감각이 생겼어요. 그래서 이 방은 제 장애를 설명하는 곳이라기보다, 제가 직접 고르고 맞춰 가며 사는 곳에 가깝습니다.",
         "마지막으로, 제 하루에도 쉬어 가는 시간이 있어요. 게임을 하고, 코인노래방에 가고, 좋아하는 걸 챙기는 시간도 분명한 제 일상이에요. 이동 이야기만 남으면 사람이 너무 단순하게만 보이거든요. 이제 목발, 도움, 책상, 자취방, 취미 중에서 먼저 궁금한 걸 골라 질문해 주세요."
     };
@@ -361,6 +385,8 @@ public sealed class AvatarChatApp : MonoBehaviour
     private Button localAnswerOnlyButton;
     private Button[] firstImpressionButtons;
     private Button[] leadButtons;
+    private Button leadThemeButton;
+    private Button leadRefreshButton;
     private GameObject[] leadShadows;
     private RectTransform[] leadRects;
     private RectTransform[] leadShadowRects;
@@ -372,25 +398,35 @@ public sealed class AvatarChatApp : MonoBehaviour
     private Button[] noteTabButtons;
     private Button moreButton;
     private Button closingButton;
+    private Button completionMoreButton;
+    private Button completionFinishButton;
     private Button closingCardSaveButton;
     private Button closingCardContinueButton;
+    private Button closingCardCloseButton;
+    private Button[] closingSensitiveQuestionButtons;
     private readonly List<Image> progressDots = new List<Image>();
     private Text progressText;
     private Scrollbar dialogueScrollbar;
     private ScrollRect dialogueScrollRect;
     private ScrollRect scrollRect;
+    private ScrollRect noteHistoryScrollRect;
+    private RectTransform noteHistoryContentRect;
+    private RectTransform noteHistoryViewportRect;
     private GameObject questionNoteObject;
     private GameObject questionNoteShadowObject;
     private GameObject noteQuestionContent;
     private GameObject noteQuestionBodyObject;
     private GameObject noteEvidenceContentObject;
     private GameObject noteHistoryContentObject;
+    private GameObject completionChoiceObject;
     private GameObject hotspotPreviewObject;
     private GameObject closingCardObject;
+    private GameObject closingSensitiveQuestionObject;
     private GameObject firstImpressionObject;
     private Text closingCardQuoteText;
     private Text closingCardCaptionText;
     private Text closingCardSummaryText;
+    private RectTransform closingCreditsTextRect;
     private Text firstImpressionPromptText;
     private Text hotspotPreviewTitleText;
     private Text hotspotPreviewQuestionText;
@@ -450,8 +486,10 @@ public sealed class AvatarChatApp : MonoBehaviour
     private ExpressionState currentExpression = ExpressionState.Idle;
     private float expressionChangedAt;
     private int leadOffset;
+    private int leadThemeCycleIndex;
     private int selectedLeadIndex;
     private int conversationTurns;
+    private float closingCreditsStartedAt;
     private int dialogueSizeLevel;
     private int selectedClosingIndex;
     private int selectedMemoryCardIndex;
@@ -483,6 +521,7 @@ public sealed class AvatarChatApp : MonoBehaviour
     private bool storyModeActive;
     private bool storyModeAdvanceRequested;
     private bool pendingClosingSensitiveQuestion;
+    private bool pendingCompletionChoiceAfterDialogue;
     private bool closingSensitiveQuestionAnswered;
     private int lastSubmitFrame = -1;
     private int storyModeIndex;
@@ -569,14 +608,20 @@ public sealed class AvatarChatApp : MonoBehaviour
     {
         "제가 실수로 도움을 앞세웠다면 어떤 태도가 더 편했을까요?",
         "불편해 보인다는 생각만으로 말을 걸 때 무엇이 부담이 될 수 있나요?",
-        "장애에 대해 물을 때, 상대를 위해 먼저 지켜야 할 선은 무엇일까요?"
+        "장애에 대해 물을 때, 상대를 위해 먼저 지켜야 할 선은 무엇일까요?",
+        "칭찬처럼 들려도 부담이 될 수 있는 말은 어떤 말일까요?",
+        "도와주고 싶은 마음과 간섭은 어디서 갈라질까요?",
+        "처음 본 인상만으로 보면 어떤 모습이 쉽게 빠질까요?"
     };
 
     private readonly string[] closingSensitiveAnswers =
     {
-        "도움이 필요한지 먼저 물어보고 기다려 주시는 게 편해요. 돕고 싶은 마음보다, 제가 고를 수 있는 잠깐의 시간이 먼저 있으면 좋겠습니다.",
-        "불편해 보인다는 것만 보고 말을 걸면, 그 사람의 하루가 불편함 하나로만 좁아질 수 있어요. 미리 단정하기보다, 필요한 게 있는지 차분히 물어봐 주시는 편이 좋습니다.",
-        "대답하지 않을 자유와 각자의 속도를 지켜 주는 선이 필요해요. 궁금하더라도 상대가 편한 만큼만 이야기할 수 있을 때 대화가 자연스럽게 이어집니다."
+        "가장 편한 건 바로 손을 대기보다 먼저 물어봐 주는 태도예요. 예를 들면 '도움이 필요하시면 어떻게 도와드리면 될까요?'처럼 선택권을 제 쪽에 남겨 두는 말이 좋습니다.\n\n도움이 필요한 순간에도 사람마다 몸의 균형, 잡히면 편한 위치, 혼자 할 수 있는 범위가 다릅니다. 그래서 잠깐 기다려 주면 제가 제 상황을 설명할 수 있고, 그때 도움은 선의가 아니라 서로 맞춘 행동이 됩니다.",
+        "불편해 보인다는 생각만으로 말을 걸면, 그 사람이 가진 다른 생활이 지워질 수 있어요. 걷는 모습이나 도구만 보고 '힘들겠다', '도와줘야겠다'로 시작하면 대화의 첫 자리가 이미 불편함으로 정해지거든요.\n\n정말 말을 걸고 싶다면 단정 대신 확인이 낫습니다. '괜찮으세요?'보다도 상황에 따라 '필요한 게 있으면 말씀해 주세요'처럼 물러설 수 있는 여지를 남겨 주면, 상대가 자기 속도와 방식으로 답할 수 있습니다.",
+        "먼저 지켜야 할 선은 대답하지 않을 자유예요. 장애에 대한 질문은 당사자의 몸과 생활을 묻는 일이기 때문에, 질문하는 사람이 궁금하다고 해서 항상 답해야 하는 주제는 아닙니다.\n\n그래서 질문은 허락을 구하는 말에서 시작하는 편이 좋아요. '물어봐도 괜찮을까요?'라고 묻고, 상대가 짧게 답하거나 넘기면 거기서 멈추는 태도가 필요합니다. 그 선이 있어야 대화가 부담이 아니라 관계가 됩니다.",
+        "칭찬처럼 들려도 부담이 되는 말은 그 사람의 평범한 일을 전부 극복담으로 만드는 말이에요. '대단하다', '나라면 못 했을 것 같다' 같은 말은 의도는 좋을 수 있지만, 듣는 사람에게는 매일의 생활이 계속 특별한 고생으로만 보인다는 느낌을 줄 수 있습니다.\n\n칭찬하고 싶다면 장애보다 그 사람이 실제로 한 일에 초점을 두는 편이 자연스럽습니다. '기획서를 끝까지 맡은 게 인상적이었다', '공부와 일을 이어가는 방식이 좋았다'처럼 구체적인 행동을 봐 주면 부담이 훨씬 줄어듭니다.",
+        "도움과 간섭은 상대가 선택할 수 있느냐에서 갈라지는 경우가 많아요. 물어보고 기다린 뒤에 상대가 말한 방식대로 움직이면 도움에 가깝고, 묻지 않은 채 붙잡거나 대신 판단하면 간섭이 되기 쉽습니다.\n\n도와주고 싶은 마음 자체가 나쁜 건 아닙니다. 다만 좋은 마음일수록 속도를 늦춰야 해요. 상대가 거절해도 괜찮고, 다른 방식을 말해도 받아들일 수 있을 때 그 도움은 관계를 편하게 만듭니다.",
+        "처음 본 인상만으로 보면 일하고 공부하는 모습, 자취방에서 생활을 직접 챙기는 모습, 좋아하는 취미와 쉬는 시간이 쉽게 빠집니다. 목발이나 이동의 어려움은 중요한 단서지만, 그 단서 하나가 한 사람의 전부가 되면 이야기가 너무 좁아져요.\n\n그래서 질문은 겉에서 속으로 넘어가야 합니다. '무엇이 불편하세요?'에서 멈추기보다 '하루를 어떻게 준비하세요?', '일과 공부는 어떻게 이어지나요?', '쉴 때는 무엇을 좋아하세요?'처럼 생활 전체를 묻는 질문이 더 정확합니다."
     };
 
     private enum ExpressionState
@@ -748,7 +793,7 @@ public sealed class AvatarChatApp : MonoBehaviour
         attitudeCounts = new int[attitudeNames.Length];
         BuildInterface();
         SetExpression(ExpressionState.Idle);
-        currentLeadQuestions = new[] { leadQuestions[0], leadQuestions[1], leadQuestions[2] };
+        currentLeadQuestions = BuildLeadQuestionSet(null);
         SetServerAvailability(false, false, ServerRequiredCheckingText);
 
         PresentAssistant(OpeningText, "오늘의 시작");
@@ -800,6 +845,7 @@ public sealed class AvatarChatApp : MonoBehaviour
         AnimateReactiveSceneProps();
         AnimateLeadQuestionSlips();
         AnimateMemoryUnlockToast();
+        AnimateClosingCredits();
         UpdateRecordDeletePromptTimeout();
         UpdateClearLocalDataPromptTimeout();
 
@@ -1686,6 +1732,10 @@ public sealed class AvatarChatApp : MonoBehaviour
         if (generatedSprites.TryGetValue(key, out Sprite cached)) return cached;
 
         Texture2D texture = Resources.Load<Texture2D>($"Illustrations/{resourceName}");
+        if (texture == null && resourceName.StartsWith("generated-", StringComparison.Ordinal))
+        {
+            texture = CreateGeneratedIllustrationTexture(resourceName);
+        }
         if (texture == null) return null;
 
         Sprite sprite = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), new Vector2(0.5f, 0.5f), 100f);
@@ -1693,21 +1743,202 @@ public sealed class AvatarChatApp : MonoBehaviour
         return sprite;
     }
 
+    private Texture2D CreateGeneratedIllustrationTexture(string resourceName)
+    {
+        const int width = 320;
+        const int height = 200;
+        Texture2D texture = new Texture2D(width, height, TextureFormat.RGBA32, false);
+        texture.wrapMode = TextureWrapMode.Clamp;
+        texture.filterMode = FilterMode.Bilinear;
+
+        Color32[] colors = GetGeneratedIllustrationPalette(resourceName);
+        FillTexture(texture, colors[0]);
+        DrawCircle(texture, 268, 152, 54, colors[1]);
+        DrawCircle(texture, 50, 42, 34, colors[2]);
+        DrawRect(texture, 0, 0, width, 28, new Color32(46, 38, 32, 42));
+        DrawRect(texture, 24, 34, 272, 5, new Color32(255, 255, 255, 58));
+
+        switch (resourceName)
+        {
+            case "generated-ordinary-day":
+                DrawRect(texture, 42, 68, 72, 66, colors[3]);
+                DrawRect(texture, 54, 118, 48, 26, colors[4]);
+                DrawCircle(texture, 178, 103, 24, colors[4]);
+                DrawRect(texture, 165, 52, 26, 52, colors[3]);
+                DrawRect(texture, 204, 70, 42, 10, colors[2]);
+                break;
+            case "generated-first-impression":
+                DrawCircle(texture, 76, 104, 32, colors[4]);
+                DrawCircle(texture, 76, 104, 18, colors[0]);
+                DrawRect(texture, 134, 92, 138, 14, colors[3]);
+                DrawRect(texture, 134, 66, 96, 10, colors[2]);
+                DrawRect(texture, 134, 124, 112, 10, colors[4]);
+                break;
+            case "generated-crutch-path":
+                DrawRect(texture, 58, 46, 13, 106, colors[3]);
+                DrawRect(texture, 76, 50, 10, 98, colors[3]);
+                DrawRect(texture, 46, 136, 54, 8, colors[3]);
+                DrawRect(texture, 128, 74, 142, 12, colors[4]);
+                DrawRect(texture, 154, 112, 92, 10, colors[2]);
+                break;
+            case "generated-access-map":
+                DrawRect(texture, 44, 50, 204, 112, new Color32(255, 250, 232, 210));
+                DrawRect(texture, 64, 72, 60, 12, colors[3]);
+                DrawRect(texture, 122, 72, 12, 62, colors[3]);
+                DrawRect(texture, 132, 122, 82, 12, colors[3]);
+                DrawCircle(texture, 228, 132, 16, colors[4]);
+                DrawCircle(texture, 66, 74, 13, colors[2]);
+                break;
+            case "generated-help-question":
+                DrawCircle(texture, 88, 112, 24, colors[3]);
+                DrawCircle(texture, 205, 112, 24, colors[4]);
+                DrawRect(texture, 110, 92, 78, 12, colors[2]);
+                DrawRect(texture, 132, 122, 54, 8, colors[2]);
+                DrawCircle(texture, 146, 112, 10, new Color32(255, 246, 214, 230));
+                break;
+            case "generated-boundary":
+                DrawRect(texture, 86, 48, 10, 112, colors[3]);
+                DrawRect(texture, 154, 48, 10, 112, colors[3]);
+                DrawRect(texture, 222, 48, 10, 112, colors[3]);
+                DrawCircle(texture, 120, 104, 18, colors[4]);
+                DrawCircle(texture, 188, 104, 18, colors[2]);
+                break;
+            case "generated-desk-study":
+                DrawRect(texture, 66, 72, 142, 70, colors[3]);
+                DrawRect(texture, 82, 88, 110, 38, new Color32(42, 58, 72, 230));
+                DrawRect(texture, 48, 46, 190, 16, colors[4]);
+                DrawRect(texture, 226, 64, 24, 76, colors[2]);
+                DrawRect(texture, 232, 72, 12, 60, new Color32(255, 250, 222, 170));
+                break;
+            case "generated-work-project":
+                DrawRect(texture, 52, 58, 86, 96, new Color32(255, 250, 232, 225));
+                DrawRect(texture, 68, 126, 54, 8, colors[3]);
+                DrawRect(texture, 68, 106, 44, 8, colors[2]);
+                DrawRect(texture, 158, 68, 98, 66, colors[4]);
+                DrawCircle(texture, 246, 72, 12, colors[2]);
+                break;
+            case "generated-room-independence":
+                DrawRect(texture, 54, 52, 86, 92, colors[3]);
+                DrawRect(texture, 70, 78, 54, 40, new Color32(255, 248, 230, 210));
+                DrawRect(texture, 176, 48, 74, 86, colors[4]);
+                DrawCircle(texture, 214, 120, 8, colors[2]);
+                break;
+            case "generated-hobby-game":
+                DrawRect(texture, 62, 74, 110, 58, colors[3]);
+                DrawCircle(texture, 86, 102, 12, colors[4]);
+                DrawRect(texture, 118, 98, 28, 8, colors[4]);
+                DrawRect(texture, 208, 58, 12, 78, colors[2]);
+                DrawCircle(texture, 226, 132, 18, colors[4]);
+                break;
+            case "generated-music-rest":
+                DrawCircle(texture, 88, 102, 32, colors[3]);
+                DrawRect(texture, 116, 70, 16, 86, colors[3]);
+                DrawCircle(texture, 198, 112, 22, colors[4]);
+                DrawRect(texture, 216, 112, 42, 8, colors[4]);
+                DrawCircle(texture, 256, 112, 10, colors[2]);
+                break;
+            case "generated-motto-steps":
+                DrawRect(texture, 52, 50, 50, 16, colors[3]);
+                DrawRect(texture, 102, 70, 58, 16, colors[4]);
+                DrawRect(texture, 160, 92, 64, 16, colors[2]);
+                DrawRect(texture, 224, 116, 50, 16, colors[3]);
+                DrawCircle(texture, 238, 148, 16, colors[4]);
+                break;
+            case "generated-transit-compare":
+                DrawCircle(texture, 78, 78, 22, colors[3]);
+                DrawCircle(texture, 78, 134, 22, colors[4]);
+                DrawRect(texture, 120, 74, 124, 10, colors[3]);
+                DrawRect(texture, 120, 130, 124, 10, colors[4]);
+                DrawRect(texture, 250, 62, 18, 92, colors[2]);
+                break;
+            default:
+                DrawRect(texture, 68, 64, 82, 84, colors[3]);
+                DrawCircle(texture, 206, 108, 34, colors[4]);
+                DrawRect(texture, 176, 100, 84, 10, colors[2]);
+                break;
+        }
+
+        DrawRect(texture, 18, 170, 284, 3, new Color32(255, 255, 255, 52));
+        texture.Apply(false, true);
+        texture.name = resourceName;
+        return texture;
+    }
+
+    private static Color32[] GetGeneratedIllustrationPalette(string key)
+    {
+        int hash = Mathf.Abs((key ?? string.Empty).GetHashCode());
+        Color32[][] palettes =
+        {
+            new[] { new Color32(250, 235, 204, 255), new Color32(231, 162, 88, 168), new Color32(118, 158, 139, 150), new Color32(146, 94, 55, 225), new Color32(42, 77, 95, 220) },
+            new[] { new Color32(232, 242, 238, 255), new Color32(108, 163, 150, 150), new Color32(220, 178, 104, 168), new Color32(38, 86, 98, 225), new Color32(172, 102, 70, 220) },
+            new[] { new Color32(240, 232, 222, 255), new Color32(190, 136, 92, 160), new Color32(91, 124, 160, 145), new Color32(111, 76, 58, 225), new Color32(36, 92, 128, 220) },
+            new[] { new Color32(236, 239, 223, 255), new Color32(135, 167, 101, 150), new Color32(210, 128, 96, 148), new Color32(79, 106, 63, 225), new Color32(138, 76, 66, 220) }
+        };
+        return palettes[hash % palettes.Length];
+    }
+
+    private static void FillTexture(Texture2D texture, Color32 color)
+    {
+        Color32[] pixels = new Color32[texture.width * texture.height];
+        for (int i = 0; i < pixels.Length; i++)
+        {
+            pixels[i] = color;
+        }
+        texture.SetPixels32(pixels);
+    }
+
+    private static void DrawRect(Texture2D texture, int x, int y, int width, int height, Color32 color)
+    {
+        int minX = Mathf.Clamp(x, 0, texture.width);
+        int maxX = Mathf.Clamp(x + width, 0, texture.width);
+        int minY = Mathf.Clamp(y, 0, texture.height);
+        int maxY = Mathf.Clamp(y + height, 0, texture.height);
+        for (int py = minY; py < maxY; py++)
+        {
+            for (int px = minX; px < maxX; px++)
+            {
+                texture.SetPixel(px, py, color);
+            }
+        }
+    }
+
+    private static void DrawCircle(Texture2D texture, int cx, int cy, int radius, Color32 color)
+    {
+        int r2 = radius * radius;
+        int minX = Mathf.Clamp(cx - radius, 0, texture.width - 1);
+        int maxX = Mathf.Clamp(cx + radius, 0, texture.width - 1);
+        int minY = Mathf.Clamp(cy - radius, 0, texture.height - 1);
+        int maxY = Mathf.Clamp(cy + radius, 0, texture.height - 1);
+        for (int y = minY; y <= maxY; y++)
+        {
+            for (int x = minX; x <= maxX; x++)
+            {
+                int dx = x - cx;
+                int dy = y - cy;
+                if (dx * dx + dy * dy <= r2)
+                {
+                    texture.SetPixel(x, y, color);
+                }
+            }
+        }
+    }
+
     private string GetIllustrationResourceForTheme(string theme)
     {
         switch (CanonicalTheme(theme))
         {
             case "이동":
-                return "scene-crutches-mobility";
+                return "ai-card-mobility-map";
             case "도움":
-                return "scene-help-listening";
+                return "ai-card-help-hands";
             case "일과 공부":
-                return "scene-desk-work-study";
+                return "ai-card-study-laptop";
             case "독립":
+                return "ai-card-independent-room";
             case "취미":
-                return "scene-independent-room-hobby";
+                return "ai-card-hobby-rest";
             case "일상":
-                return "result-card-outer-to-inner";
+                return "ai-card-ordinary-day";
             default:
                 return "result-card-outer-to-inner";
         }
@@ -1716,11 +1947,17 @@ public sealed class AvatarChatApp : MonoBehaviour
     private string GetIllustrationResourceForQuestion(string question)
     {
         string text = question ?? string.Empty;
-        if (HasAny(text, "도움", "배려", "어떻게 도와", "먼저 물", "방식")) return "scene-help-listening";
-        if (HasAny(text, "책상", "노트북", "컴퓨터", "메모", "직장", "박사", "공부", "기여")) return "scene-desk-work-study";
-        if (HasAny(text, "자취", "독립", "집", "취미", "게임", "노래방", "쉬는")) return "scene-independent-room-hobby";
-        if (HasAny(text, "목발", "이동", "처음", "공간", "곳", "엘리베이터", "화장실", "교통")) return "scene-crutches-mobility";
-        return "result-card-outer-to-inner";
+        if (HasAny(text, "좋은 의도", "간섭", "선은", "불편", "칭찬처럼", "예민", "대답하지 않을 자유")) return "ai-card-boundary-table";
+        if (HasAny(text, "도움", "배려", "어떻게 도와", "먼저 물", "방식", "설명할 시간", "기다려")) return "ai-card-help-hands";
+        if (HasAny(text, "프로젝트", "기획서", "기여", "업무", "함께 일")) return "ai-card-study-laptop";
+        if (HasAny(text, "책상", "노트북", "컴퓨터", "메모", "직장", "박사", "공부")) return "ai-card-study-laptop";
+        if (HasAny(text, "자취", "독립", "집", "방", "공과금", "생활비")) return "ai-card-independent-room";
+        if (HasAny(text, "노래방", "음악", "코인노래방", "취미", "게임", "쉬는", "여가", "좋아하는")) return "ai-card-hobby-rest";
+        if (HasAny(text, "한국", "미국", "대중교통", "장애인택시", "처음", "공간", "곳", "엘리베이터", "화장실", "교통", "접근성", "입구")) return "ai-card-mobility-map";
+        if (HasAny(text, "목발", "이동", "비가", "미끄러운")) return "ai-card-mobility-map";
+        if (HasAny(text, "끈기", "흘러간다", "버틴", "조정", "다음 단계")) return "ai-card-ordinary-day";
+        if (HasAny(text, "겉", "처음 본", "인상", "전부", "놓치기", "선입견", "평범", "하루", "생활", "장면", "관람객")) return "ai-card-ordinary-day";
+        return "ai-card-boundary-table";
     }
 
     private string GetIllustrationResourceForFirstImpression(string option)
@@ -1728,13 +1965,13 @@ public sealed class AvatarChatApp : MonoBehaviour
         switch ((option ?? string.Empty).Trim())
         {
             case "목발":
-                return "scene-crutches-mobility";
+                return "ai-card-mobility-map";
             case "책상":
-                return "scene-desk-work-study";
+                return "ai-card-study-laptop";
             case "표정":
-                return "result-card-outer-to-inner";
+                return "ai-card-ordinary-day";
             default:
-                return "result-card-outer-to-inner";
+                return "ai-card-ordinary-day";
         }
     }
 
@@ -1883,7 +2120,9 @@ public sealed class AvatarChatApp : MonoBehaviour
         CreateFlowPanel(canvasObject.transform);
         CreateHotspotPreview(canvasObject.transform);
         CreateMemoryUnlockToast(canvasObject.transform);
+        CreateClosingSensitiveQuestionOverlay(canvasObject.transform);
         CreateClosingCardOverlay(canvasObject.transform);
+        CreateCompletionChoiceOverlay(canvasObject.transform);
         CreateMemoryBookOverlay(canvasObject.transform);
         CreateFirstImpressionOverlay(canvasObject.transform);
         CreateStartMenuOverlay(canvasObject.transform);
@@ -2641,7 +2880,7 @@ public sealed class AvatarChatApp : MonoBehaviour
         if (busy || questionNoteOpen || IsHotspotPreviewOpen()) return false;
         if (IsActive(startMenuObject) || IsActive(pauseMenuObject) || IsActive(settingsMenuObject)) return false;
         if (IsActive(aboutMenuObject) || IsActive(memoryBookObject) || IsActive(recordArchiveObject)) return false;
-        if (IsActive(playtestFeedbackObject) || IsActive(closingCardObject) || IsActive(restartConfirmObject)) return false;
+        if (IsActive(playtestFeedbackObject) || IsActive(completionChoiceObject) || IsActive(closingCardObject) || IsActive(closingSensitiveQuestionObject) || IsActive(restartConfirmObject)) return false;
         if (IsActive(firstImpressionObject)) return false;
         return true;
     }
@@ -2678,15 +2917,19 @@ public sealed class AvatarChatApp : MonoBehaviour
                 if (shadow != null) shadow.SetActive(visible);
             }
         }
+
+        if (leadThemeButton != null) leadThemeButton.gameObject.SetActive(visible);
+        if (leadRefreshButton != null) leadRefreshButton.gameObject.SetActive(visible);
     }
 
     private bool ShouldShowLeadSlips()
     {
         if (!ShowFloatingLeadSlips || busy || storyModeActive) return false;
+        if (IsCompletedFiveTurnSession()) return false;
         if (IsHotspotPreviewOpen()) return false;
         if (IsActive(startMenuObject) || IsActive(pauseMenuObject) || IsActive(settingsMenuObject)) return false;
         if (IsActive(aboutMenuObject) || IsActive(memoryBookObject) || IsActive(recordArchiveObject)) return false;
-        if (IsActive(playtestFeedbackObject) || IsActive(closingCardObject) || IsActive(restartConfirmObject)) return false;
+        if (IsActive(playtestFeedbackObject) || IsActive(completionChoiceObject) || IsActive(closingCardObject) || IsActive(closingSensitiveQuestionObject) || IsActive(restartConfirmObject)) return false;
         if (IsActive(firstImpressionObject)) return false;
         return true;
     }
@@ -3221,6 +3464,7 @@ public sealed class AvatarChatApp : MonoBehaviour
         memoryBookButton = CreateBookmarkButton("Memory Book Toggle", parent, "");
         Stretch(memoryBookButton.GetComponent<RectTransform>(), new Vector2(1f, 1f), new Vector2(1f, 1f), new Vector2(-118f, -58f), new Vector2(-88f, -30f));
         memoryBookButton.onClick.AddListener(() => SetMemoryBookOpen(memoryBookObject == null || !memoryBookObject.activeSelf));
+        memoryBookButton.gameObject.SetActive(false);
     }
 
     private void CreateMemoryUnlockToast(Transform parent)
@@ -3506,26 +3750,26 @@ public sealed class AvatarChatApp : MonoBehaviour
                 label.resizeTextMinSize = 12;
                 label.resizeTextMaxSize = 16;
                 label.lineSpacing = 1.02f;
-                Stretch(label.rectTransform, Vector2.zero, Vector2.one, new Vector2(102f, 10f), new Vector2(-14f, -31f));
+                Stretch(label.rectTransform, Vector2.zero, Vector2.one, new Vector2(146f, 10f), new Vector2(-14f, -31f));
             }
 
             Text action = FindChildText(button.transform, "Action Label");
             if (action != null)
             {
-                action.text = $"추천 질문 {i + 1} · 눌러서 바로 질문";
+                action.text = $"추천 질문 {i + 1}";
                 action.fontSize = 12;
                 action.resizeTextMaxSize = 12;
-                Stretch(action.rectTransform, Vector2.zero, Vector2.one, new Vector2(102f, 66f), new Vector2(-14f, -9f));
+                Stretch(action.rectTransform, Vector2.zero, Vector2.one, new Vector2(146f, 66f), new Vector2(-14f, -9f));
             }
             Image illustration = CreateIllustrationImage(
                 $"Floating Question Illustration {i + 1}",
                 button.transform,
                 GetIllustrationResourceForQuestion(GetLeadQuestion(i)),
-                new Color(1f, 1f, 1f, 0.58f));
+                new Color(1f, 1f, 1f, 0.86f));
             if (illustration != null)
             {
                 illustration.transform.SetAsFirstSibling();
-                Stretch(illustration.rectTransform, Vector2.zero, Vector2.one, new Vector2(18f, 12f), new Vector2(-302f, -12f));
+                Stretch(illustration.rectTransform, Vector2.zero, Vector2.one, new Vector2(14f, 9f), new Vector2(-244f, -9f));
                 leadIllustrationImages[i] = illustration;
             }
             EventTrigger trigger = button.gameObject.AddComponent<EventTrigger>();
@@ -3534,6 +3778,41 @@ public sealed class AvatarChatApp : MonoBehaviour
             button.onClick.AddListener(() => SubmitPresetQuestion(GetLeadQuestion(captured)));
             leadButtons[i] = button;
         }
+
+        CreateLeadQuestionControls(parent);
+    }
+
+    private void CreateLeadQuestionControls(Transform parent)
+    {
+        leadThemeButton = CreateButton(
+            "Lead Other Theme Button",
+            parent,
+            "중요 질문 새로고침",
+            new Color(0.20f, 0.28f, 0.24f, 0.78f),
+            new Color(1f, 0.96f, 0.84f, 0.96f),
+            14);
+        Stretch(
+            leadThemeButton.GetComponent<RectTransform>(),
+            new Vector2(0.5f, 0f),
+            new Vector2(0.5f, 0f),
+            new Vector2(-812f, 442f),
+            new Vector2(-590f, 478f));
+        leadThemeButton.onClick.AddListener(RefreshVisibleLeadQuestions);
+
+        leadRefreshButton = CreateButton(
+            "Lead Refresh Button",
+            parent,
+            "질문 새로고침",
+            new Color(0.34f, 0.22f, 0.13f, 0.78f),
+            new Color(1f, 0.96f, 0.84f, 0.96f),
+            14);
+        Stretch(
+            leadRefreshButton.GetComponent<RectTransform>(),
+            new Vector2(0.5f, 0f),
+            new Vector2(0.5f, 0f),
+            new Vector2(-574f, 442f),
+            new Vector2(-402f, 478f));
+        leadRefreshButton.onClick.AddListener(RefreshVisibleLeadQuestions);
     }
 
     private void CreateQuestionNote(Transform parent)
@@ -3602,35 +3881,21 @@ public sealed class AvatarChatApp : MonoBehaviour
 
     private void BuildQuestionNoteContent()
     {
-        string[] tabLabels = { "질문", "장면", "기록" };
-        noteTabButtons = new Button[tabLabels.Length];
-        for (int i = 0; i < tabLabels.Length; i++)
-        {
-            int captured = i;
-            Button tab = CreateNoteIndexTabButton($"Question Phone Tab {tabLabels[i]}", noteQuestionContent.transform, tabLabels[i], i);
-            float leftAnchor = i / (float)tabLabels.Length;
-            float rightAnchor = (i + 1) / (float)tabLabels.Length;
-            Stretch(
-                tab.GetComponent<RectTransform>(),
-                new Vector2(leftAnchor, 1f),
-                new Vector2(rightAnchor, 1f),
-                new Vector2(i == 0 ? 0f : 5f, -36f),
-                new Vector2(i == tabLabels.Length - 1 ? 0f : -5f, -8f));
-            tab.onClick.AddListener(() => ShowNoteTab(captured));
-            noteTabButtons[i] = tab;
-        }
+        noteTabButtons = Array.Empty<Button>();
 
         noteQuestionBodyObject = new GameObject("Question Tab Content", typeof(RectTransform));
         noteQuestionBodyObject.transform.SetParent(noteQuestionContent.transform, false);
         Stretch(noteQuestionBodyObject.GetComponent<RectTransform>(), Vector2.zero, Vector2.one, new Vector2(0f, 0f), new Vector2(0f, -48f));
+        noteQuestionBodyObject.SetActive(false);
 
         noteEvidenceContentObject = new GameObject("Evidence Tab Content", typeof(RectTransform));
         noteEvidenceContentObject.transform.SetParent(noteQuestionContent.transform, false);
         Stretch(noteEvidenceContentObject.GetComponent<RectTransform>(), Vector2.zero, Vector2.one, new Vector2(0f, 0f), new Vector2(0f, -48f));
+        noteEvidenceContentObject.SetActive(false);
 
         noteHistoryContentObject = new GameObject("History Tab Content", typeof(RectTransform));
         noteHistoryContentObject.transform.SetParent(noteQuestionContent.transform, false);
-        Stretch(noteHistoryContentObject.GetComponent<RectTransform>(), Vector2.zero, Vector2.one, new Vector2(0f, 0f), new Vector2(0f, -48f));
+        Stretch(noteHistoryContentObject.GetComponent<RectTransform>(), Vector2.zero, Vector2.one, new Vector2(0f, 12f), new Vector2(0f, -8f));
 
         Image progressPill = CreateRoundedPanel("Question Phone Progress", noteQuestionBodyObject.transform, new Color(0.84f, 0.58f, 0.30f, 0.52f), 7);
         Stretch(progressPill.rectTransform, new Vector2(0f, 1f), new Vector2(1f, 1f), new Vector2(0f, -38f), new Vector2(0f, -7f));
@@ -3701,16 +3966,45 @@ public sealed class AvatarChatApp : MonoBehaviour
         Stretch(noteEvidenceText.rectTransform, Vector2.zero, Vector2.one, new Vector2(18f, 14f), new Vector2(-18f, -14f));
 
         Image historyCard = CreatePaperPanel("History Note Card", noteHistoryContentObject.transform, new Color(0.955f, 0.980f, 0.920f, 0.88f), 8, 6);
-        Stretch(historyCard.rectTransform, Vector2.zero, Vector2.one, new Vector2(0f, 12f), new Vector2(0f, -8f));
-        noteHistoryText = CreateText("History Note Text", historyCard.transform, "", 13, new Color32(30, 41, 59, 244), TextAnchor.UpperLeft, FontStyle.Normal);
+        Stretch(historyCard.rectTransform, Vector2.zero, Vector2.one, Vector2.zero, Vector2.zero);
+
+        GameObject historyScrollObject = new GameObject("History Note Scroll", typeof(RectTransform), typeof(ScrollRect));
+        historyScrollObject.transform.SetParent(historyCard.transform, false);
+        noteHistoryScrollRect = historyScrollObject.GetComponent<ScrollRect>();
+        Stretch(historyScrollObject.GetComponent<RectTransform>(), Vector2.zero, Vector2.one, new Vector2(18f, 16f), new Vector2(-26f, -16f));
+
+        GameObject historyViewportObject = new GameObject("History Note Viewport", typeof(RectTransform), typeof(CanvasRenderer), typeof(Image), typeof(Mask));
+        historyViewportObject.transform.SetParent(historyScrollObject.transform, false);
+        Image historyViewportImage = historyViewportObject.GetComponent<Image>();
+        historyViewportImage.color = new Color(1f, 1f, 1f, 0.01f);
+        historyViewportObject.GetComponent<Mask>().showMaskGraphic = false;
+        noteHistoryViewportRect = historyViewportObject.GetComponent<RectTransform>();
+        Stretch(noteHistoryViewportRect, Vector2.zero, Vector2.one, Vector2.zero, Vector2.zero);
+
+        GameObject historyContentObject = new GameObject("History Note Content", typeof(RectTransform));
+        historyContentObject.transform.SetParent(historyViewportObject.transform, false);
+        noteHistoryContentRect = historyContentObject.GetComponent<RectTransform>();
+        noteHistoryContentRect.anchorMin = new Vector2(0f, 1f);
+        noteHistoryContentRect.anchorMax = new Vector2(1f, 1f);
+        noteHistoryContentRect.pivot = new Vector2(0.5f, 1f);
+        noteHistoryContentRect.offsetMin = Vector2.zero;
+        noteHistoryContentRect.offsetMax = Vector2.zero;
+        noteHistoryContentRect.sizeDelta = new Vector2(0f, 360f);
+
+        noteHistoryText = CreateText("History Note Text", historyContentObject.transform, "", 15, new Color32(30, 41, 59, 244), TextAnchor.UpperLeft, FontStyle.Normal);
         noteHistoryText.lineSpacing = 1.02f;
-        noteHistoryText.resizeTextForBestFit = true;
-        noteHistoryText.resizeTextMinSize = 10;
-        noteHistoryText.resizeTextMaxSize = 13;
-        Stretch(noteHistoryText.rectTransform, Vector2.zero, Vector2.one, new Vector2(18f, 14f), new Vector2(-18f, -14f));
+        noteHistoryText.resizeTextForBestFit = false;
+        Stretch(noteHistoryText.rectTransform, Vector2.zero, Vector2.one, new Vector2(0f, 0f), new Vector2(-8f, -8f));
+
+        noteHistoryScrollRect.viewport = noteHistoryViewportRect;
+        noteHistoryScrollRect.content = noteHistoryContentRect;
+        noteHistoryScrollRect.horizontal = false;
+        noteHistoryScrollRect.vertical = true;
+        noteHistoryScrollRect.movementType = ScrollRect.MovementType.Clamped;
+        noteHistoryScrollRect.scrollSensitivity = 32f;
 
         UpdateQuestionPhoneProgress();
-        ShowNoteTab(0);
+        ShowNoteTab(2);
     }
 
     private void SetQuestionNoteOpen(bool open)
@@ -3728,7 +4022,7 @@ public sealed class AvatarChatApp : MonoBehaviour
         {
             UpdateNoteTabContent();
             PlayPageSound();
-            SelectFirstInteractable(questionNoteObject, "Question Phone Tab", "Chapter", "More Button", "Closing Button");
+            SelectFirstInteractable(questionNoteObject, "History Note Card");
         }
         else
         {
@@ -3741,17 +4035,15 @@ public sealed class AvatarChatApp : MonoBehaviour
 
     private void ShowNoteTab(int index)
     {
-        currentNoteTabIndex = Mathf.Clamp(index, 0, 2);
+        currentNoteTabIndex = 2;
         if (noteQuestionContent != null) noteQuestionContent.SetActive(true);
-        if (noteQuestionBodyObject != null) noteQuestionBodyObject.SetActive(currentNoteTabIndex == 0);
-        if (noteEvidenceContentObject != null) noteEvidenceContentObject.SetActive(currentNoteTabIndex == 1);
-        if (noteHistoryContentObject != null) noteHistoryContentObject.SetActive(currentNoteTabIndex == 2);
+        if (noteQuestionBodyObject != null) noteQuestionBodyObject.SetActive(false);
+        if (noteEvidenceContentObject != null) noteEvidenceContentObject.SetActive(false);
+        if (noteHistoryContentObject != null) noteHistoryContentObject.SetActive(true);
 
         if (noteTitleText != null)
         {
-            noteTitleText.text = currentNoteTabIndex == 1
-                ? "지금 열린 장면"
-                : (currentNoteTabIndex == 2 ? "지난 대화" : "무엇을 물어볼까요?");
+            noteTitleText.text = "지난 대화";
         }
 
         UpdateNoteTabStyles();
@@ -3785,6 +4077,7 @@ public sealed class AvatarChatApp : MonoBehaviour
         if (noteHistoryText != null)
         {
             noteHistoryText.text = BuildHistoryNoteText();
+            RefreshNoteHistoryScroll();
         }
     }
 
@@ -3795,7 +4088,7 @@ public sealed class AvatarChatApp : MonoBehaviour
             ? "질문을 고르면 이곳에 장면이 열립니다."
             : $"{theme} 장면이 열렸습니다. 다음 답변도 이 흐름에 맞춰 이어집니다.";
 
-        string memoryNote = "아직 기억장에 남긴 메모가 없습니다.";
+        string memoryNote = "아직 대화 기록에 남긴 메모가 없습니다.";
         EnsureMemoryNotes();
         string canonicalTheme = CanonicalTheme(theme);
         int themeIndex = Array.IndexOf(memoryThemes, canonicalTheme);
@@ -3804,28 +4097,20 @@ public sealed class AvatarChatApp : MonoBehaviour
             memoryNote = memoryNotes[themeIndex];
         }
 
-        string depth = themeIndex >= 0 && deepMemoryUnlocked != null && themeIndex < deepMemoryUnlocked.Length && deepMemoryUnlocked[themeIndex]
-            ? "깊은 기록"
-            : "얕은 기록";
-
         string attitude = string.IsNullOrWhiteSpace(lastQuestionAttitude) ? "아직 없음" : lastQuestionAttitude;
-        int opened = discoveredThemes != null ? discoveredThemes.Count : 0;
-        int deepCount = CountDeepMemories();
 
         StringBuilder builder = new StringBuilder();
         builder.Append("<b><color=#1E293B>진행 요약</color></b>  ");
-        builder.Append(SanitizeRichText($"{opened}/6 장면 · 깊은 기록 {deepCount}/6")).AppendLine();
+        builder.Append(SanitizeRichText($"{Mathf.Clamp(conversationTurns, 0, RequiredQuestionCount)}/{RequiredQuestionCount} 질문")).AppendLine();
         builder.Append("<color=#B1713A>────────────────</color>").AppendLine();
-        builder.Append("<b>첫 인상</b>  ").Append(SanitizeRichText(BuildFirstImpressionDisplayLabel())).AppendLine();
-        builder.Append("<b>겉!=속 경로</b>  ").Append(SanitizeRichText(ShortenForCard(BuildFirstImpressionArcState(), 42))).AppendLine();
-        builder.Append("<b>현재 장면</b>  ").Append(SanitizeRichText($"{theme} · {depth}")).AppendLine();
+        builder.Append("<b>질문 흐름</b>  ").Append(SanitizeRichText(ShortenForCard(BuildClosingQuestionFlowLine(5, 72), 84))).AppendLine();
         builder.Append("<b>질문 태도</b>  ").Append(SanitizeRichText(attitude)).AppendLine();
         builder.Append("<b>답변 출처</b>  ").Append(SanitizeRichText(FormatAnswerSourceForPlayer())).AppendLine();
         builder.AppendLine();
-        builder.Append("<b><color=#7C2D12>장면 메모</color></b>").AppendLine();
+        builder.Append("<b><color=#7C2D12>최근 답변 메모</color></b>").AppendLine();
         builder.Append(SanitizeRichText(ShortenForCard(sceneLine, 118))).AppendLine();
         builder.AppendLine();
-        builder.Append("<b><color=#7C2D12>기억장 메모</color></b>").AppendLine();
+        builder.Append("<b><color=#7C2D12>대화 메모</color></b>").AppendLine();
         builder.Append(SanitizeRichText(ShortenForCard(memoryNote, 62)));
         return builder.ToString();
     }
@@ -3839,23 +4124,246 @@ public sealed class AvatarChatApp : MonoBehaviour
 
         StringBuilder builder = new StringBuilder();
         builder.Append("<b><color=#1E293B>최근 대화</color></b>  ");
-        builder.Append(SanitizeRichText($"{conversationTurns}/{RequiredQuestionCount} 질문")).AppendLine();
+        int totalQuestions = CountHistoryQuestions();
+        builder.Append(SanitizeRichText($"전체 {totalQuestions}개 · 현재 {Mathf.Clamp(conversationTurns, 0, RequiredQuestionCount)}/{RequiredQuestionCount}")).AppendLine();
         builder.Append("<color=#B1713A>────────────────</color>").AppendLine();
-        int start = Mathf.Max(0, history.Count - 4);
-        for (int i = start; i < history.Count; i++)
+        for (int i = 0; i < history.Count; i++)
         {
             ChatMessage message = history[i];
             if (message == null) continue;
             string role = message.role == "user" ? "나" : "답변";
-            string content = (message.content ?? string.Empty).Replace("\r", " ").Replace("\n", " ").Trim();
+            string content = (message.content ?? string.Empty).Replace("\r", string.Empty).Trim();
             string color = message.role == "user" ? "#7C2D12" : "#1E293B";
             builder.AppendLine();
             builder.Append("<b><color=").Append(color).Append(">");
             builder.Append(SanitizeRichText(role)).Append("</color></b>  ");
-            builder.Append(SanitizeRichText(ShortenForCard(content, 76)));
+            builder.Append(SanitizeRichText(content));
         }
 
         return builder.ToString().TrimEnd();
+    }
+
+    private int CountHistoryQuestions()
+    {
+        int count = 0;
+        for (int i = 0; i < history.Count; i++)
+        {
+            ChatMessage message = history[i];
+            if (message != null && string.Equals(message.role, "user", StringComparison.Ordinal))
+            {
+                count++;
+            }
+        }
+
+        return count;
+    }
+
+    private void RefreshNoteHistoryScroll()
+    {
+        if (noteHistoryText == null || noteHistoryContentRect == null || noteHistoryScrollRect == null) return;
+
+        Canvas.ForceUpdateCanvases();
+        float minHeight = noteHistoryViewportRect != null ? noteHistoryViewportRect.rect.height + 1f : 360f;
+        float preferred = noteHistoryText.preferredHeight + 28f;
+        noteHistoryContentRect.sizeDelta = new Vector2(0f, Mathf.Max(minHeight, preferred));
+        Canvas.ForceUpdateCanvases();
+        noteHistoryScrollRect.verticalNormalizedPosition = 1f;
+    }
+
+    private void CreateClosingSensitiveQuestionOverlay(Transform parent)
+    {
+        Image overlay = CreatePanel("Closing Sensitive Question Overlay", parent, ModalOverlayColor);
+        closingSensitiveQuestionObject = overlay.gameObject;
+        Stretch(overlay.rectTransform, Vector2.zero, Vector2.one, Vector2.zero, Vector2.zero);
+
+        Image panelShadow = CreateRoundedPanel("Closing Sensitive Question Shadow", closingSensitiveQuestionObject.transform, ModalShadowColor, 28);
+        panelShadow.raycastTarget = false;
+        Stretch(panelShadow.rectTransform, new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(-716f, -398f), new Vector2(724f, 378f));
+
+        Image panel = CreatePaperPanel("Closing Sensitive Question Panel", closingSensitiveQuestionObject.transform, new Color(0.985f, 0.965f, 0.900f, 0.99f), 26, 8);
+        Stretch(panel.rectTransform, new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(-730f, -380f), new Vector2(706f, 398f));
+
+        Image accent = CreateRoundedPanel("Closing Sensitive Question Accent", panel.transform, new Color32(177, 113, 58, 225), 6);
+        accent.raycastTarget = false;
+        Stretch(accent.rectTransform, new Vector2(0f, 1f), new Vector2(1f, 1f), new Vector2(44f, -86f), new Vector2(-44f, -76f));
+
+        Text title = CreateText("Closing Sensitive Question Title", panel.transform, "마지막으로 하나만 더", 30, new Color32(15, 23, 42, 255), TextAnchor.UpperLeft, FontStyle.Bold);
+        Stretch(title.rectTransform, new Vector2(0f, 1f), new Vector2(1f, 1f), new Vector2(44f, -58f), new Vector2(-44f, -18f));
+
+        Text subtitle = CreateText(
+            "Closing Sensitive Question Subtitle",
+            panel.transform,
+            "말로 묻기 어려운 질문입니다. 가장 마음에 남는 장면 하나를 고르면 짧은 답을 듣고 마무리로 넘어갑니다.",
+            16,
+            new Color32(71, 85, 105, 255),
+            TextAnchor.UpperLeft,
+            FontStyle.Normal);
+        subtitle.resizeTextForBestFit = true;
+        subtitle.resizeTextMinSize = 13;
+        subtitle.resizeTextMaxSize = 16;
+        Stretch(subtitle.rectTransform, new Vector2(0f, 1f), new Vector2(1f, 1f), new Vector2(44f, -126f), new Vector2(-44f, -96f));
+
+        int count = Mathf.Min(6, closingSensitiveQuestions.Length);
+        closingSensitiveQuestionButtons = new Button[count];
+        for (int i = 0; i < count; i++)
+        {
+            int captured = i;
+            int row = i / 3;
+            int col = i % 3;
+            Button card = CreateClosingSensitiveQuestionCard(panel.transform, i, closingSensitiveQuestions[i]);
+            Stretch(
+                card.GetComponent<RectTransform>(),
+                new Vector2(0f, 1f),
+                new Vector2(0f, 1f),
+                new Vector2(54f + col * 438f, -392f - row * 260f),
+                new Vector2(448f + col * 438f, -148f - row * 260f));
+            card.onClick.AddListener(() => AnswerClosingSensitiveQuestion(closingSensitiveQuestions[captured]));
+            closingSensitiveQuestionButtons[i] = card;
+        }
+
+        closingSensitiveQuestionObject.SetActive(false);
+    }
+
+    private Button CreateClosingSensitiveQuestionCard(Transform parent, int index, string question)
+    {
+        GameObject root = new GameObject($"Closing Sensitive Question Card {index + 1}", typeof(RectTransform), typeof(CanvasRenderer), typeof(Image), typeof(Button));
+        root.transform.SetParent(parent, false);
+
+        Image background = root.GetComponent<Image>();
+        background.sprite = GetPaperRoundedSprite(12, 60 + index);
+        background.type = Image.Type.Sliced;
+        background.color = new Color(1.000f, 0.990f, 0.950f, 0.98f);
+
+        Button button = root.GetComponent<Button>();
+        ColorBlock colors = button.colors;
+        colors.normalColor = background.color;
+        colors.highlightedColor = new Color(1.000f, 0.965f, 0.880f, 1f);
+        colors.pressedColor = new Color(0.92f, 0.84f, 0.72f, 1f);
+        colors.disabledColor = new Color(0.80f, 0.76f, 0.68f, 0.56f);
+        button.colors = colors;
+        button.onClick.AddListener(PlayButtonSound);
+
+        Image illustration = CreateIllustrationImage(
+            $"Closing Sensitive Question Illustration {index + 1}",
+            root.transform,
+            GetClosingSensitiveIllustrationResource(index, question),
+            new Color(1f, 1f, 1f, 0.88f));
+        if (illustration != null)
+        {
+            Stretch(illustration.rectTransform, Vector2.zero, Vector2.one, new Vector2(14f, 76f), new Vector2(-14f, -14f));
+        }
+
+        Image numberPill = CreateRoundedPanel("Closing Sensitive Question Number", root.transform, new Color32(177, 113, 58, 218), 10);
+        numberPill.raycastTarget = false;
+        Stretch(numberPill.rectTransform, new Vector2(0f, 1f), new Vector2(0f, 1f), new Vector2(16f, -36f), new Vector2(62f, -12f));
+
+        Text number = CreateText("Number Label", numberPill.transform, (index + 1).ToString(CultureInfo.InvariantCulture), 13, new Color32(255, 248, 232, 255), TextAnchor.MiddleCenter, FontStyle.Bold);
+        Stretch(number.rectTransform, Vector2.zero, Vector2.one, Vector2.zero, Vector2.zero);
+
+        Image textShade = CreateRoundedPanel("Closing Sensitive Question Text Shade", root.transform, new Color(1.000f, 0.985f, 0.930f, 0.94f), 10);
+        textShade.raycastTarget = false;
+        Stretch(textShade.rectTransform, Vector2.zero, Vector2.one, new Vector2(14f, 14f), new Vector2(-14f, -166f));
+
+        Text label = CreateText("Label", root.transform, question, 18, new Color32(30, 41, 59, 255), TextAnchor.MiddleLeft, FontStyle.Bold);
+        label.lineSpacing = 1.02f;
+        label.resizeTextForBestFit = true;
+        label.resizeTextMinSize = 13;
+        label.resizeTextMaxSize = 18;
+        Stretch(label.rectTransform, Vector2.zero, Vector2.one, new Vector2(26f, 18f), new Vector2(-26f, -170f));
+        return button;
+    }
+
+    private string GetClosingSensitiveIllustrationResource(int index, string question)
+    {
+        switch (Mathf.Clamp(index, 0, 5))
+        {
+            case 0: return "ai-card-help-hands";
+            case 1: return "ai-card-boundary-table";
+            case 2: return "ai-card-independent-room";
+            case 3: return "ai-card-study-laptop";
+            case 4: return "ai-card-mobility-map";
+            case 5: return "ai-card-ordinary-day";
+            default: return GetIllustrationResourceForQuestion(question);
+        }
+    }
+
+    private void CreateCompletionChoiceOverlay(Transform parent)
+    {
+        Image overlay = CreatePanel("Completion Choice Overlay", parent, FocusModalOverlayColor);
+        completionChoiceObject = overlay.gameObject;
+        Stretch(overlay.rectTransform, Vector2.zero, Vector2.one, Vector2.zero, Vector2.zero);
+
+        Image shadow = CreateRoundedPanel("Completion Choice Shadow", completionChoiceObject.transform, ModalShadowColor, 28);
+        shadow.raycastTarget = false;
+        Stretch(shadow.rectTransform, new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(-330f, -178f), new Vector2(338f, 170f));
+
+        Image panel = CreatePaperPanel("Completion Choice Panel", completionChoiceObject.transform, new Color(0.985f, 0.965f, 0.900f, 0.99f), 24, 8);
+        Stretch(panel.rectTransform, new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(-344f, -160f), new Vector2(324f, 188f));
+
+        Image accent = CreateRoundedPanel("Completion Choice Accent", panel.transform, new Color32(177, 113, 58, 230), 6);
+        accent.raycastTarget = false;
+        Stretch(accent.rectTransform, new Vector2(0f, 1f), new Vector2(1f, 1f), new Vector2(34f, -74f), new Vector2(-34f, -64f));
+
+        Text title = CreateText("Completion Choice Title", panel.transform, "질문 5개를 마쳤어요", 28, new Color32(15, 23, 42, 255), TextAnchor.UpperLeft, FontStyle.Bold);
+        Stretch(title.rectTransform, new Vector2(0f, 1f), new Vector2(1f, 1f), new Vector2(38f, -48f), new Vector2(-38f, -14f));
+
+        Text subtitle = CreateText(
+            "Completion Choice Subtitle",
+            panel.transform,
+            "여기서 잠깐 멈춥니다. 질문을 5개 더 이어가거나, 마지막 질문으로 넘어갈 수 있어요.",
+            17,
+            new Color32(51, 65, 85, 250),
+            TextAnchor.UpperLeft,
+            FontStyle.Normal);
+        subtitle.lineSpacing = 1.08f;
+        subtitle.resizeTextForBestFit = true;
+        subtitle.resizeTextMinSize = 13;
+        subtitle.resizeTextMaxSize = 17;
+        Stretch(subtitle.rectTransform, new Vector2(0f, 1f), new Vector2(1f, 1f), new Vector2(38f, -128f), new Vector2(-38f, -88f));
+
+        completionMoreButton = CreateNoteActionButton("Completion Choice More", panel.transform, "5개 더 물어보기", true);
+        Stretch(completionMoreButton.GetComponent<RectTransform>(), Vector2.zero, Vector2.one, new Vector2(38f, 62f), new Vector2(-352f, -238f));
+        completionMoreButton.onClick.AddListener(() =>
+        {
+            if (completionChoiceObject != null) completionChoiceObject.SetActive(false);
+            SubmitMore();
+        });
+
+        completionFinishButton = CreateNoteActionButton("Completion Choice Finish", panel.transform, "끝내기", false);
+        Stretch(completionFinishButton.GetComponent<RectTransform>(), Vector2.zero, Vector2.one, new Vector2(332f, 62f), new Vector2(-38f, -238f));
+        SetButtonColor(completionFinishButton, new Color(0.045f, 0.052f, 0.064f, 0.82f), new Color(1f, 0.96f, 0.86f, 0.98f));
+        completionFinishButton.onClick.AddListener(() =>
+        {
+            if (completionChoiceObject != null) completionChoiceObject.SetActive(false);
+            ShowClosingCard();
+        });
+
+        completionChoiceObject.SetActive(false);
+    }
+
+    private void ShowCompletionChoiceOverlay()
+    {
+        if (completionChoiceObject == null) return;
+
+        pendingCompletionChoiceAfterDialogue = false;
+        if (closingCardObject != null) closingCardObject.SetActive(false);
+        if (closingSensitiveQuestionObject != null) closingSensitiveQuestionObject.SetActive(false);
+        SetQuestionNoteOpen(false);
+        completionChoiceObject.SetActive(true);
+        completionChoiceObject.transform.SetAsLastSibling();
+
+        bool hasNext = HasNextQuestionCategory();
+        if (completionMoreButton != null)
+        {
+            completionMoreButton.gameObject.SetActive(hasNext);
+            completionMoreButton.interactable = hasNext;
+        }
+        if (completionFinishButton != null) completionFinishButton.interactable = true;
+
+        SetLeadButtonsInteractable(false);
+        UpdateLeadSlipVisibility();
+        statusText.text = $"{BuildActiveCategoryLabel()} {RequiredQuestionCount}문답 완료 · 더 물어볼지 끝낼지 선택하세요";
+        SelectFirstInteractable(completionChoiceObject, "Completion Choice More", "Completion Choice Finish");
     }
 
     private void CreateClosingCardOverlay(Transform parent)
@@ -3865,26 +4373,27 @@ public sealed class AvatarChatApp : MonoBehaviour
         Stretch(overlay.rectTransform, Vector2.zero, Vector2.one, Vector2.zero, Vector2.zero);
 
         Image shadow = CreateRoundedPanel("Closing Card Shadow", closingCardObject.transform, ModalShadowColor, 34);
-        Stretch(shadow.rectTransform, new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(-526f, -326f), new Vector2(534f, 314f));
+        Stretch(shadow.rectTransform, new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(-676f, -398f), new Vector2(684f, 386f));
 
         Image card = CreatePaperPanel("Closing Card", closingCardObject.transform, new Color(0.985f, 0.965f, 0.900f, 0.99f), 34, 7);
-        Stretch(card.rectTransform, new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(-540f, -306f), new Vector2(520f, 326f));
+        Stretch(card.rectTransform, new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(-690f, -378f), new Vector2(670f, 406f));
 
         closingCardIllustrationImage = CreateIllustrationImage(
             "Closing Result Illustration",
             card.transform,
-            "result-card-outer-to-inner",
-            new Color(1f, 1f, 1f, 0.34f));
+            "ending-card-reflection-wide",
+            new Color(1f, 1f, 1f, 0.94f));
         if (closingCardIllustrationImage != null)
         {
             closingCardIllustrationImage.transform.SetAsFirstSibling();
-            closingCardIllustrationImage.color = new Color(1f, 1f, 1f, 0.78f);
-            Stretch(closingCardIllustrationImage.rectTransform, Vector2.zero, Vector2.one, new Vector2(548f, 226f), new Vector2(-48f, -104f));
+            closingCardIllustrationImage.color = new Color(1f, 1f, 1f, 0.94f);
+            closingCardIllustrationImage.preserveAspect = true;
+            Stretch(closingCardIllustrationImage.rectTransform, Vector2.zero, Vector2.one, new Vector2(64f, 284f), new Vector2(-704f, -166f));
         }
 
-        Image illustrationVeil = CreateRoundedPanel("Closing Result Illustration Veil", card.transform, new Color(1.000f, 0.965f, 0.900f, 0.16f), 18);
+        Image illustrationVeil = CreateRoundedPanel("Closing Result Illustration Veil", card.transform, new Color(0.030f, 0.024f, 0.018f, 0.08f), 18);
         illustrationVeil.raycastTarget = false;
-        Stretch(illustrationVeil.rectTransform, Vector2.zero, Vector2.one, new Vector2(528f, 210f), new Vector2(-36f, -88f));
+        Stretch(illustrationVeil.rectTransform, Vector2.zero, Vector2.one, new Vector2(64f, 284f), new Vector2(-704f, -166f));
         illustrationVeil.transform.SetSiblingIndex(closingCardIllustrationImage != null ? 1 : 0);
 
         Image accent = CreateRoundedPanel("Closing Card Accent", card.transform, new Color32(177, 113, 58, 235), 7);
@@ -3895,50 +4404,50 @@ public sealed class AvatarChatApp : MonoBehaviour
         Stretch(upperTape.rectTransform, new Vector2(0.5f, 1f), new Vector2(0.5f, 1f), new Vector2(-70f, -16f), new Vector2(70f, -6f));
         upperTape.rectTransform.localRotation = Quaternion.Euler(0f, 0f, -1.6f);
 
-        Text title = CreateText("Closing Card Title", card.transform, "겉에서 속으로 열린 장면", 30, new Color32(30, 41, 59, 255), TextAnchor.UpperLeft, FontStyle.Bold);
+        Text title = CreateText("Closing Card Title", card.transform, "대화의 끝에 남기는 말", 32, new Color32(30, 41, 59, 255), TextAnchor.UpperLeft, FontStyle.Bold);
         Stretch(title.rectTransform, new Vector2(0f, 1f), new Vector2(1f, 1f), new Vector2(48f, -52f), new Vector2(-48f, -12f));
 
-        Text subtitle = CreateText("Closing Card Subtitle", card.transform, "처음 본 단서가 전부가 아니라, 질문으로 생활의 장면까지 보았습니다.", 16, new Color32(71, 85, 105, 255), TextAnchor.UpperLeft, FontStyle.Normal);
+        Text subtitle = CreateText("Closing Card Subtitle", card.transform, "질문으로 들은 장면을 지나, 마지막으로 대상자에게 남길 말을 적어 주세요.", 17, new Color32(71, 85, 105, 255), TextAnchor.UpperLeft, FontStyle.Normal);
         Stretch(subtitle.rectTransform, new Vector2(0f, 1f), new Vector2(1f, 1f), new Vector2(48f, -108f), new Vector2(-48f, -78f));
 
-        Image quotePaper = CreatePaperPanel("Closing Quote Paper", card.transform, new Color(1.000f, 0.990f, 0.950f, 0.99f), 14, 8);
+        Image quotePaper = CreatePaperPanel("Closing Quote Paper", card.transform, new Color(1f, 0.985f, 0.940f, 0.00f), 14, 0);
         quotePaper.raycastTarget = false;
-        Stretch(quotePaper.rectTransform, Vector2.zero, Vector2.one, new Vector2(54f, 302f), new Vector2(-548f, -128f));
+        Stretch(quotePaper.rectTransform, Vector2.zero, Vector2.one, new Vector2(64f, 284f), new Vector2(-704f, -166f));
 
-        Image quoteSpine = CreateRoundedPanel("Closing Quote Spine", quotePaper.transform, new Color32(177, 113, 58, 205), 4);
+        Image quoteSpine = CreateRoundedPanel("Closing Quote Spine", quotePaper.transform, new Color(0.70f, 0.44f, 0.23f, 0f), 4);
         quoteSpine.raycastTarget = false;
         Stretch(quoteSpine.rectTransform, Vector2.zero, new Vector2(0f, 1f), new Vector2(20f, 20f), new Vector2(26f, -20f));
 
         for (int i = 0; i < 4; i++)
         {
-            Image rule = CreatePanel($"Closing Quote Rule {i + 1}", quotePaper.transform, new Color(0.44f, 0.34f, 0.20f, 0.045f));
+            Image rule = CreatePanel($"Closing Quote Rule {i + 1}", quotePaper.transform, new Color(0.44f, 0.34f, 0.20f, 0f));
             rule.raycastTarget = false;
             Stretch(rule.rectTransform, new Vector2(0f, 1f), Vector2.one, new Vector2(52f, -46f - i * 36f), new Vector2(-38f, -45f - i * 36f));
         }
 
-        Image quoteFocus = CreateRoundedPanel("Closing Quote Focus", quotePaper.transform, new Color(1.000f, 0.995f, 0.970f, 0.82f), 14);
+        Image quoteFocus = CreateRoundedPanel("Closing Quote Focus", quotePaper.transform, new Color(0.030f, 0.025f, 0.020f, 0f), 14);
         quoteFocus.raycastTarget = false;
         Stretch(quoteFocus.rectTransform, Vector2.zero, Vector2.one, new Vector2(58f, 46f), new Vector2(-38f, -50f));
 
-        closingCardQuoteText = CreateText("Closing Card Quote", card.transform, "", 30, new Color32(15, 23, 42, 255), TextAnchor.MiddleCenter, FontStyle.Bold);
+        closingCardQuoteText = CreateText("Closing Card Quote", card.transform, "", 28, new Color32(255, 248, 232, 255), TextAnchor.MiddleCenter, FontStyle.Bold);
         closingCardQuoteText.lineSpacing = 1.08f;
         closingCardQuoteText.resizeTextForBestFit = true;
-        closingCardQuoteText.resizeTextMinSize = 22;
-        closingCardQuoteText.resizeTextMaxSize = 30;
-        Stretch(closingCardQuoteText.rectTransform, Vector2.zero, Vector2.one, new Vector2(92f, 356f), new Vector2(-584f, -174f));
+        closingCardQuoteText.resizeTextMinSize = 20;
+        closingCardQuoteText.resizeTextMaxSize = 28;
+        Stretch(closingCardQuoteText.rectTransform, Vector2.zero, Vector2.one, new Vector2(156f, 440f), new Vector2(-156f, -232f));
 
-        closingCardCaptionText = CreateText("Closing Card Caption", card.transform, "", 17, new Color32(51, 65, 85, 255), TextAnchor.UpperCenter, FontStyle.Normal);
+        closingCardCaptionText = CreateText("Closing Card Caption", card.transform, "", 16, new Color32(255, 246, 225, 235), TextAnchor.UpperCenter, FontStyle.Normal);
         closingCardCaptionText.lineSpacing = 1.08f;
         closingCardCaptionText.resizeTextForBestFit = true;
         closingCardCaptionText.resizeTextMinSize = 13;
-        closingCardCaptionText.resizeTextMaxSize = 17;
-        Stretch(closingCardCaptionText.rectTransform, Vector2.zero, Vector2.one, new Vector2(92f, 312f), new Vector2(-584f, -302f));
+        closingCardCaptionText.resizeTextMaxSize = 16;
+        Stretch(closingCardCaptionText.rectTransform, Vector2.zero, Vector2.one, new Vector2(156f, 402f), new Vector2(-156f, -274f));
 
-        Text messageTitle = CreateText("Closing Message Title", card.transform, "대상자에게 남길 말", 16, new Color32(30, 41, 59, 255), TextAnchor.UpperLeft, FontStyle.Bold);
-        Stretch(messageTitle.rectTransform, Vector2.zero, Vector2.one, new Vector2(586f, 186f), new Vector2(-56f, -416f));
+        Text messageTitle = CreateText("Closing Message Title", card.transform, "대상자에게 남길 말", 18, new Color32(30, 41, 59, 255), TextAnchor.UpperLeft, FontStyle.Bold);
+        Stretch(messageTitle.rectTransform, Vector2.zero, Vector2.one, new Vector2(64f, 126f), new Vector2(-64f, -616f));
 
         closingMessageInput = CreateClosingMessageInput(card.transform);
-        Stretch(closingMessageInput.GetComponent<RectTransform>(), Vector2.zero, Vector2.one, new Vector2(586f, 96f), new Vector2(-56f, -458f));
+        Stretch(closingMessageInput.GetComponent<RectTransform>(), Vector2.zero, Vector2.one, new Vector2(64f, 64f), new Vector2(-560f, -650f));
         closingMessageInput.onValueChanged.AddListener(_ =>
         {
             closingMessageToInterviewee = GetClosingMessageToInterviewee();
@@ -3950,26 +4459,27 @@ public sealed class AvatarChatApp : MonoBehaviour
             SaveSession();
         });
 
-        closingMessageValidationText = CreateText("Closing Message Validation", card.transform, "남길 말을 먼저 입력해 주세요.", 12, new Color32(124, 45, 18, 245), TextAnchor.UpperLeft, FontStyle.Bold);
+        closingMessageValidationText = CreateText("Closing Message Validation", card.transform, "남길 말을 먼저 입력해 주세요.", 13, new Color32(124, 45, 18, 245), TextAnchor.UpperLeft, FontStyle.Bold);
         closingMessageValidationText.resizeTextForBestFit = true;
         closingMessageValidationText.resizeTextMinSize = 10;
         closingMessageValidationText.resizeTextMaxSize = 12;
-        Stretch(closingMessageValidationText.rectTransform, Vector2.zero, Vector2.one, new Vector2(586f, 80f), new Vector2(-56f, -536f));
+        Stretch(closingMessageValidationText.rectTransform, Vector2.zero, Vector2.one, new Vector2(64f, 28f), new Vector2(-560f, -732f));
 
-        Image summaryPanel = CreatePaperPanel("Closing Summary Panel", card.transform, new Color(0.975f, 0.955f, 0.895f, 0.97f), 12, 9);
-        Stretch(summaryPanel.rectTransform, Vector2.zero, Vector2.one, new Vector2(48f, 154f), new Vector2(-540f, -350f));
+        Image summaryPanel = CreatePaperPanel("Closing Summary Panel", card.transform, new Color(1.000f, 0.985f, 0.940f, 0.94f), 14, 6);
+        Stretch(summaryPanel.rectTransform, Vector2.zero, Vector2.one, new Vector2(732f, 284f), new Vector2(-64f, -166f));
 
         Image summaryClip = CreateRoundedPanel("Closing Summary Clip", summaryPanel.transform, new Color32(177, 113, 58, 205), 4);
         summaryClip.raycastTarget = false;
-        Stretch(summaryClip.rectTransform, Vector2.zero, new Vector2(0f, 1f), new Vector2(18f, 14f), new Vector2(24f, -14f));
+        Stretch(summaryClip.rectTransform, Vector2.zero, new Vector2(0f, 1f), new Vector2(18f, 18f), new Vector2(24f, -18f));
 
-        closingCardSummaryText = CreateText("Closing Summary Text", summaryPanel.transform, "", 14, new Color32(30, 41, 59, 255), TextAnchor.UpperLeft, FontStyle.Normal);
-        closingCardSummaryText.lineSpacing = 1.04f;
+        closingCardSummaryText = CreateText("Closing Summary Text", summaryPanel.transform, "", 18, new Color32(30, 41, 59, 245), TextAnchor.UpperLeft, FontStyle.Normal);
+        closingCardSummaryText.lineSpacing = 1.24f;
+        closingCardSummaryText.horizontalOverflow = HorizontalWrapMode.Wrap;
         closingCardSummaryText.verticalOverflow = VerticalWrapMode.Truncate;
-        closingCardSummaryText.resizeTextForBestFit = true;
-        closingCardSummaryText.resizeTextMinSize = 10;
-        closingCardSummaryText.resizeTextMaxSize = 14;
-        Stretch(closingCardSummaryText.rectTransform, Vector2.zero, Vector2.one, new Vector2(40f, 14f), new Vector2(-22f, -12f));
+        closingCardSummaryText.resizeTextForBestFit = false;
+        closingCardSummaryText.fontSize = 17;
+        Stretch(closingCardSummaryText.rectTransform, Vector2.zero, Vector2.one, new Vector2(44f, 30f), new Vector2(-34f, -30f));
+        closingCreditsTextRect = null;
 
         closingCardChoiceButtons = new Button[closingQuotes.Length];
         for (int i = 0; i < closingCardChoiceButtons.Length; i++)
@@ -3982,19 +4492,22 @@ public sealed class AvatarChatApp : MonoBehaviour
                 SelectClosingCard(captured);
                 SaveSession();
             });
+            choice.gameObject.SetActive(false);
             closingCardChoiceButtons[i] = choice;
         }
 
         closingCardSaveButton = CreateNoteActionButton("Closing Card Save", card.transform, "기록함에 저장", true);
-        Stretch(closingCardSaveButton.GetComponent<RectTransform>(), new Vector2(1f, 0f), new Vector2(1f, 0f), new Vector2(-488f, 32f), new Vector2(-340f, 78f));
+        Stretch(closingCardSaveButton.GetComponent<RectTransform>(), new Vector2(1f, 0f), new Vector2(1f, 0f), new Vector2(-520f, 76f), new Vector2(-360f, 126f));
+        closingCardSaveButton.gameObject.SetActive(false);
         closingCardSaveButton.onClick.AddListener(() =>
         {
             lastClosingCardShortcutAction = "save-button";
             SaveEndingRecord();
         });
 
-        closingCardContinueButton = CreateNoteActionButton("Closing Card Continue", card.transform, "질문 더 하기", false);
-        Stretch(closingCardContinueButton.GetComponent<RectTransform>(), new Vector2(1f, 0f), new Vector2(1f, 0f), new Vector2(-320f, 32f), new Vector2(-176f, 78f));
+        closingCardContinueButton = CreateNoteActionButton("Closing Card Continue", card.transform, "5개 더 물어보기", false);
+        Stretch(closingCardContinueButton.GetComponent<RectTransform>(), new Vector2(1f, 0f), new Vector2(1f, 0f), new Vector2(-344f, 76f), new Vector2(-174f, 126f));
+        closingCardContinueButton.gameObject.SetActive(false);
         SetButtonColor(closingCardContinueButton, new Color(0.045f, 0.052f, 0.064f, 0.80f), new Color(1f, 0.96f, 0.86f, 0.98f));
         closingCardContinueButton.onClick.AddListener(() =>
         {
@@ -4002,23 +4515,22 @@ public sealed class AvatarChatApp : MonoBehaviour
             ContinueToNextQuestionCategory();
         });
 
-        Button closeButton = CreateNoteActionButton("Closing Card Close", card.transform, "끝내기", false);
-        Stretch(closeButton.GetComponent<RectTransform>(), new Vector2(1f, 0f), new Vector2(1f, 0f), new Vector2(-156f, 32f), new Vector2(-48f, 78f));
-        SetButtonColor(closeButton, new Color(0.045f, 0.052f, 0.064f, 0.80f), new Color(1f, 0.96f, 0.86f, 0.98f));
-        closeButton.onClick.AddListener(() =>
+        closingCardCloseButton = CreateNoteActionButton("Closing Card Close", card.transform, "끝내기", false);
+        Stretch(closingCardCloseButton.GetComponent<RectTransform>(), new Vector2(1f, 0f), new Vector2(1f, 0f), new Vector2(-214f, 76f), new Vector2(-64f, 126f));
+        SetButtonColor(closingCardCloseButton, new Color(0.70f, 0.44f, 0.23f, 0.90f), new Color(1f, 0.96f, 0.86f, 0.98f));
+        closingCardCloseButton.onClick.AddListener(() =>
         {
             if (!HasSavedEndingRecordThisSession() || string.IsNullOrWhiteSpace(GetClosingMessageToInterviewee()))
             {
                 SaveEndingRecord();
                 if (!HasSavedEndingRecordThisSession()) return;
             }
-            closingCardObject.SetActive(false);
-            statusText.text = "카테고리 대화를 끝냈습니다";
-            ShowHotspotLabels();
+            ReturnToMainMenuAfterEnding();
         });
 
         Button feedbackButton = CreateNoteActionButton("Closing Card Feedback", card.transform, "의견 남기기", false);
-        Stretch(feedbackButton.GetComponent<RectTransform>(), new Vector2(0f, 0f), new Vector2(0f, 0f), new Vector2(48f, 32f), new Vector2(198f, 78f));
+        Stretch(feedbackButton.GetComponent<RectTransform>(), new Vector2(1f, 0f), new Vector2(1f, 0f), new Vector2(-520f, 22f), new Vector2(-360f, 64f));
+        feedbackButton.gameObject.SetActive(false);
         SetButtonColor(feedbackButton, new Color(0.045f, 0.052f, 0.064f, 0.82f), new Color(1f, 0.96f, 0.86f, 0.98f));
         feedbackButton.onClick.AddListener(() => SetPlaytestFeedbackOpen(true));
 
@@ -4030,8 +4542,8 @@ public sealed class AvatarChatApp : MonoBehaviour
     {
         int selected = Mathf.Clamp(index, 0, closingQuotes.Length - 1);
         selectedClosingIndex = selected;
-        if (closingCardQuoteText != null) closingCardQuoteText.text = closingQuotes[selected];
-        if (closingCardCaptionText != null) closingCardCaptionText.text = closingCaptions[selected];
+        if (closingCardQuoteText != null) closingCardQuoteText.text = string.Empty;
+        if (closingCardCaptionText != null) closingCardCaptionText.text = string.Empty;
         UpdateClosingSummary();
 
         if (closingCardChoiceButtons == null) return;
@@ -4127,12 +4639,8 @@ public sealed class AvatarChatApp : MonoBehaviour
         builder.AppendLine("세션 요약");
         builder.AppendLine($"문답 수: {conversationTurns}");
         builder.AppendLine($"세션 완성도: {BuildSessionCompletionLine()}");
-        builder.AppendLine($"열린 장면: {discoveredThemes.Count}/{memoryThemes.Length}");
-        builder.AppendLine($"처음 본 것: {BuildFirstImpressionDisplayLabel()}");
-        builder.AppendLine($"겉!=속 경로: {BuildFirstImpressionArcLine()}");
         builder.AppendLine($"가장 많이 물은 태도: {GetDominantAttitude()}");
-        builder.AppendLine($"깊은 기록: {CountDeepMemories()}/{memoryThemes.Length}");
-        builder.AppendLine(discoveredThemes.Count >= memoryThemes.Length ? "완성 여부: 모든 장면 완성" : "완성 여부: 진행 중");
+        builder.AppendLine($"질문 흐름: {BuildClosingQuestionFlowLine(RequiredQuestionCount, 240)}");
         builder.AppendLine();
         builder.AppendLine("오늘 남길 문장");
         builder.AppendLine(closingQuotes[selected]);
@@ -4148,24 +4656,7 @@ public sealed class AvatarChatApp : MonoBehaviour
             builder.AppendLine(selectedClosingSensitiveQuestion);
             builder.AppendLine(selectedClosingSensitiveAnswer);
         }
-        builder.AppendLine(BuildPerspectiveShiftLine());
         builder.AppendLine($"다음에 이어볼 질문: {BuildNextSessionPromptLine()}");
-        builder.AppendLine();
-        builder.AppendLine("오늘 열린 장면");
-
-        List<string> opened = GetOpenedMemoryLines();
-        if (opened.Count == 0)
-        {
-            builder.AppendLine("아직 기억장에 남은 장면이 없습니다.");
-        }
-        else
-        {
-            foreach (string line in opened)
-            {
-                builder.AppendLine(line);
-            }
-        }
-
         builder.AppendLine();
         builder.AppendLine("오늘의 대화");
         string transcript = BuildPlainConversationLog();
@@ -4223,14 +4714,8 @@ public sealed class AvatarChatApp : MonoBehaviour
         builder.AppendLine($"이슈 등급: {issueSeverity}");
         builder.AppendLine($"문답 수: {conversationTurns}");
         builder.AppendLine($"세션 완성도: {BuildSessionCompletionLine()}");
-        builder.AppendLine($"열린 장면: {discoveredThemes.Count}/{memoryThemes.Length}");
-        builder.AppendLine($"열린 장면 태그: {FormatPlaytestTags(GetOpenedSceneTags())}");
-        builder.AppendLine($"처음 본 것: {BuildFirstImpressionDisplayLabel()}");
-        builder.AppendLine($"겉!=속 경로: {BuildFirstImpressionArcLine()}");
         builder.AppendLine($"다음 질문 방향: {BuildNextSessionPromptLine()}");
         builder.AppendLine($"주된 질문 태도: {GetDominantAttitude()}");
-        builder.AppendLine($"깊은 기록 수: {CountDeepMemories()}/{memoryThemes.Length}");
-        builder.AppendLine($"마지막 장면: {lastTheme}");
         builder.AppendLine($"{RequiredQuestionCount}문답 완료: {(IsCompletedFiveTurnSession() ? "예" : "아니오")}");
         builder.AppendLine($"마무리 기록 저장: {(HasSavedEndingRecordThisSession() ? "예" : "아니오")}");
         builder.AppendLine($"긍정 근거 마무리 필요: {(ShouldRequireEndingRecordForPositiveEvidence() ? "예" : "아니오")}");
@@ -4244,20 +4729,6 @@ public sealed class AvatarChatApp : MonoBehaviour
         builder.AppendLine();
         builder.AppendLine("메모");
         builder.AppendLine(string.IsNullOrWhiteSpace(note) ? "입력된 메모가 없습니다." : note);
-        builder.AppendLine();
-        builder.AppendLine("오늘 열린 장면");
-        List<string> opened = GetOpenedMemoryLines();
-        if (opened.Count == 0)
-        {
-            builder.AppendLine("아직 기억장에 남은 장면이 없습니다.");
-        }
-        else
-        {
-            foreach (string line in opened)
-            {
-                builder.AppendLine(line);
-            }
-        }
         builder.AppendLine();
         builder.AppendLine("대화 로그");
         string transcript = BuildPlainConversationLog();
@@ -4716,14 +5187,19 @@ public sealed class AvatarChatApp : MonoBehaviour
 
         StringBuilder builder = new StringBuilder();
         string sceneTags = BuildOpenedSceneTags(3);
-        builder.AppendLine("처음 본 단서: " + ShortenForCard(BuildFirstImpressionDisplayLabel(), 42));
-        builder.AppendLine("새롭게 본 생활: " + (string.IsNullOrWhiteSpace(sceneTags) ? BuildActiveCategoryLabel() : sceneTags));
-        builder.AppendLine("질문 흐름: " + ShortenForCard(BuildClosingQuestionFlowLine(5, 90), 96));
+        builder.AppendLine("오늘의 대화");
+        builder.AppendLine("질문 5개를 마쳤습니다.");
+        builder.AppendLine();
+        builder.AppendLine("질문으로 본 생활");
+        builder.AppendLine(string.IsNullOrWhiteSpace(sceneTags) ? "전체 대화 기록" : sceneTags);
         if (!string.IsNullOrWhiteSpace(selectedClosingSensitiveQuestion))
         {
-            builder.AppendLine("마지막 질문: " + ShortenForCard(selectedClosingSensitiveQuestion, 62));
+            builder.AppendLine();
+            builder.AppendLine("마지막 질문");
+            builder.AppendLine(ShortenForCard(selectedClosingSensitiveQuestion, 58));
         }
-        builder.Append("엽서 문장: ").Append(ShortenForCard(BuildClosingSelectionLine(selectedClosingIndex), 72));
+        builder.AppendLine();
+        builder.Append("남길 말을 적고 끝내 주세요.");
 
         closingCardSummaryText.text = builder.ToString();
         RefreshClosingChoiceLabels();
@@ -4777,41 +5253,14 @@ public sealed class AvatarChatApp : MonoBehaviour
 
     private string BuildSessionCompletionLine()
     {
-        int totalScenes = memoryThemes != null ? memoryThemes.Length : 0;
-        int openedScenes = discoveredThemes != null ? discoveredThemes.Count : 0;
-        int remainingScenes = Mathf.Max(0, totalScenes - openedScenes);
-        int deepScenes = CountDeepMemories();
-        string turnLine = IsCompletedFiveTurnSession()
+        return IsCompletedFiveTurnSession()
             ? $"{RequiredQuestionCount}문답 완료"
             : $"{Mathf.Clamp(conversationTurns, 0, RequiredQuestionCount)}/{RequiredQuestionCount} 문답";
-        string sceneLine = remainingScenes <= 0
-            ? $"장면 {openedScenes}/{totalScenes}"
-            : $"장면 {openedScenes}/{totalScenes} · 남은 {remainingScenes}";
-        return $"{turnLine} · {sceneLine} · 깊은 {deepScenes}/{totalScenes}";
     }
 
     private string BuildNextSessionPromptLine()
     {
-        EnsureMemoryNotes();
-
-        string shallow = GetFirstShallowOpenedTheme();
-        if (!string.IsNullOrWhiteSpace(shallow))
-        {
-            return $"{shallow} 장면에 배려/호기심 질문을 더해 보세요.";
-        }
-
-        string unopened = GetFirstUnopenedTheme();
-        if (!string.IsNullOrWhiteSpace(unopened))
-        {
-            return $"다음 질문으로 {unopened} 장면을 열어 보세요.";
-        }
-
-        if (CountDeepMemories() < memoryThemes.Length)
-        {
-            return "얕게 남은 장면을 골라 조금 더 구체적으로 물어보세요.";
-        }
-
-        return "모든 장면이 열렸습니다. 기록함에서 오늘 남긴 문장을 다시 볼 수 있습니다.";
+        return "전체 질문 풀에서 5개를 더 이어가 보세요.";
     }
 
     private string GetFirstShallowOpenedTheme()
@@ -4914,7 +5363,7 @@ public sealed class AvatarChatApp : MonoBehaviour
 
     private string BuildFirstImpressionDisplayLabel()
     {
-        return HasFirstImpressionChoice() ? firstImpression : "첫 인상 없이 대화 시작";
+        return HasFirstImpressionChoice() ? firstImpression : "전체 대화 시작";
     }
 
     private bool HasFirstImpressionChoice()
@@ -5066,7 +5515,7 @@ public sealed class AvatarChatApp : MonoBehaviour
         topRail.raycastTarget = false;
         Stretch(topRail.rectTransform, new Vector2(0f, 1f), Vector2.one, new Vector2(52f, -64f), new Vector2(-36f, -62f));
 
-        Text title = CreateText("Memory Book Title", page.transform, "기억장", 22, new Color32(30, 41, 59, 255), TextAnchor.UpperLeft, FontStyle.Bold);
+        Text title = CreateText("Memory Book Title", page.transform, "대화 메모", 22, new Color32(30, 41, 59, 255), TextAnchor.UpperLeft, FontStyle.Bold);
         Stretch(title.rectTransform, new Vector2(0f, 1f), new Vector2(1f, 1f), new Vector2(50f, -50f), new Vector2(-36f, -18f));
 
         memoryBookCountText = CreateText("Memory Book Count", page.transform, "0/6 장면", 13, new Color32(71, 85, 105, 238), TextAnchor.UpperRight, FontStyle.Bold);
@@ -5184,7 +5633,7 @@ public sealed class AvatarChatApp : MonoBehaviour
             UpdateMemoryBook();
             if (closingCardObject != null) closingCardObject.SetActive(false);
             PlayPageSound();
-            statusText.text = "기억장을 열었습니다";
+            statusText.text = "대화 메모를 열었습니다";
             SelectFirstInteractable(memoryBookObject, "Memory Card", "Memory Book Close");
         }
         else
@@ -5231,27 +5680,8 @@ public sealed class AvatarChatApp : MonoBehaviour
         bool deep = IsDeepMemoryUnlocked(theme);
         lastChoiceConsequenceLine = BuildChoiceConsequenceLine(theme, attitude, deep, deepUnlocked);
 
-        if (discoveredThemes.Add(theme))
-        {
-            statusText.text = lastChoiceConsequenceLine;
-            if (discoveredThemes.Count >= memoryThemes.Length && !memoryCompletionCelebrated)
-            {
-                ShowMemoryCompletionToast();
-            }
-            else
-            {
-                ShowMemoryUnlockToast(theme);
-            }
-        }
-        else if (deepUnlocked && statusText != null)
-        {
-            statusText.text = lastChoiceConsequenceLine;
-            ShowMemoryUnlockToast(theme);
-        }
-        else if (statusText != null)
-        {
-            statusText.text = lastChoiceConsequenceLine;
-        }
+        discoveredThemes.Add(theme);
+        if (memoryUnlockToastObject != null) memoryUnlockToastObject.SetActive(false);
 
         UpdateMemoryBook();
         UpdateClosingSummary();
@@ -5515,8 +5945,8 @@ public sealed class AvatarChatApp : MonoBehaviour
         }
 
         return complete
-            ? "여섯 장면 완성 · 배려/호기심 질문으로 더 들어갑니다."
-            : "배려/호기심 질문으로 얕은 기록을 더 열어 봅니다.";
+            ? "여섯 장면 완성 · 더 깊이 물어볼 수 있습니다."
+            : "질문을 이어 가며 기록을 더 열어 봅니다.";
     }
 
     private string BuildFirstImpressionTargetLine()
@@ -5604,7 +6034,7 @@ public sealed class AvatarChatApp : MonoBehaviour
         }
         if (IsFirstImpressionThemeOpened())
         {
-            return $"{firstImpression} -> {theme} 장면 열림. 배려/호기심 질문으로 더 깊어질 수 있습니다.";
+            return $"{firstImpression} -> {theme} 장면 열림. 질문을 이어 가면 더 깊어질 수 있습니다.";
         }
 
         return $"{firstImpression} -> {theme} 장면 대기. 다음 질문이 겉과 속을 연결합니다.";
@@ -5618,11 +6048,9 @@ public sealed class AvatarChatApp : MonoBehaviour
 
         if (questionPhoneProgressText != null)
         {
-            questionPhoneProgressText.text = !string.IsNullOrWhiteSpace(activeQuestionCategory)
-                ? $"{activeQuestionCategory} 질문 {Mathf.Clamp(activeCategoryQuestionCount, 0, RequiredQuestionCount)}/{RequiredQuestionCount} · 전체 {conversationTurns}"
-                : (count >= total
-                ? $"장면 {total}/{total} · 깊은 기록 {deep}"
-                : $"장면 {count}/{total} · 깊은 {deep} · 남은 {Mathf.Max(0, total - count)}");
+            questionPhoneProgressText.text = IsCompletedFiveTurnSession()
+                ? $"질문 {RequiredQuestionCount}/{RequiredQuestionCount} · 선택 대기"
+                : $"질문 {Mathf.Clamp(conversationTurns, 0, RequiredQuestionCount)}/{RequiredQuestionCount} · 전체 기록";
         }
 
         if (questionPhoneGuideText != null)
@@ -5698,36 +6126,19 @@ public sealed class AvatarChatApp : MonoBehaviour
 
     private string BuildQuestionPhoneGuideText(int openedScenes, int totalScenes, int deepScenes)
     {
-        int remainingQuestions = Mathf.Max(0, RequiredQuestionCount - (string.IsNullOrWhiteSpace(activeQuestionCategory) ? conversationTurns : activeCategoryQuestionCount));
-        int remainingScenes = Mathf.Max(0, totalScenes - openedScenes);
-        string sessionLine = BuildQuestionSessionQualityLine(deepScenes, totalScenes);
+        int remainingQuestions = Mathf.Max(0, RequiredQuestionCount - conversationTurns);
 
         if (IsCompletedFiveTurnSession())
         {
-            return HasNextQuestionCategory()
-                ? $"{BuildActiveCategoryLabel()} 완료 · 다음 카테고리 또는 끝내기 선택"
-                : $"{BuildActiveCategoryLabel()} 완료 · 끝내기로 마지막 결과 저장";
+            return "질문 5개 완료 · 5개 더 물어보기 또는 끝내기 선택";
         }
 
-        if (conversationTurns <= 0 && string.IsNullOrWhiteSpace(activeQuestionCategory))
+        if (conversationTurns <= 0)
         {
-            return $"{BuildChapterStateSummaryLine()} · 장면은 질문으로 열리고, 깊은 기록은 배려/호기심으로 열립니다.";
+            return "전체 기록에서 중요한 질문 3개를 먼저 보여 줍니다.";
         }
 
-        if (!string.IsNullOrWhiteSpace(activeQuestionCategory))
-        {
-            return $"{activeQuestionCategory} 안에서만 추천 질문이 뜹니다 · 남은 질문 {remainingQuestions}개";
-        }
-
-        if (remainingScenes > 0)
-        {
-            string target = BuildFirstImpressionTargetBadge();
-            return string.IsNullOrWhiteSpace(target)
-                ? $"{sessionLine} · {remainingQuestions}문답 남음"
-                : $"{target} · {sessionLine}";
-        }
-
-        return $"{sessionLine} · 마지막까지 {remainingQuestions}문답";
+        return $"전체 질문 흐름 · 남은 질문 {remainingQuestions}개";
     }
 
     private string BuildQuestionSessionQualityLine(int deepScenes, int totalScenes)
@@ -6463,7 +6874,7 @@ public sealed class AvatarChatApp : MonoBehaviour
         Text body = CreateText(
             "Fresh Start Confirm Body",
             panel.transform,
-            "현재 이어하기 데이터와 진행 중인 기억장이 지워집니다.\n기록함에 저장한 마무리 기록은 남습니다.",
+            "현재 이어하기 데이터와 진행 중인 대화 메모가 지워집니다.\n기록함에 저장한 마무리 기록은 남습니다.",
             17,
             new Color32(51, 65, 85, 255),
             TextAnchor.UpperLeft,
@@ -6645,11 +7056,19 @@ public sealed class AvatarChatApp : MonoBehaviour
         currentStoryModePaceLine = string.Empty;
         ResetStoryModeSceneDirection();
         SetStoryModeInterface(false);
-        SetFlowButtonsInteractable(false);
+        SetFlowButtonsInteractable(true);
         UpdateActionButtons();
-        if (sendButton != null) sendButton.interactable = false;
-        if (micButton != null) micButton.interactable = false;
-        ShowFirstImpressionChoice(pendingOpeningStoryQuestionPhone);
+        if (sendButton != null) sendButton.interactable = serverReady;
+        UpdateMicButtonState();
+        firstImpression = string.Empty;
+        activeQuestionCategory = string.Empty;
+        activeCategoryQuestionCount = 0;
+        UpdateLeadPrompts("전체 기록에서 중요한 질문을 먼저 골랐습니다.", BuildLeadQuestionSet(null));
+        SetQuestionNoteOpen(pendingOpeningStoryQuestionPhone);
+        UpdateNoteTabContent();
+        UpdateClosingSummary();
+        if (statusText != null) statusText.text = "이야기를 다 들었습니다 · 바로 질문을 골라 주세요";
+        SaveSession();
     }
 
     private string BuildOpeningStoryBeatLine(int index)
@@ -6722,7 +7141,7 @@ public sealed class AvatarChatApp : MonoBehaviour
     {
         if (string.Equals(value, "목발", StringComparison.Ordinal))
         {
-            return "목발이 먼저 눈에 들어왔다면, 거기서부터 물어보셔도 좋아요. 다만 거기서 멈추지 말고, 제가 이동을 어떻게 준비하는지, 도움이 필요한 순간을 어떻게 맞춰 가는지까지 이어서 물어봐 주세요.";
+            return "목발을 골랐다면 이동 준비부터 물어보셔도 좋아요. 처음 가는 곳을 어떻게 확인하는지, 도움이 필요한 순간을 어떻게 맞춰 가는지 이어서 물어봐 주세요.";
         }
         if (string.Equals(value, "책상", StringComparison.Ordinal))
         {
@@ -6793,7 +7212,7 @@ public sealed class AvatarChatApp : MonoBehaviour
         {
             "평범한 사람으로 기억되고 싶다는 말은 어떤 장면까지 봐 달라는 뜻인가요?",
             "도움을 받을 때 설명할 시간이 필요하다는 말은 어떤 뜻인가요?",
-            "게임과 코인노래방 같은 취미가 전시에서 빠지면 무엇을 놓치게 되나요?"
+            "게임과 코인노래방 같은 취미가 같이 보여야 하는 이유는 무엇인가요?"
         };
     }
 
@@ -7014,13 +7433,8 @@ public sealed class AvatarChatApp : MonoBehaviour
     private string BuildStartSavePreview(SaveState state)
     {
         int questions = Mathf.Clamp(state != null ? state.conversationTurns : 0, 0, RequiredQuestionCount);
-        int scenes = CountSavedThemes(state);
         string progress = questions >= RequiredQuestionCount ? "마무리 가능" : $"질문 {questions}/{RequiredQuestionCount}";
-        string lastScene = LastSavedThemeLabel(state);
-
-        return string.IsNullOrWhiteSpace(lastScene)
-            ? $"지난 대화 · {progress} · 기억장 {scenes}/6"
-            : $"지난 대화 · {progress} · 기억장 {scenes}/6 · {lastScene}";
+        return $"지난 대화 · {progress}";
     }
 
     private bool EnsureServerReadyForStart()
@@ -7143,7 +7557,7 @@ public sealed class AvatarChatApp : MonoBehaviour
             discoveredThemes = new List<string>(discoveredThemes).ToArray(),
             memoryNotes = memoryNotes ?? new string[memoryThemes.Length],
             deepMemoryUnlocked = deepMemoryUnlocked ?? new bool[memoryThemes.Length],
-            currentLeadQuestions = currentLeadQuestions ?? new[] { leadQuestions[0], leadQuestions[1], leadQuestions[2] },
+            currentLeadQuestions = currentLeadQuestions ?? BuildLeadQuestionSet(null),
             lastTheme = lastTheme,
             lastEvidenceLine = lastEvidenceLine,
             lastAnswerSource = lastAnswerSource,
@@ -7151,8 +7565,8 @@ public sealed class AvatarChatApp : MonoBehaviour
             firstImpression = firstImpression,
             attitudeCounts = attitudeCounts ?? new int[attitudeNames.Length],
             lastQuestionAttitude = lastQuestionAttitude,
-            activeQuestionCategory = activeQuestionCategory,
-            activeCategoryQuestionCount = activeCategoryQuestionCount,
+            activeQuestionCategory = string.Empty,
+            activeCategoryQuestionCount = Mathf.Clamp(conversationTurns, 0, RequiredQuestionCount),
             lastChoiceConsequenceLine = lastChoiceConsequenceLine,
             leadIntro = leadText != null ? leadText.text : string.Empty,
             speaker = speakerText != null ? speakerText.text : "답변",
@@ -7212,9 +7626,9 @@ public sealed class AvatarChatApp : MonoBehaviour
             firstImpression = "목발",
             attitudeCounts = new[] { 1, 1, 1, 0 },
             lastQuestionAttitude = "호기심",
-            activeQuestionCategory = "일과 공부",
+            activeQuestionCategory = string.Empty,
             activeCategoryQuestionCount = 3,
-            lastChoiceConsequenceLine = "질문 결과: 호기심 질문 -> 일과 공부 깊은 기록 · 단서와 속 생활이 맞물렸습니다.",
+            lastChoiceConsequenceLine = "질문 결과: 일과 공부 기록 · 단서와 생활이 맞물렸습니다.",
             leadIntro = "지난 대화에서 이어갈 질문입니다.",
             speaker = "지난 답변",
             dialogue = "저장된 대화에서는 이동, 도움, 일과 공부 이야기를 이어가던 중입니다.",
@@ -7302,12 +7716,12 @@ public sealed class AvatarChatApp : MonoBehaviour
             Array.Copy(state.attitudeCounts, attitudeCounts, Mathf.Min(state.attitudeCounts.Length, attitudeCounts.Length));
         }
         lastQuestionAttitude = string.IsNullOrWhiteSpace(state.lastQuestionAttitude) ? string.Empty : state.lastQuestionAttitude;
-        activeQuestionCategory = CanonicalTheme(state.activeQuestionCategory);
-        activeCategoryQuestionCount = Mathf.Clamp(state.activeCategoryQuestionCount, 0, RequiredQuestionCount);
+        activeQuestionCategory = string.Empty;
+        activeCategoryQuestionCount = Mathf.Clamp(conversationTurns, 0, RequiredQuestionCount);
         lastChoiceConsequenceLine = string.IsNullOrWhiteSpace(state.lastChoiceConsequenceLine) ? string.Empty : state.lastChoiceConsequenceLine;
         currentLeadQuestions = state.currentLeadQuestions != null && state.currentLeadQuestions.Length == 3
             ? state.currentLeadQuestions
-            : new[] { leadQuestions[0], leadQuestions[1], leadQuestions[2] };
+            : BuildLeadQuestionSet(null);
 
         int expressionIndex = Mathf.Clamp(state.expression, 0, Enum.GetValues(typeof(ExpressionState)).Length - 1);
         dialogueSizeLevel = Mathf.Clamp(state.dialogueSizeLevel, -1, 1);
@@ -7323,14 +7737,7 @@ public sealed class AvatarChatApp : MonoBehaviour
         SetExpression((ExpressionState)expressionIndex);
         SelectClosingCard(selectedClosingIndex);
         PresentAssistant(string.IsNullOrWhiteSpace(state.dialogue) ? OpeningText : state.dialogue, string.IsNullOrWhiteSpace(state.speaker) ? "답변" : state.speaker);
-        if (!string.IsNullOrWhiteSpace(activeQuestionCategory))
-        {
-            UpdateLeadPrompts(BuildLeadIntro(), BuildCategoryLeadQuestionSet(activeQuestionCategory));
-        }
-        else
-        {
-            UpdateLeadPrompts(string.IsNullOrWhiteSpace(state.leadIntro) ? $"{lastTheme}에서 이어갈 질문입니다." : state.leadIntro);
-        }
+        UpdateLeadPrompts(string.IsNullOrWhiteSpace(state.leadIntro) ? BuildLeadIntro() : state.leadIntro, BuildLeadQuestionSet(currentLeadQuestions));
         UpdateMemoryBook();
         UpdateActionButtons();
         UpdateNoteTabContent();
@@ -7364,6 +7771,7 @@ public sealed class AvatarChatApp : MonoBehaviour
         activeCategoryQuestionCount = 0;
         selectedClosingIndex = 0;
         pendingClosingSensitiveQuestion = false;
+        pendingCompletionChoiceAfterDialogue = false;
         closingSensitiveQuestionAnswered = false;
         selectedClosingSensitiveQuestion = string.Empty;
         selectedClosingSensitiveAnswer = string.Empty;
@@ -7387,7 +7795,7 @@ public sealed class AvatarChatApp : MonoBehaviour
         lastStartMenuAction = "none";
         lastSavedEndingRecordPath = string.Empty;
         lastSavedIntervieweeMessagePath = string.Empty;
-        currentLeadQuestions = new[] { leadQuestions[0], leadQuestions[1], leadQuestions[2] };
+        currentLeadQuestions = BuildLeadQuestionSet(null);
         busy = false;
 
         if (recording)
@@ -7424,6 +7832,37 @@ public sealed class AvatarChatApp : MonoBehaviour
         UpdateMicButtonState();
         SetFlowButtonsInteractable(true);
         statusText.text = "처음부터 다시 시작";
+    }
+
+    private void ReturnToMainMenuAfterEnding()
+    {
+        StopStoryMode(null);
+        ResetSession();
+
+        if (completionChoiceObject != null) completionChoiceObject.SetActive(false);
+        if (closingSensitiveQuestionObject != null) closingSensitiveQuestionObject.SetActive(false);
+        if (closingCardObject != null) closingCardObject.SetActive(false);
+        if (firstImpressionObject != null) firstImpressionObject.SetActive(false);
+        if (memoryBookObject != null) memoryBookObject.SetActive(false);
+        if (playtestFeedbackObject != null) playtestFeedbackObject.SetActive(false);
+        CloseHotspotPreview();
+        SetQuestionNoteOpen(false);
+        SetRecordArchiveOpen(false);
+        SetRestartConfirmOpen(false);
+        SetPauseMenuOpen(false);
+        SetSettingsMenuOpen(false);
+        SetAboutMenuOpen(false);
+        SetDirectInputOpen(false, false);
+
+        if (startMenuObject != null)
+        {
+            startMenuObject.SetActive(true);
+            startMenuObject.transform.SetAsLastSibling();
+        }
+
+        UpdateContinueButton();
+        if (statusText != null) statusText.text = "메인 화면으로 돌아왔습니다";
+        SelectFirstInteractable(startMenuObject, "Start Interview Button", "Start With Phone Button", "Start Story Mode Button");
     }
 
     private void StartStoryMode()
@@ -7464,7 +7903,6 @@ public sealed class AvatarChatApp : MonoBehaviour
 
             history.Add(new ChatMessage { role = "assistant", content = line });
             TrimHistory();
-            conversationTurns++;
             AppendMessage("이야기", line, "#0f766e");
 
             lastTheme = theme;
@@ -7697,7 +8135,7 @@ public sealed class AvatarChatApp : MonoBehaviour
         int total = Mathf.Max(1, openingStoryModeActive ? openingStoryLines.Length : (storyModeLines != null ? storyModeLines.Length : 1));
         if (storyModeIndex >= total - 1)
         {
-            return openingStoryModeActive ? "첫인상 고르기" : "마무리로";
+            return openingStoryModeActive ? "질문하기" : "마무리로";
         }
 
         int next = Mathf.Clamp(storyModeIndex + 2, 2, total);
@@ -7793,10 +8231,22 @@ public sealed class AvatarChatApp : MonoBehaviour
             return;
         }
 
+        if (completionChoiceObject != null && completionChoiceObject.activeSelf)
+        {
+            statusText.text = "5개 더 물어볼지 끝낼지 선택해 주세요";
+            return;
+        }
+
+        if (closingSensitiveQuestionObject != null && closingSensitiveQuestionObject.activeSelf)
+        {
+            statusText.text = "마지막 질문 카드 하나를 골라 주세요";
+            return;
+        }
+
         if (memoryBookObject != null && memoryBookObject.activeSelf)
         {
             memoryBookObject.SetActive(false);
-            statusText.text = "기억장을 닫았습니다";
+            statusText.text = "대화 메모를 닫았습니다";
             return;
         }
 
@@ -7880,8 +8330,7 @@ public sealed class AvatarChatApp : MonoBehaviour
 
         if (questionNoteOpen && (IsKeyDown(KeyCode.LeftArrow) || IsKeyDown(KeyCode.RightArrow)))
         {
-            int delta = IsKeyDown(KeyCode.RightArrow) ? 1 : -1;
-            ShowNoteTab((currentNoteTabIndex + delta + 3) % 3);
+            ShowNoteTab(2);
             return;
         }
 
@@ -8247,8 +8696,7 @@ public sealed class AvatarChatApp : MonoBehaviour
 
         if (questionNoteOpen && (IsKeyDown(KeyCode.JoystickButton4) || IsKeyDown(KeyCode.JoystickButton5)))
         {
-            int delta = IsKeyDown(KeyCode.JoystickButton5) ? 1 : -1;
-            ShowNoteTab((currentNoteTabIndex + delta + 3) % 3);
+            ShowNoteTab(2);
             return true;
         }
 
@@ -8327,6 +8775,7 @@ public sealed class AvatarChatApp : MonoBehaviour
         if (aboutMenuObject != null && aboutMenuObject.activeSelf) return false;
         if (recordArchiveObject != null && recordArchiveObject.activeSelf) return false;
         if (closingCardObject != null && closingCardObject.activeSelf) return false;
+        if (closingSensitiveQuestionObject != null && closingSensitiveQuestionObject.activeSelf) return false;
         if (memoryBookObject != null && memoryBookObject.activeSelf) return false;
         if (leadButtons == null || index < 0 || index >= leadButtons.Length) return false;
         if (leadButtons[index] == null || !leadButtons[index].interactable) return false;
@@ -8388,9 +8837,15 @@ public sealed class AvatarChatApp : MonoBehaviour
         if (!lineUp && !lineDown && !pageUp && !pageDown && !home && !end) return false;
 
         bool recordArchiveOpen = recordArchiveObject != null && recordArchiveObject.activeSelf;
-        if (!recordArchiveOpen && (lineDown || pageDown || end))
+        bool noteHistoryOpen = questionNoteOpen && noteHistoryScrollRect != null;
+        if (!recordArchiveOpen && !noteHistoryOpen && (lineDown || pageDown || end))
         {
             if (TryAdvanceDialoguePage()) return true;
+            if (pendingCompletionChoiceAfterDialogue)
+            {
+                ShowCompletionChoiceOverlay();
+                return true;
+            }
             if (storyModeActive)
             {
                 RequestStoryModeAdvance("keyboard-page");
@@ -8429,14 +8884,18 @@ public sealed class AvatarChatApp : MonoBehaviour
             return recordArchiveScrollRect;
         }
 
+        if (questionNoteOpen)
+        {
+            return noteHistoryScrollRect;
+        }
+
         if (startMenuObject != null && startMenuObject.activeSelf) return null;
         if (settingsMenuObject != null && settingsMenuObject.activeSelf) return null;
         if (aboutMenuObject != null && aboutMenuObject.activeSelf) return null;
         if (pauseMenuObject != null && pauseMenuObject.activeSelf) return null;
         if (closingCardObject != null && closingCardObject.activeSelf) return null;
+        if (closingSensitiveQuestionObject != null && closingSensitiveQuestionObject.activeSelf) return null;
         if (memoryBookObject != null && memoryBookObject.activeSelf) return null;
-        if (questionNoteOpen) return null;
-
         return null;
     }
 
@@ -8521,7 +8980,9 @@ public sealed class AvatarChatApp : MonoBehaviour
             (settingsMenuObject != null && settingsMenuObject.activeSelf) ||
             (aboutMenuObject != null && aboutMenuObject.activeSelf) ||
             (pauseMenuObject != null && pauseMenuObject.activeSelf) ||
+            (completionChoiceObject != null && completionChoiceObject.activeSelf) ||
             (closingCardObject != null && closingCardObject.activeSelf) ||
+            (closingSensitiveQuestionObject != null && closingSensitiveQuestionObject.activeSelf) ||
             (memoryBookObject != null && memoryBookObject.activeSelf);
     }
 
@@ -8571,6 +9032,14 @@ public sealed class AvatarChatApp : MonoBehaviour
                 break;
             case "text-down":
                 ChangeDialogueSize(-1);
+                break;
+            case "lead-theme":
+            case "other-theme":
+                ShowOtherThemeLeadQuestions();
+                break;
+            case "lead-refresh":
+            case "refresh-questions":
+                RefreshVisibleLeadQuestions();
                 break;
         }
     }
@@ -8630,7 +9099,7 @@ public sealed class AvatarChatApp : MonoBehaviour
         }
 
         serverStatusText.text = serverReady
-            ? "서버 연결됨 · API 답변 사용"
+            ? serverRequiredMessage
             : (serverStatusKnown ? serverRequiredMessage : ServerStatusIdleText);
     }
 
@@ -8684,11 +9153,13 @@ public sealed class AvatarChatApp : MonoBehaviour
                     string detail = string.IsNullOrWhiteSpace(config.chatModelError)
                         ? "채팅 모델 준비 안 됨"
                         : ShortenForCard(config.chatModelError, 72);
-                    message = $"서버 연결됨 · {detail} · 시작할 수 없습니다.";
+                    message = $"서버 연결됨 · {detail} · 내장 답변 사용";
+                    ready = true;
                 }
-                else
+                else if (config != null)
                 {
-                    message = "서버 연결됨 · API 키 없음 · 시작할 수 없습니다.";
+                    message = "서버 연결됨 · API 키 없음 · 내장 답변 사용";
+                    ready = true;
                 }
             }
             else
@@ -9171,6 +9642,7 @@ public sealed class AvatarChatApp : MonoBehaviour
         if (inputField != null) inputField.DeactivateInputField();
         if (aboutMenuObject != null && aboutMenuObject.activeSelf) aboutMenuObject.SetActive(false);
         if (closingCardObject != null && closingCardObject.activeSelf) closingCardObject.SetActive(false);
+        if (closingSensitiveQuestionObject != null && closingSensitiveQuestionObject.activeSelf) closingSensitiveQuestionObject.SetActive(false);
         if (memoryBookObject != null && memoryBookObject.activeSelf) memoryBookObject.SetActive(false);
 
         RefreshRecordArchive();
@@ -9454,17 +9926,12 @@ public sealed class AvatarChatApp : MonoBehaviour
 
     private bool IsCompletedFiveTurnSession()
     {
-        if (!string.IsNullOrWhiteSpace(activeQuestionCategory))
-        {
-            return activeCategoryQuestionCount >= RequiredQuestionCount;
-        }
-
         return conversationTurns >= RequiredQuestionCount;
     }
 
     private string BuildActiveCategoryLabel()
     {
-        return string.IsNullOrWhiteSpace(activeQuestionCategory) ? "현재 카테고리" : activeQuestionCategory;
+        return "오늘의 대화";
     }
 
     private bool HasSavedEndingRecordThisSession()
@@ -10298,7 +10765,7 @@ public sealed class AvatarChatApp : MonoBehaviour
             Stretch(rule.rectTransform, Vector2.zero, Vector2.one, new Vector2(30f, 13f + i * 11f), new Vector2(-18f, 14f + i * 11f));
         }
 
-        Text action = CreateText("Action Label", root, "추천 질문 · 눌러서 바로 질문", 11, new Color32(255, 218, 154, 218), TextAnchor.MiddleLeft, FontStyle.Bold);
+        Text action = CreateText("Action Label", root, "추천 질문", 11, new Color32(255, 218, 154, 218), TextAnchor.MiddleLeft, FontStyle.Bold);
         action.resizeTextForBestFit = true;
         action.resizeTextMinSize = 9;
         action.resizeTextMaxSize = 11;
@@ -11042,52 +11509,23 @@ public sealed class AvatarChatApp : MonoBehaviour
     private void SubmitChapterQuestion(string chapter)
     {
         if (busy) return;
-
-        string theme = CanonicalTheme(chapter);
-        if (string.IsNullOrWhiteSpace(theme)) theme = chapter;
-
-        if (IsActiveQuestionCategoryLocked() &&
-            !string.Equals(activeQuestionCategory, theme, StringComparison.Ordinal))
-        {
-            if (statusText != null)
-            {
-                statusText.text = $"{activeQuestionCategory} 카테고리 5문답을 마친 뒤 다음 카테고리를 고를 수 있습니다";
-            }
-            UpdateLeadPrompts(BuildLeadIntro(), BuildCategoryLeadQuestionSet(activeQuestionCategory));
-            return;
-        }
-
-        bool resetProgress = !string.Equals(activeQuestionCategory, theme, StringComparison.Ordinal)
-            || activeCategoryQuestionCount >= RequiredQuestionCount;
-        SetActiveQuestionCategory(theme, resetProgress);
-
-        string question = GetLeadQuestion(0);
-        if (string.IsNullOrWhiteSpace(question)) question = chapter;
-        SubmitPresetQuestion(question);
+        RefreshVisibleLeadQuestions();
     }
 
     private void SubmitMore()
     {
+        if (completionChoiceObject != null && completionChoiceObject.activeSelf)
+        {
+            completionChoiceObject.SetActive(false);
+        }
+
         if (IsCompletedFiveTurnSession())
         {
-            if (HasNextQuestionCategory())
-            {
-                ContinueToNextQuestionCategory();
-            }
-            else if (statusText != null)
-            {
-                statusText.text = "마지막 카테고리입니다 · 끝내기로 결과를 확인하세요";
-            }
+            ContinueToNextQuestionCategory();
             return;
         }
 
-        if (!string.IsNullOrWhiteSpace(activeQuestionCategory))
-        {
-            SubmitPresetQuestion(GetLeadQuestion(0));
-            return;
-        }
-
-        SubmitPresetQuestion("방금 답변에서 생활 장면을 하나 더 들려주세요.");
+        SubmitPresetQuestion(GetLeadQuestion(0));
     }
 
     private bool TryStartPreparedQuestion(string question)
@@ -11105,8 +11543,15 @@ public sealed class AvatarChatApp : MonoBehaviour
 
         if (IsCompletedFiveTurnSession())
         {
-            statusText.text = $"{BuildActiveCategoryLabel()} {RequiredQuestionCount}문답을 마쳤습니다 · 다음 카테고리 또는 끝내기를 선택하세요";
-            SetQuestionNoteOpen(true);
+            if (pendingCompletionChoiceAfterDialogue && HasUnreadDialoguePage())
+            {
+                statusText.text = "마지막 답변을 끝까지 읽은 뒤 선택해 주세요";
+                UpdateDialoguePageCue();
+                return false;
+            }
+
+            statusText.text = $"{BuildActiveCategoryLabel()} {RequiredQuestionCount}문답을 마쳤습니다 · 5개 더 물어보기 또는 끝내기를 선택하세요";
+            ShowCompletionChoiceOverlay();
             return false;
         }
 
@@ -11135,7 +11580,25 @@ public sealed class AvatarChatApp : MonoBehaviour
             StopStoryMode("이야기 모드를 멈추고 마무리 카드를 엽니다");
         }
 
+        if (completionChoiceObject != null && completionChoiceObject.activeSelf)
+        {
+            completionChoiceObject.SetActive(false);
+        }
+
         if (busy || !IsCompletedFiveTurnSession()) return;
+        if (pendingCompletionChoiceAfterDialogue)
+        {
+            if (HasUnreadDialoguePage())
+            {
+                statusText.text = "마지막 답변을 끝까지 읽은 뒤 선택해 주세요";
+                UpdateDialoguePageCue();
+                return;
+            }
+
+            ShowCompletionChoiceOverlay();
+            return;
+        }
+
         if (pendingClosingSensitiveQuestion)
         {
             statusText.text = "마지막 질문을 하나만 골라 주세요";
@@ -11156,7 +11619,7 @@ public sealed class AvatarChatApp : MonoBehaviour
         return !closingSensitiveQuestionAnswered
             && !pendingClosingSensitiveQuestion
             && closingSensitiveQuestions != null
-            && closingSensitiveQuestions.Length >= 3;
+            && closingSensitiveQuestions.Length >= 6;
     }
 
     private void ShowClosingSensitiveQuestionStep()
@@ -11164,23 +11627,18 @@ public sealed class AvatarChatApp : MonoBehaviour
         pendingClosingSensitiveQuestion = true;
         selectedClosingSensitiveQuestion = string.Empty;
         selectedClosingSensitiveAnswer = string.Empty;
-        currentLeadQuestions = new[]
-        {
-            closingSensitiveQuestions[0],
-            closingSensitiveQuestions[1],
-            closingSensitiveQuestions[2]
-        };
 
         if (closingCardObject != null) closingCardObject.SetActive(false);
+        if (closingSensitiveQuestionObject != null) closingSensitiveQuestionObject.SetActive(true);
         SetQuestionNoteOpen(false);
         SetExpression(ExpressionState.Empathetic);
-        PresentAssistant("끝내기 전에 조심스럽지만 중요한 질문을 하나만 골라 주세요. 답을 들은 뒤 결과 카드로 넘어갑니다.", "마지막 질문");
-        AppendMessage("마지막 질문 안내", "끝내기 전에 조심스럽지만 중요한 질문을 하나만 골라 주세요.", "#5b21b6");
-        UpdateLeadPrompts("끝내기 전에 한 번만 고르는 질문입니다.");
-        SetLeadButtonsInteractable(true);
+        PresentAssistant("끝내기 전에 말로 묻기 어려운 질문을 하나만 골라 주세요. 카드 하나를 고르면 짧게 답하고 마무리 화면으로 넘어갑니다.", "마지막 질문");
+        AppendMessage("마지막 질문 안내", "끝내기 전에 말로 묻기 어려운 질문을 하나만 골라 주세요.", "#5b21b6");
+        SetLeadButtonsInteractable(false);
         UpdateLeadSelectionStyles();
+        UpdateLeadSlipVisibility();
         statusText.text = "마지막 질문을 하나만 골라 주세요";
-        SelectFirstInteractable(leadButtons != null && leadButtons.Length > 0 ? leadButtons[0].transform.parent.gameObject : null, "Floating Question");
+        SelectFirstInteractable(closingSensitiveQuestionObject, "Closing Sensitive Question Card");
         SaveSession();
     }
 
@@ -11203,6 +11661,7 @@ public sealed class AvatarChatApp : MonoBehaviour
         closingSensitiveQuestionAnswered = true;
         selectedClosingSensitiveQuestion = closingSensitiveQuestions[Mathf.Clamp(index, 0, closingSensitiveQuestions.Length - 1)];
         selectedClosingSensitiveAnswer = answer;
+        if (closingSensitiveQuestionObject != null) closingSensitiveQuestionObject.SetActive(false);
 
         AppendMessage("나", selectedClosingSensitiveQuestion, "#334155");
         AppendMessage("답변", answer, "#0f766e");
@@ -11214,16 +11673,9 @@ public sealed class AvatarChatApp : MonoBehaviour
         SetExpression(ExpressionState.Empathetic);
         PresentAssistant(answer, "마지막 답변");
         PlaySound(answerReadyClip);
-        statusText.text = "마지막 답변을 확인했습니다 · 결과 카드로 이동합니다";
+        statusText.text = "마지막 답변입니다 · 읽은 뒤 끝내기를 눌러 마무리하세요";
+        UpdateActionButtons();
         SaveSession();
-        StartCoroutine(ShowClosingCardAfterSensitiveAnswer());
-    }
-
-    private IEnumerator ShowClosingCardAfterSensitiveAnswer()
-    {
-        yield return new WaitForSeconds(0.75f);
-        if (busy) busy = false;
-        ShowClosingCardNow();
     }
 
     private void ShowClosingCardNow()
@@ -11231,11 +11683,14 @@ public sealed class AvatarChatApp : MonoBehaviour
         string closing = BuildConversationClosingPrompt();
 
         pendingClosingSensitiveQuestion = false;
+        pendingCompletionChoiceAfterDialogue = false;
+        if (closingSensitiveQuestionObject != null) closingSensitiveQuestionObject.SetActive(false);
         SetExpression(ExpressionState.Empathetic);
         PresentAssistant(closing, "마무리 카드");
         AppendMessage("마무리", closing, "#5b21b6");
         SelectClosingCard(GetRecommendedClosingIndex());
         if (closingCardObject != null) closingCardObject.SetActive(true);
+        SetDialogueScrollCueVisible(false);
         if (closingMessageInput != null && string.IsNullOrWhiteSpace(closingMessageInput.text) && !string.IsNullOrWhiteSpace(closingMessageToInterviewee))
         {
             closingMessageInput.text = closingMessageToInterviewee;
@@ -11248,15 +11703,20 @@ public sealed class AvatarChatApp : MonoBehaviour
         }
         if (closingCardContinueButton != null)
         {
-            closingCardContinueButton.gameObject.SetActive(HasNextQuestionCategory());
-            closingCardContinueButton.interactable = HasNextQuestionCategory();
-            Text continueLabel = closingCardContinueButton.GetComponentInChildren<Text>();
-            if (continueLabel != null) continueLabel.text = HasNextQuestionCategory() ? "다음 카테고리" : "마지막 카테고리";
+            closingCardContinueButton.gameObject.SetActive(false);
+            closingCardContinueButton.interactable = false;
         }
-        SelectFirstInteractable(closingCardObject, "Closing Choice", "Closing Card Save");
+        if (closingCardSaveButton != null) closingCardSaveButton.gameObject.SetActive(false);
+        if (closingCardCloseButton != null)
+        {
+            closingCardCloseButton.gameObject.SetActive(true);
+            closingCardCloseButton.interactable = true;
+        }
+        closingCreditsStartedAt = Time.unscaledTime;
+        SelectFirstInteractable(closingCardObject, "Closing Card Close");
         ShowHotspotLabels();
         PlaySound(resultCardClip);
-        statusText.text = $"{BuildActiveCategoryLabel()} {RequiredQuestionCount}문답 결과 카드를 열었습니다";
+        statusText.text = $"{BuildActiveCategoryLabel()} {RequiredQuestionCount}문답 마무리 화면을 열었습니다";
     }
 
     private void CompleteFiveQuestionSession()
@@ -11269,10 +11729,9 @@ public sealed class AvatarChatApp : MonoBehaviour
         UpdateQuestionPhoneProgress();
         UpdateActionButtons();
         SaveSession();
-        statusText.text = $"{BuildActiveCategoryLabel()} {RequiredQuestionCount}문답 완료 · 다음 카테고리 또는 끝내기를 선택하세요";
-        SetQuestionNoteOpen(true);
-        ShowNoteTab(0);
-        SelectFirstInteractable(questionNoteObject, "More Button", "Closing Button");
+        pendingCompletionChoiceAfterDialogue = true;
+        statusText.text = $"{BuildActiveCategoryLabel()} {RequiredQuestionCount}문답 완료 · 답변을 끝까지 읽은 뒤 선택하세요";
+        UpdateDialoguePageCue();
     }
 
     private string BuildConversationClosingPrompt()
@@ -11280,10 +11739,8 @@ public sealed class AvatarChatApp : MonoBehaviour
         string sceneLine = BuildConversationThemeLine();
         string questionFlow = BuildClosingQuestionFlowLine(RequiredQuestionCount, 220);
         string coreQa = BuildClosingQuestionAnswerLine(180);
-        string nextLine = HasNextQuestionCategory()
-            ? "다음 카테고리로 넘어가 더 물어볼 수도 있고, 여기서 기록하고 끝낼 수도 있습니다."
-            : "마지막 카테고리까지 왔습니다. 기록함에 저장하거나 여기서 마무리할 수 있습니다.";
-        return $"{BuildActiveCategoryLabel()} 카테고리의 5문답을 마쳤습니다. 남길 문장을 하나 골라 보세요.\n\n{BuildFirstImpressionArcLine()}\n{sceneLine}\n질문 흐름: {questionFlow}\n대표 질답: {coreQa}\n\n{nextLine}";
+        string nextLine = "5개를 더 물어볼 수도 있고, 여기서 기록하고 끝낼 수도 있습니다.";
+        return $"오늘의 대화에서 질문 5개를 마쳤습니다. 아래에 대상자에게 남길 말을 적어 주세요.\n\n{sceneLine}\n질문 흐름: {questionFlow}\n대표 질답: {coreQa}\n\n{nextLine}";
     }
 
     private string BuildConversationThemeLine()
@@ -11343,6 +11800,12 @@ public sealed class AvatarChatApp : MonoBehaviour
 
     private bool TryStartQuestion(string question)
     {
+        if (pendingClosingSensitiveQuestion)
+        {
+            AnswerClosingSensitiveQuestion(question);
+            return false;
+        }
+
         if (!serverReady)
         {
             if (!serverStatusKnown && serverStatusCoroutine == null)
@@ -11361,8 +11824,15 @@ public sealed class AvatarChatApp : MonoBehaviour
 
         if (IsCompletedFiveTurnSession())
         {
-            statusText.text = $"{BuildActiveCategoryLabel()} {RequiredQuestionCount}문답을 마쳤습니다 · 다음 카테고리 또는 끝내기를 선택하세요";
-            SetQuestionNoteOpen(true);
+            if (pendingCompletionChoiceAfterDialogue && HasUnreadDialoguePage())
+            {
+                statusText.text = "마지막 답변을 끝까지 읽은 뒤 선택해 주세요";
+                UpdateDialoguePageCue();
+                return false;
+            }
+
+            statusText.text = $"{BuildActiveCategoryLabel()} {RequiredQuestionCount}문답을 마쳤습니다 · 5개 더 물어보기 또는 끝내기를 선택하세요";
+            ShowCompletionChoiceOverlay();
             return false;
         }
 
@@ -11414,26 +11884,7 @@ public sealed class AvatarChatApp : MonoBehaviour
 
     private string ApplyFirstImpressionFrame(string reply)
     {
-        if (conversationTurns != 1 || string.IsNullOrWhiteSpace(firstImpression)) return reply;
-
-        string prefix;
-        switch (firstImpression)
-        {
-            case "목발":
-                prefix = "목발을 먼저 보셨으니, 그 장면이 이동과 일상, 그리고 도움을 맞춰 가는 방식으로 어떻게 이어지는지부터 볼게요.";
-                break;
-            case "책상":
-                prefix = "책상을 먼저 보셨으니, 일과 공부 이야기에서 출발해서 그 안에 놓인 이동과 도움까지 같이 이어볼게요.";
-                break;
-            case "표정":
-                prefix = "표정을 먼저 보셨으니, 그 분위기와 같은 하루 안에 있는 생활 이야기부터 들려드릴게요.";
-                break;
-            default:
-                return reply;
-        }
-
-        string clean = CleanAssistantReplyText(reply);
-        return clean.StartsWith(prefix, StringComparison.Ordinal) ? clean : $"{prefix}\n\n{clean}";
+        return CleanAssistantReplyText(reply);
     }
 
     private bool IsSubmitKeyDown()
@@ -11562,35 +12013,50 @@ public sealed class AvatarChatApp : MonoBehaviour
         }
         if (!hasServerReply)
         {
-            if (history.Count > 0 && string.Equals(history[history.Count - 1].role, "user", StringComparison.Ordinal))
-            {
-                history.RemoveAt(history.Count - 1);
-            }
+            string fallbackReply = ApplyAttitudeReaction(MakeLocalReply(question), questionAttitude);
+            fallbackReply = ApplyFirstImpressionFrame(fallbackReply);
+            history.Add(new ChatMessage { role = "assistant", content = fallbackReply });
+            TrimHistory();
+            AppendMessage("답변", fallbackReply, "#0f766e");
 
-            conversationTurns = Mathf.Max(0, conversationTurns - 1);
-            RollbackActiveCategoryQuestion();
-            lastAnswerSource = "server-error";
+            lastAnswerSource = "server-fallback";
             lastServerError = error ?? "서버 답변을 받을 수 없습니다.";
-            SetServerAvailability(false, true, $"서버 연결 실패 · {ShortenForCard(lastServerError, 60)}");
-            SetExpression(ExpressionState.Idle);
-            PresentAssistant($"서버가 정상 연결되지 않아 답변을 만들 수 없습니다.\n\n{ShortenForCard(lastServerError, 90)}\n서버를 켠 뒤 다시 시도해 주세요.", "서버 연결 필요");
-            PlaySound(errorClip);
+            SetServerAvailability(serverReady, true, $"API 호출 실패 · 내장 답변 사용 · {ShortenForCard(lastServerError, 52)}");
+            SetExpression(ClassifyExpression(question, fallbackReply));
+            PresentAssistant(fallbackReply, "답변");
+            PlaySound(answerReadyClip);
             lastEvidenceLine = BuildEvidenceLine(null, lastAnswerSource, lastServerError);
+            lastTheme = ClassifyTheme(question, fallbackReply);
+            CollectTheme(lastTheme, question, fallbackReply, questionAttitude);
+            string fallbackFocusLabel = GetSceneFocusLabelForTheme(lastTheme);
+            TriggerScenePropReaction(fallbackFocusLabel, 3.4f);
+            UpdateLeadPrompts(BuildLeadIntro(), BuildContextLeadQuestions(question, fallbackReply));
             UpdateQuestionPhoneProgress();
             UpdateActionButtons();
             UpdateNoteTabContent();
+            UpdateClosingSummary();
+
+            if (IsCompletedFiveTurnSession())
+            {
+                CompleteFiveQuestionSession();
+                yield break;
+            }
+
             busy = false;
-            if (sendButton != null) sendButton.interactable = false;
-            if (micButton != null) micButton.interactable = false;
-            SetFlowButtonsInteractable(false);
+            if (sendButton != null) sendButton.interactable = serverReady;
+            UpdateMicButtonState();
+            SetFlowButtonsInteractable(true);
             ShowHotspotLabels();
-            statusText.text = "서버 연결 필요 · 대화 중단";
+            statusText.text = "API 호출 실패 · 내장 답변으로 이어갑니다";
+            SaveSession();
             yield break;
         }
 
-        SetServerAvailability(true, true, "서버 연결됨 · API 답변 사용");
+        string responseSource = response != null ? (response.source ?? string.Empty).Trim() : string.Empty;
+        bool usedServerLocalFallback = responseSource.StartsWith("local", StringComparison.OrdinalIgnoreCase);
+        SetServerAvailability(true, true, usedServerLocalFallback ? "서버 연결됨 · 내장 답변 사용" : "서버 연결됨 · API 답변 사용");
         string reply = response.reply.Trim();
-        lastAnswerSource = "server";
+        lastAnswerSource = usedServerLocalFallback ? "server-fallback" : "server";
         lastServerError = string.Empty;
         reply = CleanAssistantReplyText(reply);
         if (string.IsNullOrWhiteSpace(reply))
@@ -12071,6 +12537,15 @@ public sealed class AvatarChatApp : MonoBehaviour
         }
     }
 
+    private void AnimateClosingCredits()
+    {
+        if (closingCardObject == null || !closingCardObject.activeSelf || closingCreditsTextRect == null) return;
+
+        float elapsed = Mathf.Max(0f, Time.unscaledTime - closingCreditsStartedAt);
+        float y = reducedMotionEnabled ? -92f : Mathf.Repeat(elapsed * 10f, 190f) - 96f;
+        closingCreditsTextRect.anchoredPosition = new Vector2(closingCreditsTextRect.anchoredPosition.x, y);
+    }
+
     private void PresentAssistant(string text, string speaker)
     {
         speakerText.text = speaker;
@@ -12272,9 +12747,19 @@ public sealed class AvatarChatApp : MonoBehaviour
         return true;
     }
 
+    private bool HasUnreadDialoguePage()
+    {
+        return dialoguePages != null && dialoguePages.Count > 1 && dialoguePageIndex < dialoguePages.Count - 1;
+    }
+
     private void AdvanceDialoguePageOrStory()
     {
         if (TryAdvanceDialoguePage()) return;
+        if (pendingCompletionChoiceAfterDialogue)
+        {
+            ShowCompletionChoiceOverlay();
+            return;
+        }
         if (storyModeActive)
         {
             RequestStoryModeAdvance("dialogue-click");
@@ -12297,13 +12782,21 @@ public sealed class AvatarChatApp : MonoBehaviour
     {
         bool hasNextPage = dialoguePages.Count > 1 && dialoguePageIndex < dialoguePages.Count - 1;
         bool canAdvanceStory = !hasNextPage && storyModeActive;
-        SetDialogueScrollCueVisible(hasNextPage || canAdvanceStory);
+        bool canOpenCompletionChoice = !hasNextPage && pendingCompletionChoiceAfterDialogue;
+        SetDialogueScrollCueVisible(hasNextPage || canAdvanceStory || canOpenCompletionChoice);
         Image cueImage = dialogueScrollCueObject != null ? dialogueScrollCueObject.GetComponent<Image>() : null;
         if (dialoguePageCueText != null)
         {
             if (hasNextPage)
             {
                 dialoguePageCueText.text = $"대사가 더 있어요 · 클릭해서 다음 대사 보기 {dialoguePageIndex + 2}/{dialoguePages.Count}";
+                dialoguePageCueText.fontSize = 14;
+                dialoguePageCueText.color = new Color32(255, 248, 225, 255);
+                if (cueImage != null) cueImage.color = new Color(0.60f, 0.34f, 0.13f, 0.92f);
+            }
+            else if (canOpenCompletionChoice)
+            {
+                dialoguePageCueText.text = "답변을 다 읽었어요 · 클릭해서 다음 선택하기";
                 dialoguePageCueText.fontSize = 14;
                 dialoguePageCueText.color = new Color32(255, 248, 225, 255);
                 if (cueImage != null) cueImage.color = new Color(0.60f, 0.34f, 0.13f, 0.92f);
@@ -12335,7 +12828,7 @@ public sealed class AvatarChatApp : MonoBehaviour
         }
         else if (currentLeadQuestions == null || currentLeadQuestions.Length != leadButtons.Length)
         {
-            currentLeadQuestions = new[] { leadQuestions[0], leadQuestions[1], leadQuestions[2] };
+            currentLeadQuestions = BuildLeadQuestionSet(null);
         }
 
         for (int i = 0; i < leadButtons.Length; i++)
@@ -12350,8 +12843,7 @@ public sealed class AvatarChatApp : MonoBehaviour
             Text action = FindChildText(leadButtons[i].transform, "Action Label");
             if (action != null)
             {
-                string attitude = ClassifyQuestionAttitude(question);
-                action.text = $"추천 {i + 1} · 바로 답변 · {BuildLeadAttitudeHint(attitude)}";
+                action.text = $"추천 질문 {i + 1}";
             }
 
             if (leadIllustrationImages != null && i < leadIllustrationImages.Length && leadIllustrationImages[i] != null)
@@ -12365,6 +12857,22 @@ public sealed class AvatarChatApp : MonoBehaviour
         }
         selectedLeadIndex = Mathf.Clamp(selectedLeadIndex, 0, leadButtons.Length - 1);
         UpdateLeadSelectionStyles();
+    }
+
+    private void ShowOtherThemeLeadQuestions()
+    {
+        RefreshVisibleLeadQuestions();
+    }
+
+    private void RefreshVisibleLeadQuestions()
+    {
+        if (busy || storyModeActive || IsCompletedFiveTurnSession()) return;
+
+        leadOffset += Mathf.Max(1, leadButtons != null ? leadButtons.Length : 3);
+        string intro = "전체 기록에서 새 추천 질문을 골랐습니다. 이미 물어본 질문은 빼고 보여 줍니다.";
+        UpdateLeadPrompts(intro, BuildLeadQuestionSet(null));
+        if (statusText != null) statusText.text = "추천 질문을 새로 골랐습니다";
+        SaveSession();
     }
 
     private void UpdateLeadSelectionStyles()
@@ -12404,22 +12912,12 @@ public sealed class AvatarChatApp : MonoBehaviour
 
     private static string BuildLeadCardLabel(int index, string question)
     {
-        return $"{BuildLeadCardTitle(question)}\n{ShortenLeadQuestion(question, 54)}";
+        return ShortenLeadQuestion(question, 74);
     }
 
     private static string BuildLeadAttitudeHint(string attitude)
     {
-        switch (attitude)
-        {
-            case "배려":
-                return "배려 질문 · 깊은 기록 후보";
-            case "호기심":
-                return "호기심 질문 · 깊은 기록 후보";
-            case "단정":
-                return "단정 질문 · 얕게 열릴 수 있음";
-            default:
-                return "거리두기 · 얕은 기록";
-        }
+        return string.Empty;
     }
 
     private static string BuildLeadCardTitle(string question)
@@ -12467,24 +12965,9 @@ public sealed class AvatarChatApp : MonoBehaviour
 
     private string BuildLeadIntro()
     {
-        if (!string.IsNullOrWhiteSpace(activeQuestionCategory))
-        {
-            int remainingInCategory = Mathf.Max(0, RequiredQuestionCount - activeCategoryQuestionCount);
-            if (remainingInCategory <= 0)
-            {
-                return $"{activeQuestionCategory} 질문 5개를 마쳤습니다. 다음 카테고리로 갈지 끝낼지 고르세요.";
-            }
-
-            return $"{activeQuestionCategory} 카테고리 질문입니다. 남은 질문 {remainingInCategory}개.";
-        }
-
-        int remaining = Mathf.Max(0, memoryThemes.Length - discoveredThemes.Count);
-        if (remaining == 0)
-        {
-            return "여섯 장면을 다 열었습니다. 더 듣고 싶은 장면을 골라도 됩니다.";
-        }
-
-        return $"남은 장면 {remaining}개를 열 수 있는 질문입니다.";
+        int remaining = Mathf.Max(0, RequiredQuestionCount - conversationTurns);
+        if (remaining <= 0) return "질문 5개를 마쳤습니다. 5개 더 물어볼지 끝낼지 고르세요.";
+        return $"전체 기록에서 중요한 질문을 골랐습니다 · 남은 질문 {remaining}개";
     }
 
     private void SetActiveQuestionCategory(string theme, bool resetProgress)
@@ -12502,32 +12985,20 @@ public sealed class AvatarChatApp : MonoBehaviour
             activeCategoryQuestionCount = 0;
         }
 
-        UpdateLeadPrompts($"{activeQuestionCategory} 카테고리에서 물어볼 질문입니다.", BuildCategoryLeadQuestionSet(activeQuestionCategory));
+        UpdateLeadPrompts("전체 기록에서 중요한 질문을 골랐습니다.", BuildLeadQuestionSet(null));
         UpdateQuestionPhoneProgress();
         UpdateActionButtons();
     }
 
     private void EnsureActiveCategoryForQuestion(string question)
     {
-        if (!string.IsNullOrWhiteSpace(activeQuestionCategory)) return;
-
-        string theme = ClassifyTheme(question, string.Empty);
-        if (string.IsNullOrWhiteSpace(theme))
-        {
-            theme = GetThemeForFirstImpression();
-        }
-        if (string.IsNullOrWhiteSpace(theme))
-        {
-            theme = "일상";
-        }
-
-        SetActiveQuestionCategory(theme, true);
+        activeQuestionCategory = string.Empty;
     }
 
     private void RegisterQuestionForActiveCategory(string question)
     {
-        EnsureActiveCategoryForQuestion(question);
-        activeCategoryQuestionCount = Mathf.Clamp(activeCategoryQuestionCount + 1, 0, RequiredQuestionCount);
+        activeQuestionCategory = string.Empty;
+        activeCategoryQuestionCount = Mathf.Clamp(conversationTurns, 0, RequiredQuestionCount);
     }
 
     private void RollbackActiveCategoryQuestion()
@@ -12537,13 +13008,12 @@ public sealed class AvatarChatApp : MonoBehaviour
 
     private bool IsActiveQuestionCategoryLocked()
     {
-        return !string.IsNullOrWhiteSpace(activeQuestionCategory)
-            && activeCategoryQuestionCount < RequiredQuestionCount;
+        return false;
     }
 
     private bool HasNextQuestionCategory()
     {
-        return GetNextQuestionCategoryIndex() >= 0;
+        return true;
     }
 
     private int GetNextQuestionCategoryIndex()
@@ -12556,26 +13026,30 @@ public sealed class AvatarChatApp : MonoBehaviour
 
     private void ContinueToNextQuestionCategory()
     {
-        int nextIndex = GetNextQuestionCategoryIndex();
-        if (nextIndex < 0)
-        {
-            if (statusText != null) statusText.text = "마지막 카테고리까지 확인했습니다";
-            return;
-        }
-
         if (closingCardObject != null) closingCardObject.SetActive(false);
+        if (completionChoiceObject != null) completionChoiceObject.SetActive(false);
         pendingClosingSensitiveQuestion = false;
+        pendingCompletionChoiceAfterDialogue = false;
+        conversationTurns = 0;
+        activeQuestionCategory = string.Empty;
+        activeCategoryQuestionCount = 0;
+        leadOffset += Mathf.Max(1, leadButtons != null ? leadButtons.Length : 3);
         lastSavedEndingRecordPath = string.Empty;
         lastSavedIntervieweeMessagePath = string.Empty;
         PlaySound(categoryTransitionClip);
-        SetActiveQuestionCategory(memoryThemes[nextIndex], true);
+        UpdateLeadPrompts("전체 기록에서 다음 5문답을 시작합니다.", BuildLeadQuestionSet(null));
         SetFlowButtonsInteractable(true);
         UpdateQuestionInputLayout();
-        if (statusText != null) statusText.text = $"{activeQuestionCategory} 카테고리로 넘어갑니다";
+        UpdateQuestionPhoneProgress();
+        UpdateActionButtons();
+        if (statusText != null) statusText.text = "다음 5문답을 시작합니다";
         ShowHotspotLabels();
-        SetQuestionNoteOpen(true);
-        ShowNoteTab(0);
-        SelectFirstInteractable(questionNoteObject, "Chapter", "More Button", "Closing Button");
+        ShowNoteTab(2);
+        if (questionNoteOpen)
+        {
+            SetQuestionNoteOpen(true);
+        }
+        SelectFirstInteractable(null, "Floating Question 1", "Floating Question 2", "Floating Question 3");
         SaveSession();
     }
 
@@ -12585,17 +13059,14 @@ public sealed class AvatarChatApp : MonoBehaviour
         List<string> result = new List<string>();
         string[] bank = GetCategoryQuestionBank(theme);
 
-        AddCategoryLeadQuestions(result, bank, targetCount, false);
-        AddCategoryLeadQuestions(result, bank, targetCount, true);
-
-        while (result.Count < targetCount && bank != null && bank.Length > 0)
-        {
-            result.Add(bank[result.Count % bank.Length]);
-        }
+        AddCategoryLeadQuestions(result, bank, targetCount);
+        AddDefaultLeadQuestions(result, targetCount);
+        AddFallbackLeadQuestions(result, targetCount);
+        AddEmergencyLeadQuestions(result, targetCount);
 
         if (result.Count == 0)
         {
-            AddDefaultLeadQuestions(result, targetCount);
+            AddGeneratedLeadQuestions(result, targetCount, CanonicalTheme(theme));
         }
 
         string[] next = new string[targetCount];
@@ -12607,15 +13078,15 @@ public sealed class AvatarChatApp : MonoBehaviour
         return next;
     }
 
-    private void AddCategoryLeadQuestions(List<string> result, string[] questions, int targetCount, bool allowAsked)
+    private void AddCategoryLeadQuestions(List<string> result, string[] questions, int targetCount)
     {
         if (result == null || questions == null) return;
         for (int i = 0; i < questions.Length && result.Count < targetCount; i++)
         {
-            string cleaned = NormalizeLeadQuestion(questions[i]);
+            string cleaned = NormalizeLeadQuestion(questions[(leadOffset + i) % questions.Length]);
             if (string.IsNullOrWhiteSpace(cleaned)) continue;
             string key = BuildLeadQuestionKey(cleaned);
-            if (!allowAsked && IsPreviouslyAskedLeadQuestionKey(key)) continue;
+            if (IsPreviouslyAskedLeadQuestionKey(key)) continue;
 
             bool alreadyInResult = false;
             for (int j = 0; j < result.Count; j++)
@@ -12635,20 +13106,13 @@ public sealed class AvatarChatApp : MonoBehaviour
 
     private string[] BuildLeadQuestionSet(string[] serverQuestions)
     {
-        if (!string.IsNullOrWhiteSpace(activeQuestionCategory))
-        {
-            return BuildCategoryLeadQuestionSet(activeQuestionCategory);
-        }
-
         int targetCount = leadButtons != null ? leadButtons.Length : 3;
         List<string> result = new List<string>();
+        List<string> importantCandidates = new List<string>();
+        if (leadQuestions != null) importantCandidates.AddRange(leadQuestions);
+        if (serverQuestions != null) importantCandidates.AddRange(serverQuestions);
 
-        AddProvidedLeadQuestions(result, serverQuestions, targetCount);
-        AddFirstImpressionTargetQuestion(result, targetCount);
-        AddUnopenedThemeQuestions(result, 2, targetCount);
-        AddUnopenedThemeQuestions(result, -1, targetCount);
-        AddDefaultLeadQuestions(result, targetCount);
-
+        AddRandomLeadQuestions(result, importantCandidates.ToArray(), targetCount, true);
         AddFallbackLeadQuestions(result, targetCount);
         AddEmergencyLeadQuestions(result, targetCount);
 
@@ -12665,8 +13129,6 @@ public sealed class AvatarChatApp : MonoBehaviour
     {
         string text = $"{question}\n{reply}";
         List<string> result = new List<string>();
-
-        AddFirstImpressionTargetQuestion(result, 3);
 
         if (HasAny(text, "처음", "장소", "동선", "엘리베이터", "화장실", "계단", "접근성", "교통"))
         {
@@ -12698,7 +13160,7 @@ public sealed class AvatarChatApp : MonoBehaviour
         }
         if (HasAny(text, "취미", "게임", "노래방", "코인노래방", "쉬는", "좋아"))
         {
-            AddUniqueLeadQuestion(result, "게임과 코인노래방 같은 취미가 전시에서 빠지면 무엇을 놓치게 되나요?", 3);
+            AddUniqueLeadQuestion(result, "게임과 코인노래방 같은 취미가 같이 보여야 하는 이유는 무엇인가요?", 3);
             AddUniqueLeadQuestion(result, "쉬는 시간이 함께 보여야 한 사람의 하루가 더 정확해지는 이유는 무엇인가요?", 3);
             AddUniqueLeadQuestion(result, "게임과 코인노래방 이야기는 이동이나 도움 이야기와 어떻게 다른 면을 보여주나요?", 3);
             AddUniqueLeadQuestion(result, "책상과 노트북은 직장 일과 박사과정 공부를 어떻게 보여주나요?", 3);
@@ -12723,7 +13185,6 @@ public sealed class AvatarChatApp : MonoBehaviour
             AddUniqueLeadQuestion(result, "버틴다는 말보다 조정하며 이어간다는 표현이 더 맞는 이유는 무엇인가요?", 3);
         }
 
-        AddUnopenedThemeQuestions(result, -1, 3);
         AddDefaultLeadQuestions(result, 3);
 
         while (result.Count < 3)
@@ -12731,6 +13192,7 @@ public sealed class AvatarChatApp : MonoBehaviour
             if (!AddFallbackLeadQuestions(result, 3)) break;
         }
         AddEmergencyLeadQuestions(result, 3);
+        AddGeneratedLeadQuestions(result, 3, string.Empty);
 
         return result.ToArray();
     }
@@ -12805,9 +13267,50 @@ public sealed class AvatarChatApp : MonoBehaviour
 
     private void AddDefaultLeadQuestions(List<string> result, int targetCount)
     {
-        for (int i = 0; i < leadQuestions.Length && result.Count < targetCount; i++)
+        AddRandomLeadQuestions(result, leadQuestions, targetCount, true);
+    }
+
+    private void AddRandomLeadQuestions(List<string> result, string[] questions, int targetCount, bool preferCategoryDiversity)
+    {
+        if (result == null || questions == null || questions.Length == 0) return;
+
+        List<string> candidates = new List<string>();
+        for (int i = 0; i < questions.Length; i++)
         {
-            AddUniqueLeadQuestion(result, leadQuestions[(leadOffset + i) % leadQuestions.Length], targetCount);
+            string cleaned = NormalizeLeadQuestion(questions[i]);
+            if (!string.IsNullOrWhiteSpace(cleaned))
+            {
+                candidates.Add(cleaned);
+            }
+        }
+
+        ShuffleLeadCandidates(candidates);
+
+        if (preferCategoryDiversity)
+        {
+            for (int i = 0; i < candidates.Count && result.Count < targetCount; i++)
+            {
+                string category = CategorizeLeadQuestion(candidates[i]);
+                if (HasLeadQuestionCategory(result, category)) continue;
+                AddUniqueLeadQuestion(result, candidates[i], targetCount);
+            }
+        }
+
+        for (int i = 0; i < candidates.Count && result.Count < targetCount; i++)
+        {
+            AddUniqueLeadQuestion(result, candidates[i], targetCount);
+        }
+    }
+
+    private void ShuffleLeadCandidates(List<string> candidates)
+    {
+        if (candidates == null) return;
+        for (int i = candidates.Count - 1; i > 0; i--)
+        {
+            int j = leadQuestionRandom.Next(i + 1);
+            string temp = candidates[i];
+            candidates[i] = candidates[j];
+            candidates[j] = temp;
         }
     }
 
@@ -12820,7 +13323,7 @@ public sealed class AvatarChatApp : MonoBehaviour
             "교통 정보나 지원 서비스는 이동 계획에 어떤 도움을 주나요?",
             "도움을 받을 때 설명할 시간이 필요하다는 말은 어떤 뜻인가요?",
             "노트북과 메모는 이동 이야기 너머의 어떤 생활을 보여주나요?",
-            "게임과 코인노래방 같은 취미가 전시에서 빠지면 무엇을 놓치게 되나요?",
+            "게임과 코인노래방 같은 취미가 같이 보여야 하는 이유는 무엇인가요?",
             "전시에서 자취방과 책상이 함께 보여야 하는 이유는 무엇인가요?",
             "끈기라는 말은 대단한 극복담보다 어떤 태도에 가까운가요?"
         };
@@ -12850,7 +13353,18 @@ public sealed class AvatarChatApp : MonoBehaviour
         int index = 1;
         while (result.Count < targetCount)
         {
-            result.Add($"아직 묻지 않은 생활 장면 {index}은 어떤 질문으로 열어볼까요?");
+            AddUniqueLeadQuestion(result, $"아직 묻지 않은 생활 장면 {index}은 어떤 질문으로 열어볼까요?", targetCount);
+            index++;
+        }
+    }
+
+    private void AddGeneratedLeadQuestions(List<string> result, int targetCount, string theme)
+    {
+        int index = 1;
+        string label = string.IsNullOrWhiteSpace(theme) ? "생활" : theme;
+        while (result.Count < targetCount && index < 40)
+        {
+            AddUniqueLeadQuestion(result, $"{label}에서 아직 꺼내지 않은 장면 {index}은 무엇인가요?", targetCount);
             index++;
         }
     }
@@ -13004,11 +13518,17 @@ public sealed class AvatarChatApp : MonoBehaviour
 
     private void SetLeadButtonsInteractable(bool interactable)
     {
-        if (leadButtons == null) return;
-        foreach (Button button in leadButtons)
+        if (leadButtons != null)
         {
-            if (button != null) button.interactable = interactable;
+            foreach (Button button in leadButtons)
+            {
+                if (button != null) button.interactable = interactable;
+            }
         }
+
+        bool canChangeTheme = interactable && !IsActiveQuestionCategoryLocked();
+        if (leadThemeButton != null) leadThemeButton.interactable = canChangeTheme;
+        if (leadRefreshButton != null) leadRefreshButton.interactable = interactable;
     }
 
     private void UpdateMicButtonState()
@@ -13119,7 +13639,7 @@ public sealed class AvatarChatApp : MonoBehaviour
         }
 
         bool canCompleteSession = interactable && sessionClosed;
-        if (moreButton != null) moreButton.interactable = sessionClosed ? canCompleteSession && HasNextQuestionCategory() : canInteract && conversationTurns > 0;
+        if (moreButton != null) moreButton.interactable = sessionClosed ? canCompleteSession : canInteract && conversationTurns > 0;
         if (closingButton != null) closingButton.interactable = canCompleteSession;
         if (finishButton != null) finishButton.interactable = canCompleteSession;
         UpdateQuestionNoteActionButtonStyles();
@@ -13132,13 +13652,13 @@ public sealed class AvatarChatApp : MonoBehaviour
         if (moreButton != null)
         {
             moreButton.interactable = completed
-                ? canCompleteSession && HasNextQuestionCategory()
+                ? canCompleteSession
                 : !busy && conversationTurns > 0;
             Text moreLabel = moreButton.GetComponentInChildren<Text>();
             if (moreLabel != null)
             {
                 moreLabel.text = completed
-                    ? (HasNextQuestionCategory() ? "다음 카테고리" : "마지막 카테고리")
+                    ? "5개 더 물어보기"
                     : "더 듣기";
             }
         }
@@ -13196,12 +13716,10 @@ public sealed class AvatarChatApp : MonoBehaviour
 
     private void UpdateProgressTracker()
     {
-        int progress = Mathf.Clamp(string.IsNullOrWhiteSpace(activeQuestionCategory) ? conversationTurns : activeCategoryQuestionCount, 0, RequiredQuestionCount);
+        int progress = Mathf.Clamp(conversationTurns, 0, RequiredQuestionCount);
         if (progressText != null)
         {
-            string prefix = string.IsNullOrWhiteSpace(activeQuestionCategory) ? string.Empty : $"{activeQuestionCategory} · ";
             string progressLabel = progress >= RequiredQuestionCount ? "결과 확인" : $"{progress}/{RequiredQuestionCount} 질문";
-            if (!string.IsNullOrWhiteSpace(prefix)) progressLabel = prefix + progressLabel;
             progressText.text = $"{progressLabel} · {FormatAnswerSourceShortLabel()}";
             progressText.color = string.Equals(lastAnswerSource, "server-error", StringComparison.Ordinal)
                 || string.Equals(lastAnswerSource, "server-fallback", StringComparison.Ordinal)
@@ -13366,22 +13884,22 @@ public sealed class AvatarChatApp : MonoBehaviour
     {
         if (HasAny(question, "누구", "소개", "정체", "안녕"))
         {
-            return "저는 목발과 출근길, 자취방, 책상, 그리고 도움에 관한 인터뷰 기록을 바탕으로 이야기하고 있어요. 어느 한 장면만 보고 끝내기보다는, 제가 이동을 준비하는 시간, 제 생활을 직접 챙기는 시간, 그리고 일하고 공부하는 시간을 함께 봐 주셨으면 하는 대화예요.";
+            return "저는 목발과 출근길, 자취방, 책상, 도움 방식에 관한 인터뷰 기록을 바탕으로 이야기하고 있어요. 이동을 준비하는 시간, 생활을 직접 챙기는 시간, 일하고 공부하는 시간을 중심으로 답할게요.";
         }
 
         if (HasAny(question, "방금 답변", "하나 더", "생활 장면"))
         {
-            return "방금 이야기에서 한 장면을 더 꺼내 보면, 약속이나 출근 같은 평범한 일정에도 미리 확인할 게 꽤 많다는 거예요. 목적지 하나만 보는 게 아니라 입구, 엘리베이터, 화장실, 돌아오는 길, 그날 몸 상태까지 같이 떠올리게 되거든요.\n\n그런 확인이 끝나야 하루가 무리 없이 이어집니다. 겉으로는 그냥 이동하는 모습처럼 보여도, 그 안에는 지치지 않으려고 미리 계산하고 조정하는 시간이 숨어 있어요. 이 장면까지 보시면 목발만이 아니라 제가 하루를 꾸려 가는 방식까지 보이기 시작합니다.";
+            return "방금 이야기에서 한 장면을 더 꺼내 보면, 약속이나 출근 같은 일정에도 미리 확인할 게 꽤 많아요. 목적지 하나만 보는 게 아니라 입구, 엘리베이터, 화장실, 돌아오는 길, 그날 몸 상태까지 같이 떠올리게 되거든요.\n\n그런 확인이 끝나야 하루가 무리 없이 이어집니다. 이동은 한순간의 장면이라기보다, 피로를 줄이려고 미리 계산하고 조정하는 과정에 가까워요.";
         }
 
         if (HasAny(question, "목발 너머", "너머의 생활", "어떤 장면까지"))
         {
-            return "목발 너머를 보려면 이동 장면에서 멈추지 말고, 그 이동이 닿는 생활까지 물어봐 주셔야 해요. 회사에서 어떤 일을 하는지, 박사과정 공부는 어떻게 이어 가는지, 자취방에서 생활을 어떻게 챙기는지, 쉴 때는 뭘 좋아하는지까지요.\n\n목발은 분명 중요한 단서예요. 하지만 목발만 보고 끝내 버리면 제 하루가 이동의 어려움 하나로만 좁아집니다. 목발 너머의 생활은 일, 공부, 독립, 취미, 사람들과의 관계처럼 저를 훨씬 입체적으로 보여 주는 장면들이에요.";
+            return "그 질문에는 회사에서 어떤 일을 하는지, 박사과정 공부를 어떻게 이어 가는지, 자취방에서 생활을 어떻게 챙기는지, 쉴 때는 뭘 좋아하는지까지 같이 답할 수 있어요.\n\n제 하루에는 이동 준비도 있고, 일과 공부도 있고, 혼자 생활을 꾸리는 시간과 취미도 있습니다. 그 장면들이 함께 있어야 생활이 더 정확하게 보입니다.";
         }
 
         if (HasAny(question, "관람객", "나갈 때", "함께 기억"))
         {
-            return "관람객이 목발을 보고 들어오셨더라도, 나가실 때는 목발만 기억하지 않으셨으면 해요. 목발은 제 하루의 조건을 보여 주지만, 저라는 사람 전부를 설명해 주진 못하거든요. 책상 앞에서 일하고 공부하는 시간, 자취방에서 생활을 챙기는 시간, 게임이나 코인노래방에서 쉬는 시간도 함께 남았으면 합니다.\n\n그래서 이 전시는 시선을 바꿔 가는 과정에 가까워요. 처음에는 겉으로 보이는 단서를 보고 들어오시지만, 질문을 이어 가다 보면 그 안쪽의 생활 리듬과 선택, 좋아하는 것까지 같이 보게 되니까요.";
+            return "나갈 때는 책상 앞에서 일하고 공부하는 시간, 자취방에서 생활을 챙기는 시간, 게임이나 코인노래방에서 쉬는 시간도 함께 기억해 주시면 좋겠습니다.\n\n이 전시는 한 가지 단서에서 시작해 생활 리듬과 선택, 좋아하는 것까지 같이 보게 만드는 대화에 가까워요.";
         }
 
         if (HasAny(question, "교통 정보", "지원 서비스", "전동휠체어", "장애인택시", "대중교통"))
@@ -13406,12 +13924,17 @@ public sealed class AvatarChatApp : MonoBehaviour
 
         if (HasAny(question, "목발", "이동", "도구", "동반자"))
         {
-            return "목발은 불편함만 보여 주는 물건이 아니에요. 밖으로 나가고, 사람을 만나고, 일상으로 이어지게 해 주는 도구예요. 하루를 시작할 때마다 제 몸 상태와 길 상태를 함께 살피게 만드는 물건이기도 하고요.\n\n처음엔 목발이 먼저 보일 수 있어요. 그다음엔 자취방, 책상, 일, 공부, 취미로 시선이 옮겨 가면 좋겠습니다. 목발은 끝이 아니라, 제 하루로 들어오는 입구니까요.";
+            return "목발은 밖으로 나가고, 사람을 만나고, 일상으로 이어지게 해 주는 이동 도구예요. 하루를 시작할 때마다 몸 상태와 길 상태를 함께 살피게 만들고, 처음 가는 곳이면 입구와 엘리베이터, 화장실, 돌아오는 길까지 먼저 확인하게 됩니다.\n\n그래서 목발 이야기는 이동 준비와 연결돼요. 어디까지 갈 수 있는지, 어떻게 덜 지치게 다녀올 수 있는지, 그날 일정을 어떻게 조정할지 생각하게 만드는 물건입니다.";
         }
 
         if (HasAny(question, "자취", "자취방", "독립", "집"))
         {
             return "자취방은 제 하루를 제가 직접 챙기는 공간이에요. 집안일, 생활비, 공과금, 시간 관리처럼 사소해 보이는 일들이 쌓이면서 독립이 만들어지거든요. 누가 대신 해 주던 일을 직접 하다 보면, 생활이 생각보다 훨씬 많은 선택으로 이뤄져 있다는 것도 알게 돼요.\n\n그래서 자취방은 제 장애를 설명하는 곳이라기보다, 생활의 감각을 보여 주는 곳이에요. 직접 정리하고 계산하고 버텨 낸 시간이 차곡차곡 쌓이는 자리죠.";
+        }
+
+        if (HasAny(question, "직장에서 필요한 도움", "함께 일하는", "상황을 모를", "무엇부터 말", "동료", "도움 요청", "도움을 요청", "조율", "기여", "업무 장면", "프로젝트", "기획서", "필요한 부분", "먼저 설명"))
+        {
+            return "함께 일하는 사람이 제 상황을 모를 때는, 제가 필요한 부분과 그 이유를 먼저 말하려고 해요. 막연히 배려해 달라고 하기보다 어떤 상황에서 시간이 더 필요한지, 어떤 도움은 편하고 어떤 방식은 불편한지 구체적으로 설명하는 편입니다.\n\n그렇게 말해야 상대도 제 상황을 추측하지 않고 같이 맞춰 갈 수 있어요. 도움을 요청하는 일은 부담만 주는 일이 아니라, 일을 원활하게 하기 위한 조율에 가깝습니다. 동시에 결과물을 만들고 프로젝트나 기획서 같은 일을 끝냈을 때는 목발보다 먼저 제 역할과 기여가 보인다고 느껴요.";
         }
 
         if (HasAny(question, "도움", "도와", "배려", "넘어"))
@@ -13431,7 +13954,7 @@ public sealed class AvatarChatApp : MonoBehaviour
 
         if (HasAny(question, "직장", "회사", "박사", "공부", "책상", "노트북", "업무", "컴퓨터"))
         {
-            return "책상은 저를 '도움받는 사람'으로만 보지 않게 해 주는 장면이에요. 직장생활과 컴퓨터공학 박사과정을 이어 가는 시간이 노트북 앞에서 만나거든요. 여기서는 누군가의 배려를 기다리는 사람이 아니라, 일을 정리하고 공부를 이어 가는 사람이 보여요.\n\n노트북이나 메모, 자료 같은 건 제 역할과 취향을 보여 주고요. 목발이 제가 어떻게 움직이는지를 보여 준다면, 책상은 그 조건을 안고도 멈추지 않는 일상의 밀도를 보여 줍니다.";
+            return "책상 앞에서는 회사 일과 컴퓨터공학 박사과정 공부를 정리해요. 노트북을 켜고 메모를 보면서 해야 할 일을 나누고, 제 속도에 맞게 붙잡는 시간이 많습니다.\n\n업무나 공부는 이동과는 다른 종류의 집중이 필요해요. 결과물을 만들고, 읽을 것을 정리하고, 다음 할 일을 이어 가는 시간이 제 하루에서 꽤 큰 부분을 차지합니다.";
         }
 
         if (HasAny(question, "물건", "소지품", "가지고", "전시", "구성", "장면", "보이는 것"))
@@ -13441,7 +13964,7 @@ public sealed class AvatarChatApp : MonoBehaviour
 
         if (HasAny(question, "취미", "게임", "노래방", "코인노래방", "쉬는 날", "주말", "휴식", "쉬어"))
         {
-            return "요즘 취미라면 게임이랑 코인노래방이 있어요. 사소해 보이지만 그냥 지나치긴 아까운 이야기예요. 이동 이야기만 보면 불편함만 남기 쉽지만, 취미까지 같이 보면 쉬고 놀고 좋아하는 게 있는 한 사람이 보이니까요.\n\n해야 할 일, 이동을 확인하는 일, 도움을 맞춰 가는 일 사이에도 제가 좋아하는 시간이 있어요. 그 장면까지 있어야 제 하루가 자연스럽게 보입니다.";
+            return "요즘 취미라면 게임이랑 코인노래방이 있어요. 사소해 보이지만 그냥 지나치긴 아까운 이야기예요. 이동 이야기에서 한 걸음 더 들어가면 쉬고 놀고 좋아하는 게 있는 한 사람이 보이니까요.\n\n해야 할 일, 이동을 확인하는 일, 도움을 맞춰 가는 일 사이에도 제가 좋아하는 시간이 있어요. 그 장면까지 있어야 제 하루가 자연스럽게 보입니다.";
         }
 
         if (HasAny(question, "불안", "걱정", "민폐", "힘들", "감정", "서운", "위축"))
@@ -13513,7 +14036,7 @@ public sealed class AvatarChatApp : MonoBehaviour
 
     private void TrimHistory()
     {
-        const int maxMessages = 18;
+        const int maxMessages = 80;
         if (history.Count <= maxMessages) return;
         history.RemoveRange(0, history.Count - maxMessages);
     }
@@ -13528,6 +14051,7 @@ public sealed class AvatarChatApp : MonoBehaviour
         bool smokeCompletionToast = false;
         bool smokeOpenClosingAfterQuestions = false;
         bool smokeSaveEndingAfterQuestions = false;
+        bool smokeSkipClosingSensitiveQuestion = false;
         bool smokeCategoryFlowContinue = false;
         float captureDelay = 0f;
         bool smokeOpenNote = false;
@@ -13579,12 +14103,14 @@ public sealed class AvatarChatApp : MonoBehaviour
         bool smokeClickContinueButton = false;
         bool smokeClickClosingSave = false;
         bool smokeClickClosingContinue = false;
+        bool smokeClickClosingClose = false;
         bool smokeClickStoryNext = false;
         bool smokeClickStoryQuestion = false;
         bool smokeClickMemoryCard = false;
         int smokeMemoryCardIndex = 0;
         string smokeFeedbackOutput = null;
         string smokeStateOutput = null;
+        string smokeClosingMessage = null;
         int? smokeDialogueSizeLevel = null;
         int? smokeSoundLevel = null;
         int smokeNoteTab = 0;
@@ -13673,6 +14199,10 @@ public sealed class AvatarChatApp : MonoBehaviour
             else if (args[i] == "--smoke-open-closing")
             {
                 smokeOpenClosing = true;
+            }
+            else if (args[i] == "--smoke-skip-closing-sensitive-question")
+            {
+                smokeSkipClosingSensitiveQuestion = true;
             }
             else if (args[i] == "--smoke-open-closing-after-questions")
             {
@@ -13849,6 +14379,15 @@ public sealed class AvatarChatApp : MonoBehaviour
                 smokeClickClosingContinue = true;
                 smokeOpenClosing = true;
             }
+            else if (args[i] == "--smoke-click-closing-close")
+            {
+                smokeClickClosingClose = true;
+                smokeOpenClosing = true;
+            }
+            else if ((args[i] == "--smoke-closing-message" || args[i] == "--smoke-ending-message") && i < args.Length - 1)
+            {
+                smokeClosingMessage = ReadSmokeTextArgument(args, i + 1);
+            }
             else if (args[i] == "--smoke-show-memory-toast")
             {
                 smokeMemoryToast = ReadSmokeTextArgument(args, i + 1);
@@ -13912,8 +14451,27 @@ public sealed class AvatarChatApp : MonoBehaviour
         if (smokeOpenClosing)
         {
             conversationTurns = Mathf.Max(conversationTurns, 5);
+            if (smokeSkipClosingSensitiveQuestion)
+            {
+                closingSensitiveQuestionAnswered = true;
+                pendingClosingSensitiveQuestion = false;
+            }
             UpdateActionButtons();
             ShowClosingCard();
+        }
+
+        if (!string.IsNullOrWhiteSpace(smokeClosingMessage))
+        {
+            closingMessageToInterviewee = smokeClosingMessage.Trim();
+            if (closingMessageInput != null)
+            {
+                closingMessageInput.text = closingMessageToInterviewee;
+            }
+            if (closingMessageValidationText != null)
+            {
+                closingMessageValidationText.text = "저장할 준비가 되었습니다.";
+                closingMessageValidationText.color = new Color32(22, 101, 52, 245);
+            }
         }
 
         if (smokeMemoryFilled || smokeFillMemory)
@@ -14002,7 +14560,7 @@ public sealed class AvatarChatApp : MonoBehaviour
             SetHighContrastEnabled(true, false);
         }
 
-        bool smokeAutomationActive = smokeSkipStart || smokeLongDialogue || smokeExpectDialogueScrollable || smokeExpectAvatarNatural || smokeThinkingState || smokeExpectThinkingCopy || smokeExpectServerFallback || smokeStartFreshSession || smokeStartStoryMode || smokeExpectStoryMode || smokeExpectAudio || smokeExpectDialogueReadingFocus || smokeKeyArt || smokeLocalOnly || smokeHighContrast || smokeOpenNote || smokeOpenClosing || smokeOpenPause || smokeOpenSettings || smokeOpenAbout || smokeOpenArchive || smokeOpenFeedback || smokeFeedbackRequireNote || smokeFeedbackRequireCompleteSession || smokeOpenHotspotPreview || smokeOpenRestartConfirm || smokeOpenMemory || smokeClickContinueButton || smokeClickClosingSave || smokeClickClosingContinue || smokeClickStoryQuestion || smokeClickStoryNext || smokeClickMemoryCard || smokeDeleteRecordPrompt || smokeDeleteRecordConfirm || smokeClearDataPrompt || smokeClearDataConfirm || smokeClickClearDataPrompt || smokeClickClearDataConfirm || smokeShortcutActions.Count > 0 || smokeShortcutKeys.Count > 0 || smokeDelayedKeys.Count > 0 || smokeQuestions.Count > 0 || !string.IsNullOrWhiteSpace(smokeStateOutput) || !string.IsNullOrWhiteSpace(smokeQuestion) || !string.IsNullOrWhiteSpace(smokeMemoryToast) || !string.IsNullOrWhiteSpace(smokeFirstImpression) || !string.IsNullOrWhiteSpace(smokeCategoryFlow) || smokeCompletionToast || smokeSoundLevel.HasValue;
+        bool smokeAutomationActive = smokeSkipStart || smokeLongDialogue || smokeExpectDialogueScrollable || smokeExpectAvatarNatural || smokeThinkingState || smokeExpectThinkingCopy || smokeExpectServerFallback || smokeStartFreshSession || smokeStartStoryMode || smokeExpectStoryMode || smokeExpectAudio || smokeExpectDialogueReadingFocus || smokeKeyArt || smokeLocalOnly || smokeHighContrast || smokeOpenNote || smokeOpenClosing || smokeOpenPause || smokeOpenSettings || smokeOpenAbout || smokeOpenArchive || smokeOpenFeedback || smokeFeedbackRequireNote || smokeFeedbackRequireCompleteSession || smokeOpenHotspotPreview || smokeOpenRestartConfirm || smokeOpenMemory || smokeClickContinueButton || smokeClickClosingSave || smokeClickClosingContinue || smokeClickClosingClose || smokeClickStoryQuestion || smokeClickStoryNext || smokeClickMemoryCard || smokeDeleteRecordPrompt || smokeDeleteRecordConfirm || smokeClearDataPrompt || smokeClearDataConfirm || smokeClickClearDataPrompt || smokeClickClearDataConfirm || smokeShortcutActions.Count > 0 || smokeShortcutKeys.Count > 0 || smokeDelayedKeys.Count > 0 || smokeQuestions.Count > 0 || !string.IsNullOrWhiteSpace(smokeStateOutput) || !string.IsNullOrWhiteSpace(smokeQuestion) || !string.IsNullOrWhiteSpace(smokeClosingMessage) || !string.IsNullOrWhiteSpace(smokeMemoryToast) || !string.IsNullOrWhiteSpace(smokeFirstImpression) || !string.IsNullOrWhiteSpace(smokeCategoryFlow) || smokeCompletionToast || smokeSoundLevel.HasValue;
         if (smokeLocalOnly)
         {
             SetLocalAnswerOnlyEnabled(true, false);
@@ -14151,6 +14709,11 @@ public sealed class AvatarChatApp : MonoBehaviour
             RunSmokeClosingContinueButtonClick();
         }
 
+        if (smokeClickClosingClose)
+        {
+            RunSmokeClosingCloseButtonClick();
+        }
+
         if (smokeOpenArchive)
         {
             SetRecordArchiveOpen(true);
@@ -14164,7 +14727,7 @@ public sealed class AvatarChatApp : MonoBehaviour
                 bool defaultCaptureOnly = !smokeSaveFeedback && !smokeFeedbackRequireNote && !smokeFeedbackRequireCompleteSession;
                 playtestFeedbackInput.text = smokeFeedbackRequireNote || defaultCaptureOnly
                     ? string.Empty
-                    : "스모크 QA: 질문 흐름, 기억장, 기록 저장을 확인했습니다. 진행을 막는 이슈는 없습니다.";
+                    : "스모크 QA: 질문 흐름, 대화 기록, 저장을 확인했습니다. 진행을 막는 이슈는 없습니다.";
                 playtestFeedbackInput.caretPosition = playtestFeedbackInput.text.Length;
                 playtestFeedbackInput.selectionAnchorPosition = playtestFeedbackInput.text.Length;
                 playtestFeedbackInput.selectionFocusPosition = playtestFeedbackInput.text.Length;
@@ -14303,6 +14866,19 @@ public sealed class AvatarChatApp : MonoBehaviour
         }
 
         closingCardContinueButton.onClick.Invoke();
+    }
+
+    private void RunSmokeClosingCloseButtonClick()
+    {
+        if (closingCardCloseButton == null || !closingCardCloseButton.gameObject.activeInHierarchy || !closingCardCloseButton.interactable)
+        {
+            lastClosingCardShortcutAction = "close-button-unavailable";
+            if (statusText != null) statusText.text = "끝내기 버튼을 누를 수 없습니다";
+            return;
+        }
+
+        lastClosingCardShortcutAction = "close-button";
+        closingCardCloseButton.onClick.Invoke();
     }
 
     private void RunSmokeClearLocalDataButtonClick()
@@ -14446,6 +15022,12 @@ public sealed class AvatarChatApp : MonoBehaviour
             .AppendLine("\tINFO");
         builder.Append("state\tnote-tab\t\t")
             .Append(EscapeSmokeCell(GetSmokeNoteTabName()))
+            .AppendLine("\tINFO");
+        builder.Append("state\tnote-panel\t\t")
+            .Append(questionNoteObject != null && questionNoteObject.activeInHierarchy ? "open" : "closed")
+            .AppendLine("\tINFO");
+        builder.Append("state\thistory-note-preview\t\t")
+            .Append(EscapeSmokeCell(noteHistoryText != null ? ShortenForCard(noteHistoryText.text, 220) : string.Empty))
             .AppendLine("\tINFO");
         builder.Append("state\tdialogue-size-level\t\t")
             .Append(dialogueSizeLevel)
@@ -15659,6 +16241,10 @@ public sealed class AvatarChatApp : MonoBehaviour
                 return true;
             case "closing":
                 open = closingCardObject != null && closingCardObject.activeSelf;
+                return true;
+            case "completion":
+            case "completionchoice":
+                open = completionChoiceObject != null && completionChoiceObject.activeSelf;
                 return true;
             case "feedback":
                 open = playtestFeedbackObject != null && playtestFeedbackObject.activeSelf;
