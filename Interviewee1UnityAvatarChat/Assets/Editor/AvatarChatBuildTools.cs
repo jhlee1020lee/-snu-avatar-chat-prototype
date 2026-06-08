@@ -9,6 +9,7 @@ public static class AvatarChatBuildTools
 {
     private const string ScenePath = "Assets/Scenes/AvatarChat.unity";
     private const string BuildPath = "Build/Interviewee1UnityAvatarChat.exe";
+    private const string WebGLBuildPath = "../Interviewee1CloneAI/public";
 
     [MenuItem("Avatar Chat/Create Scene")]
     public static void CreateScene()
@@ -52,6 +53,37 @@ public static class AvatarChatBuildTools
         }
 
         Debug.Log($"Built avatar chat app: {BuildPath}");
+    }
+
+    [MenuItem("Avatar Chat/Build WebGL")]
+    public static void BuildWebGL()
+    {
+        CreateScene();
+        if (Directory.Exists(WebGLBuildPath))
+        {
+            Directory.Delete(WebGLBuildPath, true);
+        }
+        Directory.CreateDirectory(WebGLBuildPath);
+
+        PlayerSettings.WebGL.compressionFormat = WebGLCompressionFormat.Disabled;
+        PlayerSettings.WebGL.decompressionFallback = false;
+        PlayerSettings.WebGL.nameFilesAsHashes = false;
+
+        BuildPlayerOptions options = new BuildPlayerOptions
+        {
+            scenes = new[] { ScenePath },
+            locationPathName = WebGLBuildPath,
+            target = BuildTarget.WebGL,
+            options = BuildOptions.None
+        };
+
+        BuildReport report = BuildPipeline.BuildPlayer(options);
+        if (report.summary.result != BuildResult.Succeeded)
+        {
+            throw new Exception($"WebGL build failed: {report.summary.result}");
+        }
+
+        Debug.Log($"Built avatar chat WebGL app: {WebGLBuildPath}");
     }
 
     private static void ApplyPlayerSettings()

@@ -15,7 +15,7 @@ public sealed class AvatarChatApp : MonoBehaviour
     private const string GameTitle = "겉!=속";
     private const string StartMenuDisplayTitle = "겉!=속";
     private const string GameSubtitle = "처음 보이는 겉모습이 그 사람의 전부는 아니라는 뜻입니다.";
-    private const string ServerBaseUrl = "http://127.0.0.1:8765";
+    private const string LocalServerBaseUrl = "http://127.0.0.1:8765";
     private const string ServerStatusIdleText = "서버 답변 연결을 확인 중입니다.";
     private const string ServerRequiredCheckingText = "서버 연결 확인 중입니다. 서버가 정상일 때만 시작할 수 있습니다.";
     private const string ServerRequiredBlockedText = "서버 연결 필요 · 시작 파일로 서버를 먼저 켠 뒤 다시 실행해 주세요.";
@@ -33,6 +33,20 @@ public sealed class AvatarChatApp : MonoBehaviour
     private const float KeyboardPageScrollStep = 0.34f;
     private const float AvatarHorizontalScale = 1.00f;
     private const string ThinkingReplyText = "생각을 정리하고 있어요.";
+
+    private static string ServerBaseUrl
+    {
+        get
+        {
+#if UNITY_WEBGL && !UNITY_EDITOR
+            if (Uri.TryCreate(Application.absoluteURL, UriKind.Absolute, out Uri uri))
+            {
+                return $"{uri.Scheme}://{uri.Authority}";
+            }
+#endif
+            return LocalServerBaseUrl;
+        }
+    }
     private static readonly Color ModalOverlayColor = new Color(0.96f, 0.92f, 0.80f, 0.20f);
     private static readonly Color FocusModalOverlayColor = new Color(0.96f, 0.92f, 0.80f, 0.26f);
     private static readonly Color ModalShadowColor = new Color(0f, 0f, 0f, 0.14f);

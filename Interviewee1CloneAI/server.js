@@ -1,6 +1,7 @@
 "use strict";
 
 const http = require("node:http");
+const fsSync = require("node:fs");
 const fs = require("node:fs/promises");
 const path = require("node:path");
 const { URL } = require("node:url");
@@ -9,7 +10,8 @@ const ROOT = __dirname;
 const DATA_PATH = path.join(ROOT, "data", "persona.json");
 const GENERATED_MEMORY_PATH = resolveGeneratedMemoryPath();
 const PORT = Number(process.env.PORT || 8765);
-const HOST = "127.0.0.1";
+const HOST = process.env.HOST || process.env.BIND_HOST || (process.env.PORT ? "0.0.0.0" : "127.0.0.1");
+const STATIC_ROOT = resolveStaticRoot();
 const OPENAI_API_KEY = process.env.OPENAI_API_KEY || "";
 const DEFAULT_CHAT_MODEL = "gpt-5.4-mini";
 const CHAT_MODEL_CONFIG = resolveChatModel();
@@ -33,6 +35,18 @@ function resolveGeneratedMemoryPath() {
   const configured = String(process.env.GENERATED_MEMORY_PATH || "").trim();
   if (!configured) return path.join(ROOT, "data", "generated_memory.jsonl");
   return path.isAbsolute(configured) ? configured : path.resolve(ROOT, configured);
+}
+
+function resolveStaticRoot() {
+  const configured = String(process.env.STATIC_ROOT || "").trim();
+  if (configured) return path.isAbsolute(configured) ? configured : path.resolve(ROOT, configured);
+
+  const webglPublicRoot = path.join(ROOT, "public");
+  if (fsSync.existsSync(path.join(webglPublicRoot, "index.html"))) {
+    return webglPublicRoot;
+  }
+
+  return ROOT;
 }
 
 function normalizeChatModel(value) {
@@ -106,7 +120,13 @@ const MIME_TYPES = new Map([
   [".png", "image/png"],
   [".jpg", "image/jpeg"],
   [".jpeg", "image/jpeg"],
-  [".ico", "image/x-icon"]
+  [".ico", "image/x-icon"],
+  [".wasm", "application/wasm"],
+  [".data", "application/octet-stream"],
+  [".mem", "application/octet-stream"],
+  [".unityweb", "application/octet-stream"],
+  [".br", "application/octet-stream"],
+  [".gz", "application/gzip"]
 ]);
 
 async function loadPersona() {
@@ -1924,9 +1944,9 @@ async function handleGeneratedMemoryDelete(req, res, id) {
 
 async function serveStatic(req, res, url) {
   const pathname = decodeURIComponent(url.pathname === "/" ? "/index.html" : url.pathname);
-  const safePath = path.normalize(path.join(ROOT, pathname));
+  const safePath = path.normalize(path.join(STATIC_ROOT, pathname));
 
-  if (!safePath.startsWith(ROOT)) {
+  if (safePath !== STATIC_ROOT && !safePath.startsWith(`${STATIC_ROOT}${path.sep}`)) {
     sendText(res, 403, "Forbidden");
     return;
   }
@@ -1939,6 +1959,10 @@ async function serveStatic(req, res, url) {
       "Content-Length": data.length,
       "Cache-Control": "no-store"
     });
+    if (req.method === "HEAD") {
+      res.end();
+      return;
+    }
     res.end(data);
   } catch (error) {
     if (error.code === "ENOENT" || error.code === "EISDIR") {
@@ -1964,7 +1988,7 @@ async function route(req, res) {
   if (req.method === "POST" && url.pathname === "/api/chat") return handleChat(req, res);
   if (req.method === "POST" && url.pathname === "/api/transcribe") return handleTranscribe(req, res);
   if (req.method === "POST" && url.pathname === "/api/speech") return handleSpeech(req, res);
-  if (req.method === "GET") return serveStatic(req, res, url);
+  if (req.method === "GET" || req.method === "HEAD") return serveStatic(req, res, url);
 
   sendJson(res, 405, { error: "Method not allowed" });
 }
@@ -1978,5 +2002,6 @@ const server = http.createServer((req, res) => {
 
 server.listen(PORT, HOST, () => {
   console.log(`Interviewee1 Clone AI is running at http://${HOST}:${PORT}`);
+  console.log(`Static files: ${STATIC_ROOT}`);
   console.log(`OpenAI API: ${OPENAI_API_KEY ? `enabled (${CHAT_MODEL})` : "disabled; local evidence mode only"}`);
 });
