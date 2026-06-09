@@ -269,6 +269,15 @@ Run-ProcessChecked -FilePath $powershell -ArgumentList @(
     "-Port", "8878"
 ) -WorkingDirectory $repoRoot
 
+Write-Step "Recommended question answer-match QA"
+$recommendedQuestionQa = Join-Path $PSScriptRoot "RunRecommendedQuestionQA.ps1"
+Run-ProcessChecked -FilePath $powershell -ArgumentList @(
+    "-NoProfile",
+    "-ExecutionPolicy", "Bypass",
+    "-File", $recommendedQuestionQa,
+    "-Port", "8885"
+) -WorkingDirectory $repoRoot
+
 Write-Step "Long session reply QA"
 $longSessionQa = Join-Path $PSScriptRoot "RunLongSessionQA.ps1"
 Run-ProcessChecked -FilePath $powershell -ArgumentList @(

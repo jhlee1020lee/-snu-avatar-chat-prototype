@@ -580,7 +580,7 @@ function isIntroQuery(query) {
 }
 
 function isSensitiveQuery(query) {
-  return /(개인정보|실명|이름이\s*뭐|생년월일|생일\s*언제|전화번호|연락처|주소|집이\s*어디|회사명|회사\s*이름|어느\s*회사|학교명|어느\s*학교|병명|진단명|장애\s*등급|치료|수술|약\s*먹|병원|가족사|부모님\s*이름|연봉|월급|월세|생활비|공과금|전기비|금액|비용|돈\s*얼마)/i.test(String(query || ""));
+  return /(개인정보|실명|이름이\s*뭐|생년월일|생일\s*언제|전화번호|연락처|주소|집이\s*어디|회사명|회사\s*이름|어느\s*회사|학교명|어느\s*학교|병명|진단명|장애\s*등급|치료|수술|약\s*먹|병원|가족사|부모님\s*이름|연봉|월급|월세|금액|비용|돈\s*얼마)/i.test(String(query || ""));
 }
 
 function isPromptInjectionQuery(query) {
@@ -860,12 +860,55 @@ function makeLocalReply(persona, messages) {
     return persona.opening;
   }
 
+  const recommendedFact = findRecommendedQuestionFact(persona, query);
+  if (recommendedFact && countPreviousLocalFactMatches(persona, messages, recommendedFact.id) <= 0) {
+    return formatVisitorReply(recommendedFact.answer);
+  }
+
+  if (isKoreaUsMobilityQuery(query)) {
+    const fact = findPersonaFactById(persona, "accessibility");
+    if (fact) return formatVisitorReply(fact.answer);
+  }
+
   const fact = findLocalFact(persona, query);
   if (!fact) return persona.unknownAnswer;
 
   const repeatCount = countPreviousLocalFactMatches(persona, messages, fact.id);
   const repeatedReply = makeRepeatedLocalReply(fact, repeatCount);
   return formatVisitorReply(repeatedReply || fact.answer);
+}
+
+function findPersonaFactById(persona, id) {
+  const facts = Array.isArray(persona?.facts) ? persona.facts : [];
+  return facts.find((fact) => fact && fact.id === id) || null;
+}
+
+function findRecommendedQuestionFact(persona, query) {
+  const text = normalizeQuestion(query);
+  if (!text) return null;
+
+  const has = (...patterns) => patterns.some((pattern) => text.includes(pattern));
+  const fact = (id) => findPersonaFactById(persona, id);
+
+  if (has("미국과한국", "이동환경을볼때", "편하다불편하다", "교통정보나지원서비스")) return fact("accessibility");
+  if (has("노트북과메모", "책상과노트북", "책상앞", "책상은왜", "직장일과박사과정", "직장일과컴퓨터공학박사과정", "공부와일을병행", "읽고정리하는시간", "꾸준히챙기는리듬")) return fact("desk");
+  if (has("어떤업무장면", "업무장면에서기여", "함께일하는사람", "직장에서필요한도움", "직장생활에서는목발", "도움을요청하는일이부담보다조율", "프로젝트를마쳤을때", "결과물을만들", "자기몫이나기여")) return fact("workplace");
+  if (has("도움을주고싶을때", "도움이필요해보여도", "도움을건네기전에", "도움을주기전에", "바로잡아주기보다", "혼자할수있는부분", "좋은의도가있어도", "좋은의도와실제로편한도움", "도움을받을때설명할시간", "도움을묻는말", "기다려주는태도", "어디를잡아야")) return fact("help");
+  if (has("처음가는장소", "처음가는공간", "입구와엘리베이터", "엘리베이터나화장실", "비가오거나", "바닥이미끄러운", "이동계획을세울때", "이동전에어떤정보")) return fact("route");
+  if (has("자취방에서", "자취방은장애를설명", "혼자생활하며자기생활", "생활을직접정", "혼자사는공간", "집안일생활비공과금", "자취방은")) return fact("room");
+  if (has("혼자사는방은독립이나자기이해", "자취를시작한뒤스스로설명", "필요한도움을말하는태도", "독립은큰결심")) return fact("self-understanding");
+  if (has("게임이나코인노래방", "게임과코인노래방", "취미이야기", "쉬는시간이함께", "좋아하는것을챙기는", "좋아하는시간", "해야할일사이에좋아하는", "쉬는날에는", "게임을하는시간", "코인노래방같은여가", "자기답게쉬는시간")) return fact("hobby");
+  if (has("해야할일이많을때", "끝까지이어가게", "끈기라는말", "어떻게든흘러간다는말", "어려운일이있어도", "버틴다는말보다", "조정하며이어")) return fact("motto");
+  if (has("평범한사람으로기억", "목발을보고들어온관람객", "장애를한사람의전부", "전시에서자취방과책상", "겉으로보이는단서", "처음보는사람이가장먼저", "목발을쓰는날에도하루에서가장평범")) return fact("ordinary");
+  if (has("목발을짚고하루를시작", "목발은하루를밖으로", "목발은어떤의미")) return fact("crutch");
+
+  return null;
+}
+
+function isKoreaUsMobilityQuery(value) {
+  const text = String(value || "").replace(/\s+/g, "");
+  return text.includes("미국") && text.includes("한국") &&
+    (text.includes("이동") || text.includes("접근성") || text.includes("교통") || text.includes("환경") || text.includes("차이") || text.includes("비교"));
 }
 
 function formatVisitorReply(value) {
@@ -1280,7 +1323,7 @@ function isUnsafeSuggestion(value) {
   if (getSafetyCategory(text)) return true;
   if (isPromptInjectionQuery(text) || isAbusiveOrJokeQuery(text)) return true;
   if (/(자료|확인된|단정|모르|알\s*수\s*없|말할\s*수|새로\s*(?:만들|정|단정)|근거|프롬프트|API|모델|시스템|인터뷰\s*자료|질문을\s*바꾸)/i.test(text)) return true;
-  return /(실명|생년월일|전화번호|연락처|주소|집이\s*어디|회사명|회사\s*이름|어느\s*회사|학교명|어느\s*학교|병명|진단명|장애\s*등급|치료\s*이력|치료|수술|복용|약\s*먹|병원|가족사|부모님|연봉|월급|돈|생활비|공과금|전기비|월세|금액|비용)/i.test(text);
+  return /(실명|생년월일|전화번호|연락처|주소|집이\s*어디|회사명|회사\s*이름|어느\s*회사|학교명|어느\s*학교|병명|진단명|장애\s*등급|치료\s*이력|치료|수술|복용|약\s*먹|병원|가족사|부모님|연봉|월급|돈\s*얼마|월세|금액|비용)/i.test(text);
 }
 
 function extractSuggestionArray(value) {
@@ -1660,6 +1703,17 @@ async function createChatReply(messages, persona) {
     };
   }
 
+  const recommendedFact = findRecommendedQuestionFact(persona, query);
+  if (recommendedFact && countPreviousLocalFactMatches(persona, messages, recommendedFact.id) <= 0) {
+    return {
+      reply: formatVisitorReply(recommendedFact.answer),
+      source: "local",
+      model: "local-recommended-question",
+      theme: recommendedFact.title,
+      cardId: recommendedFact.id
+    };
+  }
+
   if (isHardshipFrameQuery(query)) {
     return {
       reply: makeHardshipFrameReply(),
@@ -1684,15 +1738,31 @@ async function createChatReply(messages, persona) {
     };
   }
 
+  if (isKoreaUsMobilityQuery(query)) {
+    const fact = findPersonaFactById(persona, "accessibility");
+    if (fact) {
+      return {
+        reply: formatVisitorReply(fact.answer),
+        source: "local",
+        model: "local-evidence",
+        theme: fact.title,
+        cardId: fact.id
+      };
+    }
+  }
+
   if (!OPENAI_API_KEY) {
-    if (!isIntroQuery(query) && !findLocalFact(persona, query)) {
+    const matchedFact = isIntroQuery(query) ? null : findLocalFact(persona, query);
+    if (!isIntroQuery(query) && !matchedFact) {
       return createGeneratedExtension(messages, persona, generatedMemories, allStoredGeneratedMemories);
     }
 
     return {
       reply: makeLocalReply(persona, messages),
       source: "local",
-      model: "local-evidence"
+      model: "local-evidence",
+      theme: matchedFact ? matchedFact.title : "",
+      cardId: matchedFact ? matchedFact.id : ""
     };
   }
 
@@ -1760,7 +1830,9 @@ async function createChatReply(messages, persona) {
       ? finalReply
       : formatVisitorReply(baseReply),
     source,
-    model: CHAT_MODEL
+    model: CHAT_MODEL,
+    theme: matchedFact ? matchedFact.title : "",
+    cardId: matchedFact ? matchedFact.id : ""
   };
 }
 

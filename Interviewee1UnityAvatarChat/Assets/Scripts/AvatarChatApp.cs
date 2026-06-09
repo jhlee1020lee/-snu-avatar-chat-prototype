@@ -56,6 +56,8 @@ public sealed class AvatarChatApp : MonoBehaviour
     private const string SaveKey = "Interviewee1AvatarChat.Save.v1";
     private const string TextSizeKey = "Interviewee1AvatarChat.DialogueSize";
     private const string FullscreenKey = "Interviewee1AvatarChat.Fullscreen";
+    private const string DisplayDefaultsVersionKey = "Interviewee1AvatarChat.DisplayDefaultsVersion";
+    private const int CurrentDisplayDefaultsVersion = 2;
     private const string SoundLevelKey = "Interviewee1AvatarChat.SoundLevel";
     private const string ReducedMotionKey = "Interviewee1AvatarChat.ReducedMotion";
     private const string HighContrastKey = "Interviewee1AvatarChat.HighContrast";
@@ -792,13 +794,19 @@ public sealed class AvatarChatApp : MonoBehaviour
         Application.targetFrameRate = 60;
         LoadUiFonts();
         dialogueSizeLevel = Mathf.Clamp(PlayerPrefs.GetInt(TextSizeKey, 0), -1, 1);
-        fullscreenEnabled = PlayerPrefs.GetInt(FullscreenKey, 0) == 1;
+        if (PlayerPrefs.GetInt(DisplayDefaultsVersionKey, 0) < CurrentDisplayDefaultsVersion)
+        {
+            PlayerPrefs.SetInt(FullscreenKey, 1);
+            PlayerPrefs.SetInt(DisplayDefaultsVersionKey, CurrentDisplayDefaultsVersion);
+            PlayerPrefs.Save();
+        }
+        fullscreenEnabled = PlayerPrefs.GetInt(FullscreenKey, 1) == 1;
         soundLevel = Mathf.Clamp(PlayerPrefs.GetInt(SoundLevelKey, 2), 0, 2);
         reducedMotionEnabled = PlayerPrefs.GetInt(ReducedMotionKey, 0) == 1;
         highContrastEnabled = PlayerPrefs.GetInt(HighContrastKey, 0) == 1;
         localAnswerOnly = false;
         PlayerPrefs.SetInt(LocalAnswerOnlyKey, 0);
-        Screen.SetResolution(TargetWidth, TargetHeight, fullscreenEnabled);
+        ApplyDisplayResolution();
 
         CreateAudioSystem();
         LoadSprites();
@@ -1755,6 +1763,42 @@ public sealed class AvatarChatApp : MonoBehaviour
         Sprite sprite = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), new Vector2(0.5f, 0.5f), 100f);
         generatedSprites[key] = sprite;
         return sprite;
+    }
+
+    private static Vector2Int GetWindowedResolutionForDisplay()
+    {
+        int displayWidth = Mathf.Max(1, Display.main.systemWidth);
+        int displayHeight = Mathf.Max(1, Display.main.systemHeight);
+        if (displayWidth <= 1 || displayHeight <= 1)
+        {
+            displayWidth = Mathf.Max(1, Screen.currentResolution.width);
+            displayHeight = Mathf.Max(1, Screen.currentResolution.height);
+        }
+
+        int width = Mathf.Min(TargetWidth, Mathf.FloorToInt(displayWidth * 0.92f));
+        int height = Mathf.RoundToInt(width * 9f / 16f);
+        int maxHeight = Mathf.FloorToInt(displayHeight * 0.88f);
+        if (height > maxHeight)
+        {
+            height = maxHeight;
+            width = Mathf.RoundToInt(height * 16f / 9f);
+        }
+
+        width = Mathf.Clamp(width, 960, TargetWidth);
+        height = Mathf.Clamp(height, 540, TargetHeight);
+        return new Vector2Int(width, height);
+    }
+
+    private void ApplyDisplayResolution()
+    {
+        if (fullscreenEnabled)
+        {
+            Screen.SetResolution(TargetWidth, TargetHeight, true);
+            return;
+        }
+
+        Vector2Int size = GetWindowedResolutionForDisplay();
+        Screen.SetResolution(size.x, size.y, false);
     }
 
     private Texture2D CreateGeneratedIllustrationTexture(string resourceName)
@@ -9277,7 +9321,7 @@ public sealed class AvatarChatApp : MonoBehaviour
     private void SetFullscreenEnabled(bool enabled, bool persist)
     {
         fullscreenEnabled = enabled;
-        Screen.SetResolution(TargetWidth, TargetHeight, fullscreenEnabled);
+        ApplyDisplayResolution();
 
         if (persist)
         {
@@ -13364,22 +13408,34 @@ public sealed class AvatarChatApp : MonoBehaviour
             AddUniqueLeadQuestion(result, emergencyQuestions[i], targetCount);
         }
 
-        int index = 1;
-        while (result.Count < targetCount)
+        string[] verifiedFallbackQuestions =
         {
-            AddUniqueLeadQuestion(result, $"아직 묻지 않은 생활 장면 {index}은 어떤 질문으로 열어볼까요?", targetCount);
-            index++;
+            "교통 정보나 지원 서비스는 이동 계획에 어떤 도움을 주나요?",
+            "노트북과 메모는 이동 이야기 너머의 어떤 생활을 보여주나요?",
+            "게임과 코인노래방 같은 취미가 같이 보여야 하는 이유는 무엇인가요?",
+            "해야 할 일이 많을 때 끝까지 이어가게 하는 태도는 무엇인가요?",
+            "처음 가는 장소에서는 이동 전에 어떤 정보를 먼저 확인하나요?"
+        };
+
+        for (int i = 0; i < verifiedFallbackQuestions.Length && result.Count < targetCount; i++)
+        {
+            AddLeadQuestionIgnoringHistory(result, verifiedFallbackQuestions[i], targetCount);
         }
     }
 
     private void AddGeneratedLeadQuestions(List<string> result, int targetCount, string theme)
     {
-        int index = 1;
-        string label = string.IsNullOrWhiteSpace(theme) ? "생활" : theme;
-        while (result.Count < targetCount && index < 40)
+        string[] source = string.IsNullOrWhiteSpace(theme)
+            ? leadQuestions
+            : GetCategoryQuestionBank(theme);
+        if (source == null || source.Length == 0)
         {
-            AddUniqueLeadQuestion(result, $"{label}에서 아직 꺼내지 않은 장면 {index}은 무엇인가요?", targetCount);
-            index++;
+            source = leadQuestions;
+        }
+
+        for (int i = 0; i < source.Length && result.Count < targetCount; i++)
+        {
+            AddLeadQuestionIgnoringHistory(result, source[i], targetCount);
         }
     }
 
@@ -13392,6 +13448,25 @@ public sealed class AvatarChatApp : MonoBehaviour
         string key = BuildLeadQuestionKey(cleaned);
         if (IsPreviouslyAskedLeadQuestionKey(key)) return false;
 
+        for (int i = 0; i < result.Count; i++)
+        {
+            if (string.Equals(BuildLeadQuestionKey(result[i]), key, StringComparison.Ordinal))
+            {
+                return false;
+            }
+        }
+
+        result.Add(cleaned);
+        return true;
+    }
+
+    private bool AddLeadQuestionIgnoringHistory(List<string> result, string question, int targetCount)
+    {
+        if (result.Count >= targetCount) return false;
+
+        string cleaned = NormalizeLeadQuestion(question);
+        if (string.IsNullOrWhiteSpace(cleaned)) return false;
+        string key = BuildLeadQuestionKey(cleaned);
         for (int i = 0; i < result.Count; i++)
         {
             if (string.Equals(BuildLeadQuestionKey(result[i]), key, StringComparison.Ordinal))
@@ -13901,6 +13976,56 @@ public sealed class AvatarChatApp : MonoBehaviour
             return "저는 목발과 출근길, 자취방, 책상, 도움 방식에 관한 인터뷰 기록을 바탕으로 이야기하고 있어요. 이동을 준비하는 시간, 생활을 직접 챙기는 시간, 일하고 공부하는 시간을 중심으로 답할게요.";
         }
 
+        if (HasAny(question, "해야 할 일이 많을 때", "끝까지 이어가게", "이어가게 하는 태도"))
+        {
+            return "끈기라고 하면 대단한 극복담처럼 들리지만, 저한테는 하루를 계속 조정하며 이어 가는 태도에 더 가까워요. 해야 할 일이 많을 때도 한 번에 다 해결하려고 하기보다, 할 수 있는 방식으로 나누고 순서를 다시 잡으면서 다음 단계로 넘어가게 됩니다.\n\n그래서 끝까지 이어간다는 말은 무조건 버틴다는 뜻이 아니에요. 필요한 도움은 설명하고, 이동은 다시 계산하고, 일과 공부는 제 속도에 맞게 붙잡으면서 생활을 멈추지 않게 만드는 방식에 가깝습니다.";
+        }
+
+        if (HasAny(question, "회사에 가고 공부하고 집에 돌아오는 하루", "회사에 가고 공부하고 집에"))
+        {
+            return "하루를 아주 단순하게 말하면, 이동을 준비해서 회사에 가고, 해야 할 일을 처리한 뒤 다시 공부나 생활 쪽으로 넘어오는 흐름이에요. 밖으로 나가기 전에는 길과 몸 상태를 먼저 생각하고, 책상 앞에서는 회사 일과 컴퓨터공학 박사과정 공부를 정리합니다.\n\n집에 돌아온 뒤에도 하루가 그냥 끝나지는 않아요. 자취방에서 생활을 챙기고, 해야 할 일을 다시 나누고, 쉴 시간도 남겨 둡니다. 그래서 제 하루는 이동, 일과 공부, 생활 관리가 순서대로 이어지는 쪽에 가깝습니다.";
+        }
+
+        if (HasAny(question, "처음 보는 사람이", "가장 먼저 물어봐 주면 좋겠는 생활 질문"))
+        {
+            return "처음 보는 사람이 가장 먼저 물어봐 주면 좋은 건, 제 장애를 설명하라고 밀어붙이는 질문보다 하루를 어떻게 보내는지 묻는 질문이에요. 예를 들면 어디를 이동할 때 무엇을 확인하는지, 책상 앞에서는 어떤 일을 하는지, 도움이 필요할 땐 어떻게 물어보면 편한지 같은 질문이 더 자연스럽습니다.\n\n그런 질문은 목발에서 시작하더라도 거기서 멈추지 않게 해 줍니다. 이동, 일과 공부, 자취방, 취미까지 같이 물어볼 때 한 사람의 생활이 훨씬 덜 납작하게 보입니다.";
+        }
+
+        if (HasAny(question, "이동 환경을 볼 때", "편하다 불편하다", "이동 계획을 세울 때", "확인하는 정보"))
+        {
+            return "이동 환경은 단순히 편하다, 불편하다로만 말하기 어려워요. 엘리베이터가 있는지, 입구가 어떤지, 화장실이나 내부 동선은 어떤지, 대중교통 정보가 정확한지 같은 조건이 함께 맞아야 하루가 덜 지칩니다.\n\n그래서 이동 계획을 세울 때는 목적지만 보지 않습니다. 가는 길과 돌아오는 길, 건물 안에서 실제로 움직일 수 있는지, 필요한 지원을 받을 수 있는지까지 확인해야 그날 일정이 현실적으로 가능해집니다.";
+        }
+
+        if (HasAny(question, "목발을 쓰는 날에도", "평범하게 반복되는 일"))
+        {
+            return "목발을 쓰는 날에도 하루 전체가 이동 이야기로만 채워지는 건 아니에요. 회사 일을 하고, 공부를 정리하고, 자취방에서 생활을 챙기고, 쉬는 시간을 갖는 평범한 반복이 같이 있습니다.\n\n목발은 분명 중요한 이동 도구지만, 그 도구가 제 하루의 전부를 대신하지는 않습니다. 그래서 전시에서도 목발을 보고 들어왔더라도, 나갈 때는 책상과 방, 취미와 관계까지 함께 기억해 주면 좋겠습니다.";
+        }
+
+        if (HasAny(question, "좋아하는 시간과 해야 하는 시간", "좋아하는 것을 챙기는 시간", "좋아하는 시간을 남겨", "해야 할 일 사이"))
+        {
+            return "해야 하는 일만으로 하루를 채우면 사람이 너무 납작해져요. 회사 일이나 공부, 이동을 확인하는 시간이 분명 있지만, 그 사이에 좋아하는 것을 챙기는 시간도 같이 있어야 하루가 제 생활처럼 느껴집니다.\n\n게임을 하거나 코인노래방에 가는 시간은 그냥 덤이 아니에요. 해야 할 일 사이에 숨을 고르고, 다시 다음 일을 이어갈 수 있게 해 주는 시간입니다. 그래서 취미까지 보여야 한 사람의 하루가 더 정확해집니다.";
+        }
+
+        if (HasAny(question, "취미 이야기가 이동이나 도움", "게임과 코인노래방 이야기는 이동이나 도움", "쉬는 시간이 함께 보여야"))
+        {
+            return "취미 이야기는 이동이나 도움 이야기와 다른 면을 보여줘요. 이동은 하루를 가능하게 만드는 조건에 가깝고, 도움은 관계 속에서 방식을 맞추는 이야기라면, 게임과 코인노래방은 제가 무엇을 좋아하고 어떻게 쉬는지를 보여줍니다.\n\n그 장면이 빠지면 제 하루는 불편함이나 조율만 남기 쉬워요. 쉬는 시간까지 함께 보여야 일하고 공부하고 이동하는 사람뿐 아니라, 좋아하는 것을 챙기며 사는 한 사람으로 더 정확하게 보입니다.";
+        }
+
+        if (HasAny(question, "노트북과 메모는 이동 이야기 너머", "책상과 노트북은 이동 이야기 너머", "책상과 노트북은 목발 너머"))
+        {
+            return "책상과 노트북은 이동 이야기 너머의 시간을 보여줘요. 밖으로 나갈 때는 목발과 동선을 많이 생각하지만, 책상 앞에서는 회사 일과 컴퓨터공학 박사과정 공부를 정리하고 제 몫의 결과물을 만들어 갑니다.\n\n그래서 노트북과 메모는 단순한 소품이 아니에요. 이동의 조건을 지나서도 하루가 계속 이어지고, 제가 일하고 공부하는 사람이라는 점을 보여 주는 장면입니다.";
+        }
+
+        if (HasAny(question, "생활을 직접 정한다는 감각", "작은 선택", "혼자 사는 공간", "하루를 맞춰 가는 방식"))
+        {
+            return "생활을 직접 정한다는 감각은 큰 결심보다 작은 선택에서 생겨요. 집안일을 언제 할지, 생활비와 공과금을 어떻게 챙길지, 하루 시간을 어떻게 나눌지 같은 일을 직접 맡다 보면 내 생활을 내가 맞춰 간다는 느낌이 분명해집니다.\n\n혼자 사는 공간에서는 누가 대신 정해 주는 일이 줄어들어요. 그래서 자취방은 장애를 설명하는 장소라기보다, 직접 계산하고 정리하고 버티는 생활의 감각을 보여 주는 곳에 가깝습니다.";
+        }
+
+        if (HasAny(question, "자취를 시작한 뒤 스스로 설명", "필요한 도움을 말하는 태도는 시간이 지나며"))
+        {
+            return "자취를 시작한 뒤에는 제 생활을 제가 더 자주 설명하게 됐어요. 예전에는 누군가 대신 챙겨 주거나 알아서 조정해 주는 일이 있었다면, 혼자 생활하면서는 필요한 도움과 가능한 일을 제 말로 구분해서 말해야 하는 순간이 늘었습니다.\n\n그 과정에서 도움을 말하는 태도도 조금 달라졌습니다. 미안해하거나 숨기는 일이라기보다, 같이 생활하고 일하기 위해 필요한 조율로 받아들이게 된 쪽에 가깝습니다.";
+        }
+
         if (HasAny(question, "방금 답변", "하나 더", "생활 장면"))
         {
             return "방금 이야기에서 한 장면을 더 꺼내 보면, 약속이나 출근 같은 일정에도 미리 확인할 게 꽤 많아요. 목적지 하나만 보는 게 아니라 입구, 엘리베이터, 화장실, 돌아오는 길, 그날 몸 상태까지 같이 떠올리게 되거든요.\n\n그런 확인이 끝나야 하루가 무리 없이 이어집니다. 이동은 한순간의 장면이라기보다, 피로를 줄이려고 미리 계산하고 조정하는 과정에 가까워요.";
@@ -13914,6 +14039,11 @@ public sealed class AvatarChatApp : MonoBehaviour
         if (HasAny(question, "관람객", "나갈 때", "함께 기억"))
         {
             return "나갈 때는 책상 앞에서 일하고 공부하는 시간, 자취방에서 생활을 챙기는 시간, 게임이나 코인노래방에서 쉬는 시간도 함께 기억해 주시면 좋겠습니다.\n\n이 전시는 한 가지 단서에서 시작해 생활 리듬과 선택, 좋아하는 것까지 같이 보게 만드는 대화에 가까워요.";
+        }
+
+        if (IsKoreaUsMobilityQuestion(question))
+        {
+            return "미국과 한국을 단순히 어느 쪽이 더 낫다고 말하기는 어려워요. 미국은 장애인이 건물에 드나들기 쉬운 환경이 비교적 갖춰져 있었지만, 대중교통 시간 정보가 정확하지 않거나 시설이 노후한 문제도 있었습니다.\n\n한국은 휴대폰으로 버스나 지하철 도착 정보를 확인할 수 있고, 장애인을 위한 택시나 버스 같은 지원도 있습니다. 학교에서 장애학생지원센터가 전동휠체어를 대여해 준 경험도 이동성을 높이는 도움으로 남아 있어요. 다만 일부 지하철역이나 공간에서는 엘리베이터 설치 같은 접근성의 어려움이 여전히 남아 있습니다.";
         }
 
         if (HasAny(question, "교통 정보", "지원 서비스", "전동휠체어", "장애인택시", "대중교통"))
@@ -14010,6 +14140,15 @@ public sealed class AvatarChatApp : MonoBehaviour
             }
         }
         return false;
+    }
+
+    private static bool IsKoreaUsMobilityQuestion(string text)
+    {
+        if (string.IsNullOrWhiteSpace(text)) return false;
+        string compact = Regex.Replace(text, @"\s+", string.Empty);
+        return compact.Contains("미국")
+            && compact.Contains("한국")
+            && (compact.Contains("이동") || compact.Contains("접근성") || compact.Contains("교통") || compact.Contains("환경") || compact.Contains("차이") || compact.Contains("비교"));
     }
 
     private void AppendMessage(string speaker, string content, string color)
