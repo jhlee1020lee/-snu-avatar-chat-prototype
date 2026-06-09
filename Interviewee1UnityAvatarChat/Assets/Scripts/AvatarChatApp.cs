@@ -2374,7 +2374,6 @@ public sealed class AvatarChatApp : MonoBehaviour
         avatarBasePosition = avatarRect.anchoredPosition;
 
         avatarSceneWashImage = CreatePanel("Avatar Scene Wash", parent, new Color(0.96f, 0.82f, 0.60f, 0f));
-        avatarSceneWashImage.sprite = avatarImage.sprite;
         avatarSceneWashImage.preserveAspect = true;
         avatarSceneWashImage.useSpriteMesh = true;
         avatarSceneWashImage.raycastTarget = false;
@@ -4658,10 +4657,10 @@ public sealed class AvatarChatApp : MonoBehaviour
             }
 
             PlaySound(confirmClip);
-            statusText.text = "기록 저장됨 · 전달용 파일도 함께 저장";
+            statusText.text = "기록 저장됨 · 대상자에게 전할 메시지도 저장";
             if (closingMessageValidationText != null)
             {
-                closingMessageValidationText.text = "전달용 파일과 결과 기록에 저장했습니다.";
+                closingMessageValidationText.text = "전달용 파일로 저장했습니다. 대상자에게 꼭 전해드릴게요.";
                 closingMessageValidationText.color = new Color32(22, 101, 52, 245);
             }
         }
@@ -4738,6 +4737,8 @@ public sealed class AvatarChatApp : MonoBehaviour
         StringBuilder builder = new StringBuilder();
         builder.AppendLine($"{GameTitle} 전달용 메시지");
         builder.AppendLine($"저장 시각: {DateTime.Now:yyyy-MM-dd HH:mm:ss}");
+        builder.AppendLine();
+        builder.AppendLine("아래 문장은 인터뷰 대상자에게 전달하기 위해 저장한 메시지입니다.");
         builder.AppendLine();
         builder.AppendLine(GetClosingMessageToInterviewee());
         builder.AppendLine();
@@ -8204,16 +8205,7 @@ public sealed class AvatarChatApp : MonoBehaviour
     {
         if (avatarSceneWashImage != null)
         {
-            Color[] washes =
-            {
-                new Color(1.00f, 0.88f, 0.62f, 0.050f),
-                new Color(0.70f, 0.82f, 1.00f, 0.055f),
-                new Color(0.96f, 0.76f, 0.54f, 0.060f),
-                new Color(0.78f, 0.92f, 1.00f, 0.052f),
-                new Color(0.88f, 0.80f, 1.00f, 0.050f),
-                new Color(1.00f, 0.78f, 0.74f, 0.055f)
-            };
-            avatarSceneWashImage.color = washes[Mathf.Abs(index) % washes.Length];
+            avatarSceneWashImage.color = new Color(1f, 0.88f, 0.65f, 0f);
         }
 
         Vector2 focus = GetSceneFocusPositionForTheme(theme);
@@ -12313,10 +12305,6 @@ public sealed class AvatarChatApp : MonoBehaviour
             {
                 avatarSilhouetteShadowImage.sprite = sprite;
             }
-            if (avatarSceneWashImage != null)
-            {
-                avatarSceneWashImage.sprite = sprite;
-            }
         }
 
         if (avatarHandsImage != null && avatarHandSprites.TryGetValue(state, out Sprite handsSprite) && handsSprite != null)
@@ -13102,9 +13090,11 @@ public sealed class AvatarChatApp : MonoBehaviour
         UpdateActionButtons();
         if (statusText != null) statusText.text = "다음 5문답을 시작합니다";
         ShowHotspotLabels();
+        UpdateNoteTabContent();
         ShowNoteTab(2);
         if (questionNoteOpen)
         {
+            UpdateNoteTabContent();
             SetQuestionNoteOpen(true);
         }
         SelectFirstInteractable(null, "Floating Question 1", "Floating Question 2", "Floating Question 3");
@@ -13170,7 +13160,7 @@ public sealed class AvatarChatApp : MonoBehaviour
         if (leadQuestions != null) importantCandidates.AddRange(leadQuestions);
         if (serverQuestions != null) importantCandidates.AddRange(serverQuestions);
 
-        AddRandomLeadQuestions(result, importantCandidates.ToArray(), targetCount, true);
+        AddPriorityLeadQuestions(result, importantCandidates.ToArray(), targetCount);
         AddFallbackLeadQuestions(result, targetCount);
         AddEmergencyLeadQuestions(result, targetCount);
 
@@ -13181,6 +13171,65 @@ public sealed class AvatarChatApp : MonoBehaviour
         }
 
         return next;
+    }
+
+    private void AddPriorityLeadQuestions(List<string> result, string[] questions, int targetCount)
+    {
+        if (result == null || questions == null || questions.Length == 0) return;
+
+        List<string> candidates = new List<string>();
+        HashSet<string> seen = new HashSet<string>();
+        for (int i = 0; i < questions.Length; i++)
+        {
+            string cleaned = NormalizeLeadQuestion(questions[i]);
+            if (string.IsNullOrWhiteSpace(cleaned)) continue;
+            string key = BuildLeadQuestionKey(cleaned);
+            if (string.IsNullOrWhiteSpace(key) || seen.Contains(key)) continue;
+            seen.Add(key);
+            candidates.Add(cleaned);
+        }
+
+        candidates.Sort((left, right) =>
+        {
+            int scoreCompare = GetLeadQuestionPriorityScore(right).CompareTo(GetLeadQuestionPriorityScore(left));
+            if (scoreCompare != 0) return scoreCompare;
+
+            int askedCompare = IsPreviouslyAskedLeadQuestionKey(BuildLeadQuestionKey(left)).CompareTo(IsPreviouslyAskedLeadQuestionKey(BuildLeadQuestionKey(right)));
+            if (askedCompare != 0) return askedCompare;
+
+            return string.Compare(left, right, StringComparison.Ordinal);
+        });
+
+        for (int pass = 0; pass < 2 && result.Count < targetCount; pass++)
+        {
+            for (int i = 0; i < candidates.Count && result.Count < targetCount; i++)
+            {
+                string question = candidates[i];
+                string key = BuildLeadQuestionKey(question);
+                if (pass == 0 && IsPreviouslyAskedLeadQuestionKey(key)) continue;
+                if (pass == 0 && HasLeadQuestionCategory(result, CategorizeLeadQuestion(question))) continue;
+                AddUniqueLeadQuestion(result, question, targetCount);
+            }
+        }
+    }
+
+    private static int GetLeadQuestionPriorityScore(string question)
+    {
+        string text = question ?? string.Empty;
+        int score = 0;
+
+        if (HasAny(text, "장애를 한 사람의 전부", "목발을 보고", "평범한 사람", "겉", "관람객", "전시")) score += 70;
+        if (HasAny(text, "직장", "박사", "공부", "기여", "함께 일", "프로젝트", "자기 몫")) score += 55;
+        if (HasAny(text, "도움", "설명할 시간", "혼자 할 수", "기다려", "조율", "배려")) score += 50;
+        if (HasAny(text, "처음 가는", "접근성", "엘리베이터", "화장실", "교통 정보", "지원 서비스", "미국", "한국")) score += 48;
+        if (HasAny(text, "자취", "독립", "자기이해", "생활을 직접", "스스로 설명")) score += 42;
+        if (HasAny(text, "책상", "노트북", "메모")) score += 38;
+        if (HasAny(text, "끈기", "흘러간다", "버틴", "조정")) score += 34;
+        if (HasAny(text, "취미", "게임", "코인노래방", "쉬는 시간")) score += 18;
+        if (HasAny(text, "분위기", "좋아하는 시간", "쉬는 날")) score -= 12;
+        if (HasAny(text, "무엇인가요?", "어떤 역할을 하나요?", "어떻게 바꾸나요?")) score -= 6;
+
+        return score;
     }
 
     private string[] BuildContextLeadQuestions(string question, string reply)
@@ -13325,7 +13374,7 @@ public sealed class AvatarChatApp : MonoBehaviour
 
     private void AddDefaultLeadQuestions(List<string> result, int targetCount)
     {
-        AddRandomLeadQuestions(result, leadQuestions, targetCount, true);
+        AddPriorityLeadQuestions(result, leadQuestions, targetCount);
     }
 
     private void AddRandomLeadQuestions(List<string> result, string[] questions, int targetCount, bool preferCategoryDiversity)
